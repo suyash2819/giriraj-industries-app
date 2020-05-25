@@ -1,0 +1,59 @@
+.Woman-pic {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 100vh;
+  background-image: url("../images/Woman3.jpg");
+  background-attachment: fixed;
+  filter: blur(0px);
+}
+.Man-pic {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 100vh;
+  background-image: url("../images/Man1.jpg");
+  background-attachment: fixed;
+  filter: blur(0px);
+}
+.Kid-pic {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 100vh;
+  background-image: url("../images/Kids1.jpg");
+  background-attachment: fixed;
+  filter: blur(0px);
+}
+.Covid-pic {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 100vh;
+  background-image: url("../images/Covid1.jpg");
+  background-attachment: fixed;
+  filter: blur(0px);
+}
+.front-text {
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+.front-button > a {
+  text-decoration: none;
+  color: white;
+}
+.front-button {
+  color: white;
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  border: 1px solid #fff;
+  transform: translate(-50%, -50%);
+  background-color: transparent;
+}

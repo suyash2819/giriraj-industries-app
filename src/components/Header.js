@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
-    <nav className="navbar navbar-expand-md navbar-dark bg-dark">
+    <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
       <div
         className="navbar-collapse collapse w-100 order-1 order-md-0"
         id="dual-collapse2"

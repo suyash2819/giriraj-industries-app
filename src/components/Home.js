@@ -1,6 +1,5 @@
 import React from "react";
 import "../CSS/Home.css";
-import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "./Header";
 import { Link } from "react-router-dom";
 
@@ -9,13 +8,13 @@ function Home() {
     <>
       <Navbar />
       <div className="Woman-pic">
-        <h1 className="front-text">WOMAN</h1>
+        <h1 className="front-text">WOMEN</h1>
         <button className="front-button">
           <Link to="/Woman">DISCOVER</Link>
         </button>
       </div>
       <div className="Man-pic">
-        <h1 className="front-text">MAN</h1>
+        <h1 className="front-text">MEN</h1>
         <button className="front-button">
           <Link to="/Man">DISCOVER</Link>
         </button>

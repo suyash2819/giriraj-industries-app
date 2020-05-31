@@ -1,4 +1,5 @@
 import React from "react";
+import Card from './Card';
 import Navbar from "./Header";
 import { data } from "./Data";
 
@@ -8,17 +9,14 @@ function CardDisplay() {
     <div className="row">
       {kids.map((kids, key) => {
         return (
-          <div className="col-md-3" key={kids.key}>
-            <div className="card">
-              <img src={kids.image} alt="" />
-              <div className="card-body">
-                <h5 className="card-title">{kids.itemType}</h5>
-                <p className="card-text">{kids.Description}</p>
-                <p className="card-text">{kids.Cost}</p>
-                <button className="btn btn-primary">{kids.btnText}</button>
-              </div>
-            </div>
-          </div>
+          <Card
+            wrapperClass='col-md-3'
+            image={kids.image}
+            itemType={kids.itemType}
+            description={kids.Description}
+            cost={kids.Cost}
+            btnText={kids.btnText}
+          />
         );
       })}
     </div>

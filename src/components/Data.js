@@ -20,7 +20,7 @@ export const data = {
     ],
     women: [
       {
-        key: 1,
+        key: 3,
         itemType: "Lower",
         Description: "cotton , color red, washable...",
         Cost: "250 rs",
@@ -28,7 +28,7 @@ export const data = {
         image: "https://picsum.photos/200/300?q=$(Math.random())",
       },
       {
-        key: 2,
+        key: 4,
         itemType: "Top",
         Description: "Lenin , color white, washable...",
         Cost: "899 rs",
@@ -38,7 +38,7 @@ export const data = {
     ],
     kids: [
       {
-        key: 1,
+        key: 5,
         itemType: "Lower",
         Description: "cotton , color red, washable...",
         Cost: "250 rs",
@@ -46,7 +46,7 @@ export const data = {
         image: "https://picsum.photos/200/300?q=$(Math.random())",
       },
       {
-        key: 2,
+        key: 6,
         itemType: "Tshirt",
         Description: "Lenin , color white, washable...",
         Cost: "899 rs",
@@ -56,7 +56,7 @@ export const data = {
     ],
     covid: [
       {
-        key: 1,
+        key: 7,
         itemType: "Lower",
         Description: "cotton , color red, washable...",
         Cost: "250 rs",
@@ -64,7 +64,7 @@ export const data = {
         image: "https://picsum.photos/200/300?q=$(Math.random())",
       },
       {
-        key: 2,
+        key: 8,
         itemType: "Tshirt",
         Description: "Lenin , color white, washable...",
         Cost: "899 rs",

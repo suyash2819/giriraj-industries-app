@@ -1,31 +1,31 @@
 import React from "react";
 import Navbar from "./Header";
 import { data } from "./Data";
+import Card from "./Card";
 
-function CardDisplay() {
+const CardDisplay = () => {
   const men = data.collections.men;
   return (
     <div className="row">
-      {men.map((men, key) => {
+      {men.map((men) => {
         return (
-          <div className="col-md-3" key={men.key}>
-            <div className="card">
-              <img src={men.image} alt="" />
-              <div className="card-body">
-                <h5 className="card-title">{men.itemType}</h5>
-                <p className="card-text">{men.Description}</p>
-                <p className="card-text">{men.Cost}</p>
-                <button className="btn btn-primary">{men.btnText}</button>
-              </div>
-            </div>
-          </div>
+          <Card
+            key={men.key}
+            id={men.key}
+            wrapperClass="col-md-3"
+            image={men.image}
+            itemType={men.itemType}
+            description={men.Description}
+            cost={men.Cost}
+            btnText={men.btnText}
+          />
         );
       })}
     </div>
   );
-}
+};
 
-function Man() {
+const Man = () => {
   return (
     <>
       <Navbar />
@@ -35,6 +35,6 @@ function Man() {
       </div>
     </>
   );
-}
+};
 
 export default Man;

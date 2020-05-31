@@ -2,7 +2,7 @@ import React from "react";
 import "../CSS/Header.css";
 import { Link } from "react-router-dom";
 
-function Navbar() {
+const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
       <div
@@ -16,12 +16,12 @@ function Navbar() {
             </Link>
           </li>
           <li className="nav-item">
-            <Link to="/About" className="nav-link">
+            <Link to="/about" className="nav-link">
               About
             </Link>
           </li>
           <li className="nav-item">
-            <Link to="/Contact" className="nav-link">
+            <Link to="/contact" className="nav-link">
               Contact
             </Link>
           </li>
@@ -50,6 +50,6 @@ function Navbar() {
       ></div>
     </nav>
   );
-}
+};
 
 export default Navbar;

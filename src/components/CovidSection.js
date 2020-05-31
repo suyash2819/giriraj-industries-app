@@ -2,31 +2,31 @@ import React from "react";
 import Navbar from "./Header";
 import { data } from "./Data";
 import "../CSS/AllSection.css";
+import Card from "./Card";
 
-function CardDisplay() {
+const CardDisplay = () => {
   const covid = data.collections.covid;
   return (
     <div className="row">
-      {covid.map((covid, key) => {
+      {covid.map((covid) => {
         return (
-          <div className="col-md-3" key={covid.key}>
-            <div className="card">
-              <img src={covid.image} alt="" />
-              <div className="card-body">
-                <h5 className="card-title">{covid.itemType}</h5>
-                <p className="card-text">{covid.Description}</p>
-                <p className="card-text">{covid.Cost}</p>
-                <button className="btn btn-primary">{covid.btnText}</button>
-              </div>
-            </div>
-          </div>
+          <Card
+            key={covid.key}
+            id={covid.key}
+            wrapperClass="col-md-3"
+            image={covid.image}
+            itemType={covid.itemType}
+            description={covid.Description}
+            cost={covid.Cost}
+            btnText={covid.btnText}
+          />
         );
       })}
     </div>
   );
-}
+};
 
-function Covid() {
+const Covid = () => {
   return (
     <>
       <Navbar />
@@ -36,6 +36,6 @@ function Covid() {
       </div>
     </>
   );
-}
+};
 
 export default Covid;

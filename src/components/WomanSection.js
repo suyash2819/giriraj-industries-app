@@ -2,31 +2,31 @@ import React from "react";
 import Navbar from "./Header";
 import "../CSS/AllSection.css";
 import { data } from "./Data";
+import Card from "./Card";
 
-function CardDisplay() {
+const CardDisplay = () => {
   const women = data.collections.women;
   return (
     <div className="row">
-      {women.map((women, key) => {
+      {women.map((women) => {
         return (
-          <div className="col-md-3" key={women.key}>
-            <div className="card">
-              <img src={women.image} alt="" />
-              <div className="card-body">
-                <h5 className="card-title">{women.itemType}</h5>
-                <p className="card-text">{women.Description}</p>
-                <p className="card-text">{women.Cost}</p>
-                <button className="btn btn-primary">{women.btnText}</button>
-              </div>
-            </div>
-          </div>
+          <Card
+            key={women.key}
+            id={women.key}
+            wrapperClass="col-md-3"
+            image={women.image}
+            itemType={women.itemType}
+            description={women.Description}
+            cost={women.Cost}
+            btnText={women.btnText}
+          />
         );
       })}
     </div>
   );
-}
+};
 
-function Woman() {
+const Woman = () => {
   return (
     <>
       <Navbar />
@@ -36,6 +36,6 @@ function Woman() {
       </div>
     </>
   );
-}
+};
 
 export default Woman;

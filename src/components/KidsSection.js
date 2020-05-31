@@ -1,16 +1,18 @@
 import React from "react";
-import Card from './Card';
+import Card from "./Card";
 import Navbar from "./Header";
 import { data } from "./Data";
 
-function CardDisplay() {
+const CardDisplay = () => {
   const kids = data.collections.kids;
   return (
     <div className="row">
-      {kids.map((kids, key) => {
+      {kids.map((kids) => {
         return (
           <Card
-            wrapperClass='col-md-3'
+            key={kids.key}
+            id={kids.key}
+            wrapperClass="col-md-3"
             image={kids.image}
             itemType={kids.itemType}
             description={kids.Description}
@@ -21,9 +23,9 @@ function CardDisplay() {
       })}
     </div>
   );
-}
+};
 
-function Kids() {
+const Kids = () => {
   return (
     <>
       <Navbar />
@@ -33,6 +35,6 @@ function Kids() {
       </div>
     </>
   );
-}
+};
 
 export default Kids;

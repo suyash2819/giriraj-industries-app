@@ -5,6 +5,7 @@
     "no-unused-vars": "warn",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "no-console": "off",
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "camelcase": "warn"
   }
 }

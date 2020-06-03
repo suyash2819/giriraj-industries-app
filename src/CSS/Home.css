@@ -48,6 +48,10 @@
   text-decoration: none;
   color: white;
 }
+.front-button > a:hover {
+  text-decoration: none;
+  color: white;
+}
 .front-button {
   color: white;
   position: absolute;

@@ -6,15 +6,15 @@ import Kids from "./KidsSection";
 import Man from "./ManSection";
 import Covid from "./CovidSection";
 
-function Main() {
+const Main = () => {
   return (
     <Switch>
       <Route exact path="/" component={Home} />
-      <Route exact path="/Woman" component={Woman} />
-      <Route exact path="/Kids" component={Kids} />
-      <Route exact path="/Man" component={Man} />
-      <Route exact path="/Covid" component={Covid} />
+      <Route exact path="/woman" component={Woman} />
+      <Route exact path="/kids" component={Kids} />
+      <Route exact path="/man" component={Man} />
+      <Route exact path="/covid" component={Covid} />
     </Switch>
   );
-}
+};
 export default Main;

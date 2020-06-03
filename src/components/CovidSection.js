@@ -1,14 +1,41 @@
 import React from "react";
-import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "./Header";
+import { data } from "./Data";
+import "../CSS/AllSection.css";
+import Card from "./Card";
 
-function Covid() {
+const CardDisplay = () => {
+  const covid = data.collections.covid;
+  return (
+    <div className="row">
+      {covid.map((covid) => {
+        return (
+          <Card
+            key={covid.key}
+            id={covid.key}
+            wrapperClass="col-md-3"
+            image={covid.image}
+            itemType={covid.itemType}
+            description={covid.Description}
+            cost={covid.Cost}
+            btnText={covid.btnText}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
+const Covid = () => {
   return (
     <>
       <Navbar />
-      <p>it works</p>
+      <div className="container">
+        <h2>Masks</h2>
+        <CardDisplay />
+      </div>
     </>
   );
-}
+};
 
 export default Covid;

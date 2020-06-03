@@ -1,14 +1,41 @@
 import React from "react";
-import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "./Header";
+import "../CSS/AllSection.css";
+import { data } from "./Data";
+import Card from "./Card";
 
-function Woman() {
+const CardDisplay = () => {
+  const women = data.collections.women;
+  return (
+    <div className="row">
+      {women.map((women) => {
+        return (
+          <Card
+            key={women.key}
+            id={women.key}
+            wrapperClass="col-md-3"
+            image={women.image}
+            itemType={women.itemType}
+            description={women.Description}
+            cost={women.Cost}
+            btnText={women.btnText}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
+const Woman = () => {
   return (
     <>
       <Navbar />
-      <p>it works</p>
+      <div className="container">
+        <h2>Lowers</h2>
+        <CardDisplay />
+      </div>
     </>
   );
-}
+};
 
 export default Woman;

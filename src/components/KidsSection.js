@@ -3,7 +3,7 @@ import Card from "./Card";
 import Navbar from "./Header";
 import { data } from "./Data";
 
-const CardDisplay = () => {
+const CardList = () => {
   const kids = data.collections.kids;
   return (
     <div className="row">
@@ -31,7 +31,7 @@ const Kids = () => {
       <Navbar />
       <div className="container">
         <h2>Lowers</h2>
-        <CardDisplay />
+        <CardList />
       </div>
     </>
   );

@@ -4,7 +4,7 @@ import "../CSS/AllSection.css";
 import { data } from "./Data";
 import Card from "./Card";
 
-const CardDisplay = () => {
+const CardList = () => {
   const women = data.collections.women;
   return (
     <div className="row">
@@ -32,7 +32,7 @@ const Woman = () => {
       <Navbar />
       <div className="container">
         <h2>Lowers</h2>
-        <CardDisplay />
+        <CardList />
       </div>
     </>
   );

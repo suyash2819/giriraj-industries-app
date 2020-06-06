@@ -4,7 +4,7 @@ import { data } from "./Data";
 import "../CSS/AllSection.css";
 import Card from "./Card";
 
-const CardDisplay = () => {
+const CardList = () => {
   const covid = data.collections.covid;
   return (
     <div className="row">
@@ -32,7 +32,7 @@ const Covid = () => {
       <Navbar />
       <div className="container">
         <h2>Masks</h2>
-        <CardDisplay />
+        <CardList />
       </div>
     </>
   );

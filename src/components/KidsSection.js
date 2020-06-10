@@ -1,28 +1,52 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card from "./Card";
 import Navbar from "./Header";
-import { data } from "./Data";
+import "../CSS/AllSection.css";
+import { db } from "../config/firebase";
+import { LinearProgress } from "@material-ui/core";
 
 const CardList = () => {
-  const kids = data.collections.kids;
-  return (
-    <div className="row">
-      {kids.map((kids) => {
-        return (
-          <Card
-            key={kids.key}
-            id={kids.key}
-            wrapperClass="col-md-3"
-            image={kids.image}
-            itemType={kids.itemType}
-            description={kids.Description}
-            cost={kids.Cost}
-            btnText={kids.btnText}
-          />
-        );
-      })}
-    </div>
-  );
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [kids, setKids] = useState([]);
+  useEffect(() => {
+    let KidsCollection = db.collection("Kids");
+    KidsCollection.get()
+      .then((snapshot) => {
+        const data = [];
+        snapshot.forEach((doc) => {
+          data.push(doc.data());
+        });
+        setIsLoaded(true);
+        setKids(data);
+      })
+      .catch((err) => {
+        setIsLoaded(true);
+        console.log(err);
+      });
+  }, []);
+
+  if (!isLoaded) {
+    return <LinearProgress />;
+  } else {
+    return (
+      <div className="row">
+        {kids.map((kidsData, index) => {
+          return (
+            <Card
+              key={index}
+              id={index}
+              wrapperClass="col-md-3"
+              image={kidsData.Image_url}
+              itemType={kidsData.Item_Type}
+              description={kidsData.Description}
+              cost={kidsData.Cost}
+              btnText="Add To Cart"
+            />
+          );
+        })}
+      </div>
+    );
+  }
 };
 
 const Kids = () => {

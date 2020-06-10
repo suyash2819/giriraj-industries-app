@@ -1,29 +1,54 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./Header";
-import { data } from "./Data";
+// import { data } from "./Data";
 import "../CSS/AllSection.css";
 import Card from "./Card";
+import { db } from "../config/firebase";
+import { LinearProgress } from "@material-ui/core";
 
 const CardList = () => {
-  const covid = data.collections.covid;
-  return (
-    <div className="row">
-      {covid.map((covid) => {
-        return (
-          <Card
-            key={covid.key}
-            id={covid.key}
-            wrapperClass="col-md-3"
-            image={covid.image}
-            itemType={covid.itemType}
-            description={covid.Description}
-            cost={covid.Cost}
-            btnText={covid.btnText}
-          />
-        );
-      })}
-    </div>
-  );
+  // const covid = data.collections.covid;
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [covid, setCovid] = useState([]);
+  useEffect(() => {
+    let CovidCollection = db.collection("Covid");
+    CovidCollection.get()
+      .then((snapshot) => {
+        const data = [];
+        snapshot.forEach((doc) => {
+          data.push(doc.data());
+        });
+        setIsLoaded(true);
+        setCovid(data);
+      })
+      .catch((err) => {
+        setIsLoaded(true);
+        console.log(err);
+      });
+  }, []);
+
+  if (!isLoaded) {
+    return <LinearProgress />;
+  } else {
+    return (
+      <div className="row">
+        {covid.map((covidData, index) => {
+          return (
+            <Card
+              key={index}
+              id={index}
+              wrapperClass="col-md-3"
+              image={covidData.Image_url}
+              itemType={covidData.Item_Type}
+              description={covidData.Description}
+              cost={covidData.Cost}
+              btnText="Add To Cart"
+            />
+          );
+        })}
+      </div>
+    );
+  }
 };
 
 const Covid = () => {

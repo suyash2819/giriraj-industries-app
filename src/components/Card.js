@@ -11,8 +11,8 @@ const Card = (props) => {
     btnText,
   } = props;
   return (
-    <div className={wrapperClass || ""} key={id}>
-      <div className="card">
+    <div className={wrapperClass || ""}>
+      <div className="card" key={id}>
         <img src={image} alt="" />
         <div className="card-body">
           <h5 className="card-title">{itemType}</h5>

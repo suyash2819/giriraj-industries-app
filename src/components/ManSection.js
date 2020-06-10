@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { LinearProgress } from "@material-ui/core";
-
 import Navbar from "./Header";
-// import { data } from "./Data";
 import { db } from "../config/firebase";
 import Card from "./Card";
 import "../CSS/AllSection.css";

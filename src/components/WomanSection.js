@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./Header";
 import "../CSS/AllSection.css";
-// import { data } from "./Data";
 import Card from "./Card";
 import { db } from "../config/firebase";
 import { LinearProgress } from "@material-ui/core";
 
 const CardList = () => {
-  //   const women = data.collections.women;
   const [isLoaded, setIsLoaded] = useState(false);
   const [women, setWomen] = useState([]);
   useEffect(() => {

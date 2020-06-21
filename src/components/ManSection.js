@@ -4,11 +4,12 @@ import Navbar from "./Header";
 import { db } from "../config/firebase";
 import Card from "./Card";
 import "../CSS/AllSection.css";
+import { sections } from "./data";
 
 const CardList = () => {
   const [men, setMen] = useState([]);
   useEffect(() => {
-    db.collection("Men").onSnapshot((snapshot) => {
+    db.collection(sections.men).onSnapshot((snapshot) => {
       const data = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),

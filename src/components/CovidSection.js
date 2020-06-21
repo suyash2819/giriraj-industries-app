@@ -4,11 +4,12 @@ import "../CSS/AllSection.css";
 import Card from "./Card";
 import { db } from "../config/firebase";
 import { LinearProgress } from "@material-ui/core";
+import { sections } from "./data";
 
 const CardList = () => {
   const [covid, setCovid] = useState([]);
   useEffect(() => {
-    db.collection("Covid").onSnapshot((snapshot) => {
+    db.collection(sections.covid).onSnapshot((snapshot) => {
       const data = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),

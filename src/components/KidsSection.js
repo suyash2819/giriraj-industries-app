@@ -4,11 +4,12 @@ import Navbar from "./Header";
 import "../CSS/AllSection.css";
 import { db } from "../config/firebase";
 import { LinearProgress } from "@material-ui/core";
+import { sections } from "./data";
 
 const CardList = () => {
   const [kids, setKids] = useState([]);
   useEffect(() => {
-    db.collection("Kids").onSnapshot((snapshot) => {
+    db.collection(sections.kids).onSnapshot((snapshot) => {
       const data = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -17,7 +18,7 @@ const CardList = () => {
     });
   }, []);
 
-  if (kids.length) {
+  if (kids.length === 0) {
     return <LinearProgress />;
   } else {
     return (
@@ -25,8 +26,8 @@ const CardList = () => {
         {kids.map((kidsData) => {
           return (
             <Card
-              key={kidsData.length}
-              id={kidsData.length}
+              key={kidsData.id}
+              id={kidsData.id}
               wrapperClass="col-md-3"
               image={kidsData.Image_url}
               itemType={kidsData.Item_Type}

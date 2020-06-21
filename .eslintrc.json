@@ -6,6 +6,7 @@
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "no-console": "off",
     "prettier/prettier": "error",
-    "camelcase": "warn"
+    "camelcase": "warn",
+    "endOfLine": "auto"
   }
 }

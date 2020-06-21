@@ -1,28 +1,45 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { LinearProgress } from "@material-ui/core";
 import Navbar from "./Header";
-import { data } from "./Data";
+import { db } from "../config/firebase";
 import Card from "./Card";
+import "../CSS/AllSection.css";
+import { sections } from "./data";
 
 const CardList = () => {
-  const men = data.collections.men;
-  return (
-    <div className="row">
-      {men.map((men) => {
-        return (
-          <Card
-            key={men.key}
-            id={men.key}
-            wrapperClass="col-md-3"
-            image={men.image}
-            itemType={men.itemType}
-            description={men.Description}
-            cost={men.Cost}
-            btnText={men.btnText}
-          />
-        );
-      })}
-    </div>
-  );
+  const [men, setMen] = useState([]);
+  useEffect(() => {
+    db.collection(sections.men).onSnapshot((snapshot) => {
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setMen(data);
+    });
+  }, []);
+
+  if (men.length === 0) {
+    return <LinearProgress />;
+  } else {
+    return (
+      <div className="row">
+        {men.map((menData) => {
+          return (
+            <Card
+              key={menData.id}
+              id={menData.id}
+              wrapperClass="col-md-3"
+              image={menData.Image_url}
+              itemType={menData.Item_Type}
+              description={menData.Description}
+              cost={menData.Cost}
+              btnText="Add To Cart"
+            />
+          );
+        })}
+      </div>
+    );
+  }
 };
 
 const Man = () => {

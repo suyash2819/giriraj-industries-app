@@ -6,35 +6,27 @@ import Card from "./Card";
 import "../CSS/AllSection.css";
 
 const CardList = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
   const [men, setMen] = useState([]);
   useEffect(() => {
-    const MenCollection = db.collection("Men");
-    MenCollection.get()
-      .then((snapshot) => {
-        const data = [];
-        snapshot.forEach((doc) => {
-          data.push(doc.data());
-        });
-        setIsLoaded(true);
-        setMen(data);
-      })
-      .catch((err) => {
-        setIsLoaded(true);
-        console.log(err);
-      });
+    db.collection("Men").onSnapshot((snapshot) => {
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setMen(data);
+    });
   }, []);
 
-  if (!isLoaded) {
+  if (men.length === 0) {
     return <LinearProgress />;
   } else {
     return (
       <div className="row">
-        {men.map((menData, index) => {
+        {men.map((menData) => {
           return (
             <Card
-              key={index}
-              id={menData.key}
+              key={menData.id}
+              id={menData.id}
               wrapperClass="col-md-3"
               image={menData.Image_url}
               itemType={menData.Item_Type}

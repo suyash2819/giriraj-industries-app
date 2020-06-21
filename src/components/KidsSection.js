@@ -6,35 +6,27 @@ import { db } from "../config/firebase";
 import { LinearProgress } from "@material-ui/core";
 
 const CardList = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
   const [kids, setKids] = useState([]);
   useEffect(() => {
-    let KidsCollection = db.collection("Kids");
-    KidsCollection.get()
-      .then((snapshot) => {
-        const data = [];
-        snapshot.forEach((doc) => {
-          data.push(doc.data());
-        });
-        setIsLoaded(true);
-        setKids(data);
-      })
-      .catch((err) => {
-        setIsLoaded(true);
-        console.log(err);
-      });
+    db.collection("Kids").onSnapshot((snapshot) => {
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setKids(data);
+    });
   }, []);
 
-  if (!isLoaded) {
+  if (kids.length) {
     return <LinearProgress />;
   } else {
     return (
       <div className="row">
-        {kids.map((kidsData, index) => {
+        {kids.map((kidsData) => {
           return (
             <Card
-              key={index}
-              id={index}
+              key={kidsData.length}
+              id={kidsData.length}
               wrapperClass="col-md-3"
               image={kidsData.Image_url}
               itemType={kidsData.Item_Type}

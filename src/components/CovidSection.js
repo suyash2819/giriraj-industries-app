@@ -6,35 +6,27 @@ import { db } from "../config/firebase";
 import { LinearProgress } from "@material-ui/core";
 
 const CardList = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
   const [covid, setCovid] = useState([]);
   useEffect(() => {
-    let CovidCollection = db.collection("Covid");
-    CovidCollection.get()
-      .then((snapshot) => {
-        const data = [];
-        snapshot.forEach((doc) => {
-          data.push(doc.data());
-        });
-        setIsLoaded(true);
-        setCovid(data);
-      })
-      .catch((err) => {
-        setIsLoaded(true);
-        console.log(err);
-      });
+    db.collection("Covid").onSnapshot((snapshot) => {
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCovid(data);
+    });
   }, []);
 
-  if (!isLoaded) {
+  if (covid.length === 0) {
     return <LinearProgress />;
   } else {
     return (
       <div className="row">
-        {covid.map((covidData, index) => {
+        {covid.map((covidData) => {
           return (
             <Card
-              key={index}
-              id={index}
+              key={covidData.id}
+              id={covidData.id}
               wrapperClass="col-md-3"
               image={covidData.Image_url}
               itemType={covidData.Item_Type}

@@ -5,7 +5,7 @@ import "../CSS/AllSection.css";
 import { sections } from "./data";
 import ContainerCard from "./ContainerCard";
 
-const Covid = () => {
+const CovidCardList = () => {
   const [covid, setCovid] = useState([]);
   useEffect(() => {
     db.collection(sections.covid).onSnapshot((snapshot) => {
@@ -24,4 +24,4 @@ const Covid = () => {
   );
 };
 
-export default Covid;
+export default CovidCardList;

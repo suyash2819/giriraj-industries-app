@@ -5,7 +5,7 @@ import "../CSS/AllSection.css";
 import { sections } from "./data";
 import ContainerCard from "./ContainerCard";
 
-const Man = () => {
+const ManCardList = () => {
   const [men, setMen] = useState([]);
   useEffect(() => {
     db.collection(sections.men).onSnapshot((snapshot) => {
@@ -24,4 +24,4 @@ const Man = () => {
   );
 };
 
-export default Man;
+export default ManCardList;

@@ -5,7 +5,7 @@ import "../CSS/AllSection.css";
 import { sections } from "./data";
 import ContainerCard from "./ContainerCard";
 
-const Kids = () => {
+const KidsCardList = () => {
   const [kids, setKids] = useState([]);
   useEffect(() => {
     db.collection(sections.kids).onSnapshot((snapshot) => {
@@ -24,4 +24,4 @@ const Kids = () => {
   );
 };
 
-export default Kids;
+export default KidsCardList;

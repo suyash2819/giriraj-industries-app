@@ -6,7 +6,6 @@ import "../CSS/AllSection.css";
 const ContainerCard = (props) => {
   let showData = [];
   let _itemTypes = [];
-  console.log(showData.length);
   const { data } = props;
   data.forEach((element) => {
     let index = _itemTypes.indexOf(element.Item_Type);
@@ -18,7 +17,6 @@ const ContainerCard = (props) => {
       _itemTypes.push(element.Item_Type);
     }
   });
-  console.log("showData", showData[0]);
   if (showData.length === 0) {
     return (
       <div className="container">

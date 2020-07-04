@@ -6,7 +6,7 @@ import "../CSS/AllSection.css";
 import { sections } from "./data";
 import ContainerCard from "./ContainerCard";
 
-const Woman = () => {
+const WomanCardList = () => {
   const [women, setWomen] = useState([]);
   useEffect(() => {
     db.collection(sections.women).onSnapshot((snapshot) => {
@@ -25,4 +25,4 @@ const Woman = () => {
   );
 };
 
-export default Woman;
+export default WomanCardList;

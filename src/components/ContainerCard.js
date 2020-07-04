@@ -13,7 +13,6 @@ const ContainerCard = (props) => {
       showData[index].push(element);
     } else {
       showData.push([element]);
-      console.log("post", showData);
       _itemTypes.push(element.Item_Type);
     }
   });

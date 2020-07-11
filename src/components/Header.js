@@ -46,7 +46,15 @@ const Navbar = () => {
       <div
         className="navbar-collapse collapse w-100 order-3"
         id="dual-collapse2"
-      ></div>
+      >
+        <ul className="navbar-nav ml-auto">
+          <li className="nav-item">
+            <Link to="/cart" className="nav-link">
+              <i className="fa fa-cart-plus" style={{ fontSize: "36px" }}></i>
+            </Link>
+          </li>
+        </ul>
+      </div>
     </nav>
   );
 };

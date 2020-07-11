@@ -38,7 +38,8 @@ const ContainerCard = (props) => {
                   itemType={obj.Item_Type}
                   description={obj.Description}
                   cost={obj.Cost}
-                  btnText={obj.btnText}
+                  btnText="Add To Cart"
+                  element={obj}
                 />
               ))}
             </div>

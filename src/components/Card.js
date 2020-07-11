@@ -1,6 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 const Card = (props) => {
+  const [cartItems, setcartItems] = useState([]);
+
+  const addCart = (element) => {
+    setcartItems((cartItems) => [...cartItems, element]);
+  };
+
   const {
     id,
     wrapperClass,
@@ -9,6 +15,7 @@ const Card = (props) => {
     description,
     cost,
     btnText,
+    element,
   } = props;
   return (
     <div className={wrapperClass || ""}>
@@ -18,7 +25,14 @@ const Card = (props) => {
           <h5 className="card-title">{itemType}</h5>
           <p className="card-text">{description}</p>
           <p className="card-text">{cost}</p>
-          {!!btnText && <button className="btn btn-primary">{btnText}</button>}
+          {!!btnText && (
+            <button
+              className="btn btn-primary"
+              onClick={() => addCart(element)}
+            >
+              {btnText}
+            </button>
+          )}
         </div>
       </div>
     </div>

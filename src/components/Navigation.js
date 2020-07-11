@@ -1,19 +1,19 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import Home from "./Home";
-import Woman from "./WomanSection";
-import Kids from "./KidsSection";
-import Man from "./ManSection";
-import Covid from "./CovidSection";
+import WomanCardList from "./WomanSection";
+import KidsCardList from "./KidsSection";
+import ManCardList from "./ManSection";
+import CovidCardList from "./CovidSection";
 
 const Main = () => {
   return (
     <Switch>
       <Route exact path="/" component={Home} />
-      <Route exact path="/woman" component={Woman} />
-      <Route exact path="/kids" component={Kids} />
-      <Route exact path="/man" component={Man} />
-      <Route exact path="/covid" component={Covid} />
+      <Route exact path="/woman" component={WomanCardList} />
+      <Route exact path="/kids" component={KidsCardList} />
+      <Route exact path="/man" component={ManCardList} />
+      <Route exact path="/covid" component={CovidCardList} />
     </Switch>
   );
 };

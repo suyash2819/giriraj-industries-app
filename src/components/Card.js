@@ -6,10 +6,6 @@ const Card = (props) => {
   const addCart = (element) => {
     setcartItems((cartItems) => [...cartItems, element]);
   };
-  //used useEffect to console as useState is also async
-  useEffect(() => {
-    console.log(cartItems);
-  });
 
   const {
     id,

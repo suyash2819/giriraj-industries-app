@@ -5,6 +5,7 @@ import WomanCardList from "./WomanSection";
 import KidsCardList from "./KidsSection";
 import ManCardList from "./ManSection";
 import CovidCardList from "./CovidSection";
+import CartDisplay from "./CartDisplay";
 
 const Main = () => {
   return (
@@ -14,6 +15,7 @@ const Main = () => {
       <Route exact path="/kids" component={KidsCardList} />
       <Route exact path="/man" component={ManCardList} />
       <Route exact path="/covid" component={CovidCardList} />
+      <Route exact path="/cart" component={CartDisplay} />
     </Switch>
   );
 };

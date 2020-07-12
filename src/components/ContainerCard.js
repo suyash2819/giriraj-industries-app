@@ -7,6 +7,7 @@ const ContainerCard = (props) => {
   let showData = [];
   let _itemTypes = [];
   const { data } = props;
+  
   data.forEach((element) => {
     let index = _itemTypes.indexOf(element.Item_Type);
     if (index > -1) {
@@ -16,6 +17,7 @@ const ContainerCard = (props) => {
       _itemTypes.push(element.Item_Type);
     }
   });
+
   if (showData.length === 0) {
     return (
       <div className="container">

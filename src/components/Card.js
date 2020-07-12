@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { addToCart } from './reducer';
 
-const Card = (props) => {
+const CardComponent = (props) => {
   const [cartItems, setcartItems] = useState([]);
 
   const addCart = (element) => {
-    setcartItems((cartItems) => [...cartItems, element]);
+    let el = [...props.cartItems];
+    el.push(element);
+    props.addToCart(el)
   };
 
   const {
@@ -38,5 +43,15 @@ const Card = (props) => {
     </div>
   );
 };
+
+const mapStateToProps = state => ({
+  cartItems: state.cartItems,
+});
+
+const mapDispatchToProps = dispatch => ({
+  addToCart: bindActionCreators(addToCart, dispatch),
+});
+
+const Card = connect(mapStateToProps, mapDispatchToProps)(CardComponent)
 
 export default Card;

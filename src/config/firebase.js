@@ -1,14 +1,14 @@
 import firebase from "firebase";
 
 const firebaseConfig = {
-  apiKey: 'admin-REACT_APP_NAME',
-  authDomain: 'giriraj-industries.firebaseapp.com',
-  databaseURL: 'https://giriraj-industries.firebaseio.com',
-  projectId: 'giriraj-industries',
-  storageBucket: 'giriraj-industries.appspot.com',
-  messagingSenderId: '928393443662',
-  appId: '1:928393443662:web:b6a402ea9f57462635c61f',
-  measurementId: 'G-Y0YKZLLJH7',
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
+  measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 };
 export const fire = firebase.initializeApp(firebaseConfig);
 export const db = firebase.firestore();

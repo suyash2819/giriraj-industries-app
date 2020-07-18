@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Badge } from '@material-ui/core';
 
 const Card = (props) => {
   const {
@@ -9,7 +8,7 @@ const Card = (props) => {
     itemType,
     description,
     cost,
-    badgeNum = 0,
+    badgeNum = null,
     onClick,
     btnText,
     element,
@@ -20,9 +19,15 @@ const Card = (props) => {
       <div className="card" key={id}>
         <img src={image} alt="" />
         <div className="card-body">
-          <Badge color="primary" badgeContent={badgeNum}>
+          {badgeNum ? (
+            <h5 className="card-title">
+              {itemType}
+              <span className="badge badge-pill badge-primary">{badgeNum}</span>
+            </h5>
+          ) : (
             <h5 className="card-title">{itemType}</h5>
-          </Badge>
+          )}
+
           <p className="card-text">{description}</p>
           <p className="card-text">{cost}</p>
           <button

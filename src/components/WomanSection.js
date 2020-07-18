@@ -20,7 +20,7 @@ const WomanCardList = () => {
   return (
     <>
       <Navbar />
-      <ContainerCard data={women}></ContainerCard>
+      <ContainerCard data={women} btnText="Add To Cart"></ContainerCard>
     </>
   );
 };

@@ -1,13 +1,11 @@
 import React from "react";
 import Card from "./Card";
-import { LinearProgress } from "@material-ui/core";
 import "../CSS/AllSection.css";
 
 const ContainerCard = (props) => {
   let showData = [];
   let _itemTypes = [];
-  const { data } = props;
-  
+  const { data, btnText } = props;
   data.forEach((element) => {
     let index = _itemTypes.indexOf(element.Item_Type);
     if (index > -1) {
@@ -21,7 +19,11 @@ const ContainerCard = (props) => {
   if (showData.length === 0) {
     return (
       <div className="container">
-        <LinearProgress />
+        <div className="d-flex justify-content-center">
+          <div className="spinner-border" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
       </div>
     );
   } else {
@@ -40,7 +42,7 @@ const ContainerCard = (props) => {
                   itemType={obj.Item_Type}
                   description={obj.Description}
                   cost={obj.Cost}
-                  btnText="Add To Cart"
+                  btnText={btnText}
                   element={obj}
                 />
               ))}

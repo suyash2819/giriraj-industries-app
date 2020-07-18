@@ -19,7 +19,7 @@ const CovidCardList = () => {
   return (
     <>
       <Navbar />
-      <ContainerCard data={covid}></ContainerCard>
+      <ContainerCard data={covid} btnText="Add To Cart"></ContainerCard>
     </>
   );
 };

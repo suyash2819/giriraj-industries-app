@@ -19,7 +19,7 @@ const KidsCardList = () => {
   return (
     <>
       <Navbar />
-      <ContainerCard data={kids}></ContainerCard>
+      <ContainerCard data={kids} btnText="Add To Cart"></ContainerCard>
     </>
   );
 };

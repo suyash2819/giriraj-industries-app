@@ -19,14 +19,17 @@ const Card = (props) => {
       <div className="card" key={id}>
         <img src={image} alt="" />
         <div className="card-body">
-          {badgeNum ? (
+          {
             <h5 className="card-title">
               {itemType}
-              <span className="badge badge-pill badge-primary">{badgeNum}</span>
+
+              {!!badgeNum && (
+                <span className="badge badge-pill badge-primary">
+                  {badgeNum}
+                </span>
+              )}
             </h5>
-          ) : (
-            <h5 className="card-title">{itemType}</h5>
-          )}
+          }
 
           <p className="card-text">{description}</p>
           <p className="card-text">{cost}</p>

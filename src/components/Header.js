@@ -24,6 +24,11 @@ const Navbar = () => {
               Contact
             </Link>
           </li>
+          <li className="nav-item">
+            <Link to="/usersignup" className="nav-link">
+              Sign Up
+            </Link>
+          </li>
         </ul>
       </div>
       <div className="mx-auto order-0">
@@ -50,7 +55,7 @@ const Navbar = () => {
         <ul className="navbar-nav ml-auto">
           <li className="nav-item">
             <Link to="/cart" className="nav-link">
-              <i className="fa fa-cart-plus" style={{ fontSize: "36px" }}></i>
+              <i className="fa fa-cart-plus" style={{ fontSize: "22px" }}></i>
             </Link>
           </li>
         </ul>

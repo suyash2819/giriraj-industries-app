@@ -17,50 +17,71 @@ const UserSignUp = (props) => {
     show: false,
   });
 
-  const createUser = (e) => {
-    e.preventDefault();
-    fire
-      .auth()
-      .createUserWithEmailAndPassword(userInfo.userEmail, userInfo.userPassword)
+  const sendEmailVerification = () => {
+    setShowAlert({
+      success: null,
+      message: null,
+      show: false,
+    });
+    let user = fire.auth().currentUser;
+    user
+      .updateProfile({
+        displayName: userInfo.userName,
+      })
       .then(() => {
-        var user = fire.auth().currentUser;
         user
-          .updateProfile({
-            displayName: userInfo.userName,
-          })
+          .sendEmailVerification()
           .then(() => {
-            user
-              .sendEmailVerification()
-              .then(function () {
-                setShowAlert({
-                  success: true,
-                  message: "Email Verification Sent at the provided Email",
-                  show: true,
-                });
-                setUserInfo({ userEmail: "", userPassword: "", userName: "" });
-              })
-              .catch((err) => {
-                setShowAlert({
-                  success: false,
-                  message: err.message,
-                  show: true,
-                });
-              });
+            setShowAlert({
+              success: true,
+              message: "Email Verification Sent at the provided Email",
+              show: true,
+            });
+            setUserInfo({ userEmail: "", userPassword: "", userName: "" });
+            console.log(showAlert);
           })
           .catch((err) => {
+            console.log(showAlert);
+
             setShowAlert({
               success: false,
               message: err.message,
               show: true,
             });
+            setUserInfo({ userEmail: "", userPassword: "", userName: "" });
           });
       })
       .catch((err) => {
+        console.log(showAlert);
         setShowAlert({
           success: false,
           message: err.message,
           show: true,
         });
+      });
+  };
+
+  const createUser = (e) => {
+    e.preventDefault();
+    setShowAlert({
+      success: null,
+      message: null,
+      show: false,
+    });
+    fire
+      .auth()
+      .createUserWithEmailAndPassword(userInfo.userEmail, userInfo.userPassword)
+      .then(() => {
+        sendEmailVerification();
+      })
+      .catch((err) => {
+        console.log(showAlert);
+        setShowAlert({
+          success: false,
+          message: err.message,
+          show: true,
+        });
+        setUserInfo({ userEmail: "", userPassword: "", userName: "" });
       });
   };
 
@@ -89,7 +110,7 @@ const UserSignUp = (props) => {
                           userName: e.target.value,
                         })
                       }
-                    ></input>
+                    />
                   </div>
                   <div className="form-group">
                     <input
@@ -105,7 +126,7 @@ const UserSignUp = (props) => {
                           userName: userInfo.userName,
                         })
                       }
-                    ></input>
+                    />
                   </div>
 
                   <div className="form-group">
@@ -122,7 +143,7 @@ const UserSignUp = (props) => {
                           userName: userInfo.userName,
                         })
                       }
-                    ></input>
+                    />
                   </div>
                   <div className="d-flex flex-row align-items-center justify-content-between">
                     <button className="btn btn-primary" onClick={createUser}>

@@ -9,7 +9,7 @@ const AlertMessage = (props) => {
         className="alert alert-success alert-dismissible fade show"
         role="alert"
       >
-        {message}
+        {message || ""}
         <button
           type="button"
           className="close"
@@ -26,7 +26,7 @@ const AlertMessage = (props) => {
         className="alert alert-danger alert-dismissible fade show"
         role="alert"
       >
-        {message}
+        {message || ""}
         <button
           type="button"
           className="close"

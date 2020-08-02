@@ -17,7 +17,7 @@ const Main = () => {
       <Route exact path="/man" component={ManCardList} />
       <Route exact path="/covid" component={CovidCardList} />
       <Route exact path="/cart" component={CartDisplay} />
-      <Route exact path="/usersignup" component={UserSignUp} />
+      <Route exact path="/signup" component={UserSignUp} />
     </Switch>
   );
 };

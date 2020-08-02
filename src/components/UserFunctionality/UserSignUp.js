@@ -5,9 +5,12 @@ import "../../CSS/AllSection.css";
 import AlertMessage from "../AlertMessage";
 
 const UserSignUp = (props) => {
-  const [userEmail, setUserEmail] = useState("");
-  const [userPassword, setUserPassword] = useState("");
-  const [userName, setUserName] = useState("");
+  const [userInfo, setUserInfo] = useState({
+    userEmail: "",
+    userPassword: "",
+    userName: "",
+  });
+
   const [showAlert, setShowAlert] = useState({
     success: null,
     message: null,
@@ -18,12 +21,12 @@ const UserSignUp = (props) => {
     e.preventDefault();
     fire
       .auth()
-      .createUserWithEmailAndPassword(userEmail, userPassword)
+      .createUserWithEmailAndPassword(userInfo.userEmail, userInfo.userPassword)
       .then(() => {
         var user = fire.auth().currentUser;
         user
           .updateProfile({
-            displayName: userName,
+            displayName: userInfo.userName,
           })
           .then(() => {
             user
@@ -34,9 +37,7 @@ const UserSignUp = (props) => {
                   message: "Email Verification Sent at the provided Email",
                   show: true,
                 });
-                setUserName("");
-                setUserEmail("");
-                setUserPassword("");
+                setUserInfo({ userEmail: "", userPassword: "", userName: "" });
               })
               .catch((err) => {
                 setShowAlert({
@@ -79,9 +80,15 @@ const UserSignUp = (props) => {
                       type="text"
                       className="form-control"
                       id="name"
-                      placeholder="Name"
-                      value={userName}
-                      onChange={(e) => setUserName(e.target.value)}
+                      placeholder="Full Name"
+                      value={userInfo.userName}
+                      onChange={(e) =>
+                        setUserInfo({
+                          userEmail: userInfo.userEmail,
+                          userPassword: userInfo.userPassword,
+                          userName: e.target.value,
+                        })
+                      }
                     ></input>
                   </div>
                   <div className="form-group">
@@ -90,8 +97,14 @@ const UserSignUp = (props) => {
                       className="form-control"
                       id="email"
                       placeholder="Email"
-                      value={userEmail}
-                      onChange={(e) => setUserEmail(e.target.value)}
+                      value={userInfo.userEmail}
+                      onChange={(e) =>
+                        setUserInfo({
+                          userEmail: e.target.value,
+                          userPassword: userInfo.userPassword,
+                          userName: userInfo.userName,
+                        })
+                      }
                     ></input>
                   </div>
 
@@ -101,8 +114,14 @@ const UserSignUp = (props) => {
                       className="form-control"
                       id="password"
                       placeholder="Password"
-                      value={userPassword}
-                      onChange={(e) => setUserPassword(e.target.value)}
+                      value={userInfo.userPassword}
+                      onChange={(e) =>
+                        setUserInfo({
+                          userEmail: userInfo.userEmail,
+                          userPassword: e.target.value,
+                          userName: userInfo.userName,
+                        })
+                      }
                     ></input>
                   </div>
                   <div className="d-flex flex-row align-items-center justify-content-between">

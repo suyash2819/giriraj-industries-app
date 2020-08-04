@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "./Header";
+import NavBar from "./Header";
 import { db } from "../config/firebase";
 import "../CSS/AllSection.css";
 import { sections } from "./data";
@@ -18,7 +18,7 @@ const ManCardList = () => {
   }, []);
   return (
     <>
-      <Navbar />
+      <NavBar />
       <ContainerCard data={men} btnText="Add To Cart"></ContainerCard>
     </>
   );

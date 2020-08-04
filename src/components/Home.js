@@ -1,12 +1,12 @@
 import React from "react";
 import "../CSS/Home.css";
-import Navbar from "./Header";
+import NavBar from "./Header";
 import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
     <>
-      <Navbar />
+      <NavBar />
       <div className="Woman-pic">
         <h1 className="front-text">WOMEN</h1>
         <button className="front-button">

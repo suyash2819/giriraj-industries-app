@@ -1,10 +1,11 @@
 import React from "react";
-import Navbar from "./Header";
-import Card from "./Card";
+import NavBar from "./Header";
+import CardDisplay from "./Card";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { removeFromCart } from "./reducer";
 import "../CSS/AllSection.css";
+import { Container, Row } from "react-bootstrap";
 
 const CartDisplayComponent = (props) => {
   // TODO fetch data from LocalStorage only when USER isn't logged in
@@ -18,16 +19,15 @@ const CartDisplayComponent = (props) => {
 
   return (
     <>
-      <Navbar />
-      <div className="container">
-        <div className="row">
+      <NavBar />
+      <Container>
+        <Row>
           {!!showData.length &&
             showData.map((obj) => (
               <>
-                <Card
+                <CardDisplay
                   key={obj.id}
                   id={obj.id}
-                  wrapperClass="col-md-3"
                   image={obj.Image_url}
                   itemType={obj.Item_Type}
                   description={obj.Description}
@@ -38,8 +38,8 @@ const CartDisplayComponent = (props) => {
                 />
               </>
             ))}
-        </div>
-      </div>
+        </Row>
+      </Container>
     </>
   );
 };

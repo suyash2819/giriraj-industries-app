@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
 import { fire } from "../../config/firebase";
 import Navbar from "../Header";
-// import AlertMessage from "../AlertMessage";
-import func from "../AlertMessage";
+import AlertMessage from "../AlertMessage";
 import "../../CSS/AllSection.css";
 
 const UserSignUp = () => {
@@ -20,11 +19,11 @@ const UserSignUp = () => {
   });
 
   const sendEmailVerification = () => {
-    // setShowAlert({
-    //   success: null,
-    //   message: null,
-    //   show: false,
-    // });
+    setShowAlert({
+      success: null,
+      message: null,
+      show: false,
+    });
     let user = fire.auth().currentUser;
     user
       .updateProfile({
@@ -34,47 +33,42 @@ const UserSignUp = () => {
         user
           .sendEmailVerification()
           .then(() => {
-            func(true, "Email Verification Sent at the provided Email");
-
-            // setShowAlert({
-            //   success: true,
-            //   message: "Email Verification Sent at the provided Email",
-            //   show: true,
-            // });
+            setShowAlert({
+              success: true,
+              message: "Email Verification Sent at the provided Email",
+              show: true,
+            });
             setUserInfo({ userEmail: "", userPassword: "", userName: "" });
             console.log(showAlert);
           })
           .catch((err) => {
             console.log(showAlert);
-            func(false, err.message);
 
-            // setShowAlert({
-            //   success: false,
-            //   message: err.message,
-            //   show: true,
-            // });
+            setShowAlert({
+              success: false,
+              message: err.message,
+              show: true,
+            });
             setUserInfo({ userEmail: "", userPassword: "", userName: "" });
           });
       })
       .catch((err) => {
         console.log(showAlert);
-        func(false, err.message);
-
-        // setShowAlert({
-        //   success: false,
-        //   message: err.message,
-        //   show: true,
-        // });
+        setShowAlert({
+          success: false,
+          message: err.message,
+          show: true,
+        });
       });
   };
 
   const createUser = (e) => {
     e.preventDefault();
-    // setShowAlert({
-    //   success: null,
-    //   message: null,
-    //   show: false,
-    // });
+    setShowAlert({
+      success: null,
+      message: null,
+      show: false,
+    });
     fire
       .auth()
       .createUserWithEmailAndPassword(userInfo.userEmail, userInfo.userPassword)
@@ -83,21 +77,18 @@ const UserSignUp = () => {
       })
       .catch((err) => {
         console.log(showAlert);
-        console.log(func);
-        let s = func(false, err.message);
-        console.log(s);
-        // setShowAlert({
-        //   success: false,
-        //   message: err.message,
-        //   show: true,
-        // });
+        setShowAlert({
+          success: false,
+          message: err.message,
+          show: true,
+        });
         setUserInfo({ userEmail: "", userPassword: "", userName: "" });
       });
   };
 
-  //   const AlertMessageDisplay = () => {
-  //     setShowAlert({ show: false });
-  //   };
+  const AlertMessageDisplay = () => {
+    setShowAlert({ show: false });
+  };
 
   return (
     <>
@@ -167,15 +158,15 @@ const UserSignUp = () => {
             </Card>
           </Col>
         </Row>
-        {/* <div className="row justify-content-center">
+        <div className="row justify-content-center">
           {showAlert.show ? (
             <AlertMessage
               success={showAlert.success}
               message={showAlert.message}
-              func={AlertMessageDisplay}
+              alertDisplay={AlertMessageDisplay}
             />
           ) : null}
-        </div> */}
+        </div>
       </Container>
     </>
   );

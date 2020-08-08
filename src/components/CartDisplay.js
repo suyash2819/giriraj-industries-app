@@ -1,11 +1,11 @@
 import React from "react";
-import NavBar from "./Header";
-import CardDisplay from "./Card";
+import { Container, Row } from "react-bootstrap";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import NavBar from "./Header";
+import CardDisplay from "./Card";
 import { removeFromCart } from "./reducer";
 import "../CSS/AllSection.css";
-import { Container, Row } from "react-bootstrap";
 
 const CartDisplayComponent = (props) => {
   // TODO fetch data from LocalStorage only when USER isn't logged in

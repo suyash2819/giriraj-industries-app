@@ -1,10 +1,10 @@
 import React from "react";
-import CardDisplay from "./Card";
+import { Container, Row, Spinner } from "react-bootstrap";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { addToCart } from "./reducer";
+import CardDisplay from "./Card";
 import "../CSS/AllSection.css";
-import { Container, Row, Spinner } from "react-bootstrap";
 
 const ContainerCardComponent = (props) => {
   let showData = [];

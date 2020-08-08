@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import NavBar from "./Header";
 import "../CSS/AllSection.css";
 import { db } from "../config/firebase";
-import "../CSS/AllSection.css";
 import { sections } from "./data";
 import ContainerCard from "./ContainerCard";
+import "../CSS/AllSection.css";
 
 const WomanCardList = () => {
   const [women, setWomen] = useState([]);

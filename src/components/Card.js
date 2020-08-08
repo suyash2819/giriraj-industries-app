@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Card, Col, Button } from "react-bootstrap";
 
 const CardDisplay = (props) => {
   const {
     id,
-    // wrapperClass,
     image,
     itemType,
     description,

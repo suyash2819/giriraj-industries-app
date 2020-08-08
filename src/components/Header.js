@@ -26,6 +26,11 @@ const NavBar = () => {
               Contact
             </Link>
           </Navbar.Text>
+          <Navbar.Text style={{ padding: "0px" }}>
+            <Link to="/signup" className="nav-link">
+              Sign Up
+            </Link>
+          </Navbar.Text>
         </Nav>
         <Nav>
           <Navbar.Text style={{ padding: "0px" }}>

@@ -1,62 +1,42 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Navbar, Nav } from "react-bootstrap";
 
-const Navbar = () => {
+const NavBar = () => {
   return (
-    <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <div
-        className="navbar-collapse collapse w-100 order-1 order-md-0"
-        id="dual-collapse2"
-      >
-        <ul className="navbar-nav mr-auto">
-          <li className="nav-item active">
+    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
+      <Navbar.Brand style={{ fontSize: "15px" }}>
+        GIRIRAJ INDUSTRIES
+      </Navbar.Brand>
+      <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+      <Navbar.Collapse id="responsive-navbar-nav">
+        <Nav className="mr-auto">
+          <Navbar.Text style={{ padding: "0px" }}>
             <Link to="/" className="nav-link">
               Home
             </Link>
-          </li>
-          <li className="nav-item">
+          </Navbar.Text>
+          <Navbar.Text style={{ padding: "0px" }}>
             <Link to="/about" className="nav-link">
               About
             </Link>
-          </li>
-          <li className="nav-item">
+          </Navbar.Text>
+          <Navbar.Text style={{ padding: "0px" }}>
             <Link to="/contact" className="nav-link">
               Contact
             </Link>
-          </li>
-        </ul>
-      </div>
-      <div className="mx-auto order-0">
-        <p
-          className="navbar-brand mx-auto"
-          style={{ padding: "0", margin: "0" }}
-        >
-          GIRIRAJ INDUSTRIES
-        </p>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#dual-collapse2"
-          style={{ marginLeft: "50px" }}
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-      </div>
-      <div
-        className="navbar-collapse collapse w-100 order-3"
-        id="dual-collapse2"
-      >
-        <ul className="navbar-nav ml-auto">
-          <li className="nav-item">
+          </Navbar.Text>
+        </Nav>
+        <Nav>
+          <Navbar.Text style={{ padding: "0px" }}>
             <Link to="/cart" className="nav-link">
-              <i className="fa fa-cart-plus" style={{ fontSize: "36px" }}></i>
+              <i className="fa fa-cart-plus" style={{ fontSize: "22px" }}></i>
             </Link>
-          </li>
-        </ul>
-      </div>
-    </nav>
+          </Navbar.Text>
+        </Nav>
+      </Navbar.Collapse>
+    </Navbar>
   );
 };
 
-export default Navbar;
+export default NavBar;

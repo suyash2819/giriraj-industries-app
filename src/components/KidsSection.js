@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "./Header";
+import NavBar from "./Header";
 import { db } from "../config/firebase";
-import "../CSS/AllSection.css";
 import { sections } from "./data";
 import ContainerCard from "./ContainerCard";
+import "../CSS/AllSection.css";
 
 const KidsCardList = () => {
   const [kids, setKids] = useState([]);
@@ -18,7 +18,7 @@ const KidsCardList = () => {
   }, []);
   return (
     <>
-      <Navbar />
+      <NavBar />
       <ContainerCard data={kids} btnText="Add To Cart"></ContainerCard>
     </>
   );

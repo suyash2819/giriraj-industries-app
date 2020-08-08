@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { Card, Col, Button } from "react-bootstrap";
 
-const Card = (props) => {
+const CardDisplay = (props) => {
   const {
     id,
-    wrapperClass,
     image,
     itemType,
     description,
@@ -15,12 +15,12 @@ const Card = (props) => {
   } = props;
 
   return (
-    <div className={wrapperClass || ""}>
-      <div className="card" key={id}>
+    <Col md={3}>
+      <Card key={id}>
         <img src={image} alt="" />
-        <div className="card-body">
+        <Card.Body>
           {
-            <h5 className="card-title">
+            <Card.Title>
               {itemType}
 
               {!!badgeNum && (
@@ -28,21 +28,18 @@ const Card = (props) => {
                   {badgeNum}
                 </span>
               )}
-            </h5>
+            </Card.Title>
           }
 
-          <p className="card-text">{description}</p>
-          <p className="card-text">{cost}</p>
-          <button
-            className="btn btn-primary"
-            onClick={() => onClick(element) || null}
-          >
+          <Card.Text>{description} </Card.Text>
+          <Card.Text>{cost} </Card.Text>
+          <Button variant="primary" onClick={() => onClick(element) || null}>
             {btnText}
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </Card.Body>
+      </Card>
+    </Col>
   );
 };
 
-export default Card;
+export default CardDisplay;

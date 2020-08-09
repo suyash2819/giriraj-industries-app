@@ -7,6 +7,7 @@ import ManCardList from "./ManSection";
 import CovidCardList from "./CovidSection";
 import CartDisplay from "./CartDisplay";
 import UserSignUp from "./UserFunctionality/UserSignUp";
+import UserSignIn from "./UserFunctionality/UserSignIn";
 
 const Main = () => {
   return (
@@ -18,6 +19,7 @@ const Main = () => {
       <Route exact path="/covid" component={CovidCardList} />
       <Route exact path="/cart" component={CartDisplay} />
       <Route exact path="/signup" component={UserSignUp} />
+      <Route exact path="/signin" component={UserSignIn} />
     </Switch>
   );
 };

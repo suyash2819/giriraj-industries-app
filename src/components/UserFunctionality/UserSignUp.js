@@ -39,11 +39,8 @@ const UserSignUp = () => {
               show: true,
             });
             setUserInfo({ userEmail: "", userPassword: "", userName: "" });
-            console.log(showAlert);
           })
           .catch((err) => {
-            console.log(showAlert);
-
             setShowAlert({
               success: false,
               message: err.message,
@@ -53,7 +50,6 @@ const UserSignUp = () => {
           });
       })
       .catch((err) => {
-        console.log(showAlert);
         setShowAlert({
           success: false,
           message: err.message,
@@ -76,7 +72,6 @@ const UserSignUp = () => {
         sendEmailVerification();
       })
       .catch((err) => {
-        console.log(showAlert);
         setShowAlert({
           success: false,
           message: err.message,

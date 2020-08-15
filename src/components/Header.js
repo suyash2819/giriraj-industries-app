@@ -1,16 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { fire } from "../config/firebase";
 import { Navbar, Nav } from "react-bootstrap";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { fire } from "../config/firebase";
+import { userSignedIn } from "./reducer";
 
-const NavBar = () => {
-  const [loggedInUser, setUser] = useState(false);
-  fire.auth().onAuthStateChanged(function (user) {
-    if (user) {
-      setUser(user);
-    }
-  });
-
+const RootnavBar = (props) => {
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
       <Navbar.Brand style={{ fontSize: "15px" }}>
@@ -34,12 +30,15 @@ const NavBar = () => {
               Contact
             </Link>
           </Navbar.Text>
-          {loggedInUser ? (
+          {props.loggedInUser ? (
             <>
               <Navbar.Text style={{ padding: "0px" }}>
                 <Link
                   className="nav-link"
-                  onClick={() => fire.auth().signOut()}
+                  onClick={() => {
+                    fire.auth().signOut();
+                    props.userSignedIn(null);
+                  }}
                   to="/"
                 >
                   Log Out
@@ -62,9 +61,9 @@ const NavBar = () => {
           )}
         </Nav>
         <Nav>
-          {loggedInUser ? (
-            <Navbar.Text>Welcome {loggedInUser.displayName}</Navbar.Text>
-          ) : null}
+          {!!props.loggedInUser && (
+            <Navbar.Text>Welcome {props.loggedInUser.displayName}</Navbar.Text>
+          )}
           <Navbar.Text style={{ padding: "0px" }}>
             <Link to="/cart" className="nav-link">
               <i className="fa fa-cart-plus" style={{ fontSize: "22px" }}></i>
@@ -75,5 +74,15 @@ const NavBar = () => {
     </Navbar>
   );
 };
+
+const mapStateToProps = (state) => ({
+  loggedInUser: state.userstate.loggedInUser,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  userSignedIn: bindActionCreators(userSignedIn, dispatch),
+});
+
+const NavBar = connect(mapStateToProps, mapDispatchToProps)(RootnavBar);
 
 export default NavBar;

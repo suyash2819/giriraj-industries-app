@@ -1,5 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { bindActionCreators } from "redux";
+import { fire } from "../config/firebase";
+import { connect } from "react-redux";
 import { Switch, Route } from "react-router-dom";
+import { userSignedIn } from "./reducer";
 import Home from "./Home";
 import WomanCardList from "./WomanSection";
 import KidsCardList from "./KidsSection";
@@ -9,7 +13,14 @@ import CartDisplay from "./CartDisplay";
 import UserSignUp from "./UserFunctionality/UserSignUp";
 import UserSignIn from "./UserFunctionality/UserSignIn";
 
-const Main = () => {
+const Rootmain = (props) => {
+  useEffect(() => {
+    fire.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        props.userSignedIn(user);
+      }
+    });
+  });
   return (
     <Switch>
       <Route exact path="/" component={Home} />
@@ -23,4 +34,15 @@ const Main = () => {
     </Switch>
   );
 };
+
+const mapStateToProps = (state) => ({
+  loggedInUser: state.loggedInUser,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  userSignedIn: bindActionCreators(userSignedIn, dispatch),
+});
+
+const Main = connect(mapStateToProps, mapDispatchToProps)(Rootmain);
+
 export default Main;

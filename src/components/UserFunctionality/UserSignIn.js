@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { userSignedIn } from ".././reducer";
 import { fire } from "../../config/firebase";
 import NavBar from "../Header";
 import AlertMessage from "../AlertMessage";
 import "../../CSS/AllSection.css";
 
-const UserSignIn = () => {
+const RootuserSignIn = (props) => {
   const [userInfo, setUserInfo] = useState({
     userEmail: "",
     userPassword: "",
@@ -18,12 +21,35 @@ const UserSignIn = () => {
     show: false,
   });
 
-  const userSignIn = () => {
+  const userNotVerified = () => {
+    fire
+      .auth()
+      .signOut()
+      .then(() => {
+        setShowAlert({
+          success: false,
+          message: "Please Verify your email address and login again",
+          show: true,
+        });
+        props.userSignedIn(false);
+        setUserInfo({ userEmail: "", userPassword: "", userName: "" });
+      })
+      .catch((err) => {
+        setShowAlert({
+          success: false,
+          message: err.message,
+          show: true,
+        });
+        setUserInfo({ userEmail: "", userPassword: "", userName: "" });
+      });
+  };
+
+  const userSignIn = (e) => {
+    e.preventDefault();
     fire
       .auth()
       .signInWithEmailAndPassword(userInfo.userEmail, userInfo.userPassword)
       .then((user) => {
-        console.log(user);
         if (user.user.emailVerified) {
           setShowAlert({
             success: true,
@@ -32,25 +58,7 @@ const UserSignIn = () => {
           });
           setUserInfo({ userEmail: "", userPassword: "", userName: "" });
         } else {
-          fire
-            .auth()
-            .signOut()
-            .then(() => {
-              setShowAlert({
-                success: false,
-                message: "Please Verify your email address and login again",
-                show: true,
-              });
-              setUserInfo({ userEmail: "", userPassword: "", userName: "" });
-            })
-            .catch((err) => {
-              setShowAlert({
-                success: false,
-                message: err.message,
-                show: true,
-              });
-              setUserInfo({ userEmail: "", userPassword: "", userName: "" });
-            });
+          userNotVerified();
         }
       })
       .catch((err) => {
@@ -111,7 +119,11 @@ const UserSignIn = () => {
                     />
                   </Form.Group>
                   <center>
-                    <Button variant="primary" onClick={userSignIn}>
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      onClick={userSignIn}
+                    >
                       Sign In
                     </Button>
                   </center>
@@ -133,5 +145,16 @@ const UserSignIn = () => {
     </>
   );
 };
+
+const mapStateToProps = (state) => ({
+  cartItems: state.cartItems,
+  loggedInUser: state.loggedInUser,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  userSignedIn: bindActionCreators(userSignedIn, dispatch),
+});
+
+const UserSignIn = connect(mapStateToProps, mapDispatchToProps)(RootuserSignIn);
 
 export default UserSignIn;

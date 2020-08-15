@@ -4,7 +4,7 @@
   "rules": {
     "no-unused-vars": "warn",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "no-console": "off",
+    "no-console": "error",
     "prettier/prettier": "error",
     "camelcase": "warn",
     "endOfLine": "auto"

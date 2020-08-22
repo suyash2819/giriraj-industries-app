@@ -12,7 +12,6 @@ const RootuserSignIn = (props) => {
   const [userInfo, setUserInfo] = useState({
     userEmail: "",
     userPassword: "",
-    userName: "",
   });
 
   const [showAlert, setShowAlert] = useState({
@@ -31,8 +30,8 @@ const RootuserSignIn = (props) => {
           message: "Please Verify your email address and login again",
           show: true,
         });
-        props.userSignedIn(false);
-        setUserInfo({ userEmail: "", userPassword: "", userName: "" });
+        props.userSignedIn(null);
+        setUserInfo({ userEmail: "", userPassword: "" });
       })
       .catch((err) => {
         setShowAlert({
@@ -40,7 +39,7 @@ const RootuserSignIn = (props) => {
           message: err.message,
           show: true,
         });
-        setUserInfo({ userEmail: "", userPassword: "", userName: "" });
+        setUserInfo({ userEmail: "", userPassword: "" });
       });
   };
 
@@ -49,14 +48,14 @@ const RootuserSignIn = (props) => {
     fire
       .auth()
       .signInWithEmailAndPassword(userInfo.userEmail, userInfo.userPassword)
-      .then((user) => {
-        if (user.user.emailVerified) {
+      .then((userdata) => {
+        if (userdata.user.emailVerified) {
           setShowAlert({
             success: true,
             message: "Signed In Successfully",
             show: true,
           });
-          setUserInfo({ userEmail: "", userPassword: "", userName: "" });
+          setUserInfo({ userEmail: "", userPassword: "" });
         } else {
           userNotVerified();
         }
@@ -67,7 +66,7 @@ const RootuserSignIn = (props) => {
           message: err.message,
           show: true,
         });
-        setUserInfo({ userEmail: "", userPassword: "", userName: "" });
+        setUserInfo({ userEmail: "", userPassword: "" });
       });
   };
 
@@ -97,7 +96,6 @@ const RootuserSignIn = (props) => {
                         setUserInfo({
                           userEmail: e.target.value,
                           userPassword: userInfo.userPassword,
-                          userName: userInfo.userName,
                         })
                       }
                     />
@@ -113,7 +111,6 @@ const RootuserSignIn = (props) => {
                         setUserInfo({
                           userEmail: userInfo.userEmail,
                           userPassword: e.target.value,
-                          userName: userInfo.userName,
                         })
                       }
                     />

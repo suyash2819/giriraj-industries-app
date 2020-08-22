@@ -148,7 +148,7 @@ const RootuserSignIn = (props) => {
 
 const mapStateToProps = (state) => ({
   cartItems: state.cartItems,
-  loggedInUser: state.loggedInUser,
+  user: state.user,
 });
 
 const mapDispatchToProps = (dispatch) => ({

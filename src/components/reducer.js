@@ -3,6 +3,7 @@ import { combineReducers } from "redux";
 const ADD_TO_CART = "ADD_TO_CART";
 const REMOVE_FROM_CART = "REMOVE_FROM_CART";
 const USER_SIGN_IN = "USER_SIGN_IN";
+const LOADER = "DISPLAY_LOADER";
 
 export function addToCart(payload) {
   return {
@@ -22,12 +23,23 @@ export function userSignedIn(payload) {
   return { type: USER_SIGN_IN, payload };
 }
 
+export function displayLoader(payload) {
+  return {
+    type: LOADER,
+    payload,
+  };
+}
+
 const cartinitialState = {
   cartItems: [],
 };
 
 const userinitialState = {
-  loggedInUser: null,
+  user: null,
+};
+
+const loaderinitialstate = {
+  loader: true,
 };
 
 export function cartReducer(state = cartinitialState, action) {
@@ -68,7 +80,18 @@ export function userReducer(state = userinitialState, action) {
 
   switch (type) {
     case USER_SIGN_IN:
-      return { ...state, loggedInUser: payload };
+      return { ...state, user: payload };
+    default:
+      return state;
+  }
+}
+
+export function loaderReducer(state = loaderinitialstate, action) {
+  const { payload, type } = action;
+
+  switch (type) {
+    case LOADER:
+      return { ...state, loader: payload };
     default:
       return state;
   }
@@ -77,4 +100,5 @@ export function userReducer(state = userinitialState, action) {
 export default combineReducers({
   cartstate: cartReducer,
   userstate: userReducer,
+  loaderstate: loaderReducer,
 });

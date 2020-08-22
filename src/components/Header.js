@@ -4,7 +4,7 @@ import { Navbar, Nav } from "react-bootstrap";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { fire } from "../config/firebase";
-import { userSignedIn } from "./reducer";
+import { userSignedIn, displayLoader } from "./reducer";
 
 const RootnavBar = (props) => {
   return (
@@ -30,7 +30,7 @@ const RootnavBar = (props) => {
               Contact
             </Link>
           </Navbar.Text>
-          {props.loggedInUser ? (
+          {props.user ? (
             <>
               <Navbar.Text style={{ padding: "0px" }}>
                 <Link
@@ -61,8 +61,8 @@ const RootnavBar = (props) => {
           )}
         </Nav>
         <Nav>
-          {!!props.loggedInUser && (
-            <Navbar.Text>Welcome {props.loggedInUser.displayName}</Navbar.Text>
+          {!!props.user && (
+            <Navbar.Text>Welcome {props.user.displayName}</Navbar.Text>
           )}
           <Navbar.Text style={{ padding: "0px" }}>
             <Link to="/cart" className="nav-link">
@@ -76,11 +76,13 @@ const RootnavBar = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  loggedInUser: state.userstate.loggedInUser,
+  user: state.userstate.user,
+  loader: state.loaderstate.loader,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   userSignedIn: bindActionCreators(userSignedIn, dispatch),
+  displayLoader: bindActionCreators(displayLoader, dispatch),
 });
 
 const NavBar = connect(mapStateToProps, mapDispatchToProps)(RootnavBar);

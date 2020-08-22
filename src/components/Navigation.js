@@ -41,7 +41,7 @@ const Rootmain = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  loggedInUser: state.userstate.loggedInUser,
+  user: state.userstate.user,
   loader: state.loaderstate.loader,
 });
 

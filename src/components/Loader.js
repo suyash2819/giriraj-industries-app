@@ -4,11 +4,9 @@ import "../CSS/loader.css";
 
 const Loader = () => {
   return (
-    <>
-      <div className="loaderDisplay">
-        <Spinner animation="border" variant="primary" />
-      </div>
-    </>
+    <div className="loaderDisplay">
+      <Spinner animation="border" variant="primary" />
+    </div>
   );
 };
 

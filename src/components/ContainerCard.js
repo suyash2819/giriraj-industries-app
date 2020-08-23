@@ -82,7 +82,7 @@ const ContainerCardComponent = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  cartItems: state.cartItems,
+  cartItems: state.cartstate.cartItems,
 });
 
 const mapDispatchToProps = (dispatch) => ({

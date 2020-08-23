@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
 import { fire } from "../../config/firebase";
-import Navbar from "../Header";
+import NavBar from "../Header";
 import AlertMessage from "../AlertMessage";
 import "../../CSS/AllSection.css";
 
@@ -81,19 +81,19 @@ const UserSignUp = () => {
       });
   };
 
-  const AlertMessageDisplay = () => {
+  const alertMessageDisplay = () => {
     setShowAlert({ show: false });
   };
 
   return (
     <>
-      <Navbar />
+      <NavBar />
       <Container>
         <Row className="justify-content-md-center">
           <Col md="5">
             <Card>
               <center>
-                <Card.Title>Sign Up</Card.Title>
+                <Card.Title style={{ marginTop: "20px" }}>Sign Up</Card.Title>
               </center>
               <Card.Body>
                 <Form>
@@ -143,11 +143,11 @@ const UserSignUp = () => {
                       }
                     />
                   </Form.Group>
-                  <div className="d-flex flex-row align-items-center justify-content-between">
+                  <center>
                     <Button variant="primary" onClick={createUser}>
                       Create Account
                     </Button>
-                  </div>
+                  </center>
                 </Form>
               </Card.Body>
             </Card>
@@ -158,7 +158,7 @@ const UserSignUp = () => {
             <AlertMessage
               success={showAlert.success}
               message={showAlert.message}
-              alertDisplay={AlertMessageDisplay}
+              alertDisplay={alertMessageDisplay}
             />
           ) : null}
         </div>

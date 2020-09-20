@@ -8,8 +8,7 @@ import NavBar from "./Header";
 import CardDisplay from "./Card";
 import { removeFromCart } from "./reducer";
 import { getData } from "./reducer";
-// import { fire } from "../config/firebase";
-// import store from "../store";
+
 import { localToStore, addToCart } from "./reducer";
 import "../CSS/AllSection.css";
 import { db } from "../config/firebase";

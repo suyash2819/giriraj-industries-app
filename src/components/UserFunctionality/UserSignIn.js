@@ -146,7 +146,6 @@ const RootuserSignIn = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  // cartItems: state.cartstate.cartItems,
   user: state.userstate.user,
 });
 

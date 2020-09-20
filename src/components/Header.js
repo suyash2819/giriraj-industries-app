@@ -4,9 +4,13 @@ import { Navbar, Nav } from "react-bootstrap";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { fire } from "../config/firebase";
-import { userSignedIn, displayLoader } from "./reducer";
+import { userSignedIn, displayLoader, localToStore } from "./reducer";
 
 const RootnavBar = (props) => {
+  // console.log(props.cartfromdb);
+  // console.log(props.user);
+  // console.log(props.cartItems);
+
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
       <Navbar.Brand style={{ fontSize: "15px" }}>
@@ -78,11 +82,13 @@ const RootnavBar = (props) => {
 const mapStateToProps = (state) => ({
   user: state.userstate.user,
   loader: state.loaderstate.loader,
+  cartItems: state.cartstate.cartItems,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   userSignedIn: bindActionCreators(userSignedIn, dispatch),
   displayLoader: bindActionCreators(displayLoader, dispatch),
+  localToStore: bindActionCreators(localToStore, dispatch),
 });
 
 const NavBar = connect(mapStateToProps, mapDispatchToProps)(RootnavBar);

@@ -49,6 +49,8 @@ const RootuserSignIn = (props) => {
       .auth()
       .signInWithEmailAndPassword(userInfo.userEmail, userInfo.userPassword)
       .then((userdata) => {
+        props.userSignedIn(userdata);
+
         if (userdata.user.emailVerified) {
           setShowAlert({
             success: true,
@@ -144,8 +146,7 @@ const RootuserSignIn = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  cartItems: state.cartItems,
-  user: state.user,
+  user: state.userstate.user,
 });
 
 const mapDispatchToProps = (dispatch) => ({

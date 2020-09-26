@@ -4,6 +4,8 @@ const ADD_TO_CART = "ADD_TO_CART";
 const REMOVE_FROM_CART = "REMOVE_FROM_CART";
 const USER_SIGN_IN = "USER_SIGN_IN";
 const LOADER = "DISPLAY_LOADER";
+const GET_DATA = "GET_DATA_FROM_DB";
+const LOCAL_TO_STORE = "LOCAL_TO_STORE";
 
 export function addToCart(payload) {
   return {
@@ -30,6 +32,19 @@ export function displayLoader(payload) {
   };
 }
 
+export function getData(payload) {
+  return {
+    type: GET_DATA,
+    payload,
+  };
+}
+
+export function localToStore() {
+  return {
+    type: LOCAL_TO_STORE,
+  };
+}
+
 const cartinitialState = {
   cartItems: [],
 };
@@ -45,29 +60,48 @@ const loaderinitialstate = {
 export function cartReducer(state = cartinitialState, action) {
   const { payload, type } = action;
 
-  // todo dont use localStorage when the user is logged in
-  let localStorageItems = JSON.parse(localStorage.getItem("items")) || [];
-  let updatedItem = !!state.cartItems.length
-    ? [...state.cartItems]
-    : localStorageItems;
+  let updatedItem = [];
+  if (!!payload && !!payload.userstate) {
+  } else {
+    let localStorageItems = JSON.parse(localStorage.getItem("items")) || [];
+
+    updatedItem = localStorageItems;
+  }
 
   switch (type) {
-    case ADD_TO_CART:
-      updatedItem.push(payload);
-      localStorage.setItem("items", JSON.stringify(updatedItem));
+    case ADD_TO_CART: {
+      if (!!payload && !!payload.userstate) {
+        updatedItem = payload.data;
+      } else {
+        updatedItem.push(payload.data);
+        localStorage.setItem("items", JSON.stringify(updatedItem));
+      }
       return { ...state, cartItems: updatedItem };
+    }
+
     case REMOVE_FROM_CART:
-      for (let index = 0; index < updatedItem.length; index++) {
-        if (updatedItem[index].id === payload.id) {
-          updatedItem.splice(index, 1);
-          break;
+      if (!!payload && !!payload.userstate) {
+        updatedItem = payload.data;
+      } else {
+        for (let index = 0; index < updatedItem.length; index++) {
+          if (updatedItem[index].id === payload.data.id) {
+            updatedItem.splice(index, 1);
+            break;
+          }
+        }
+        if (!!updatedItem.length) {
+          localStorage.setItem("items", JSON.stringify(updatedItem));
+        } else {
+          localStorage.clear();
         }
       }
-      if (!!updatedItem.length) {
-        localStorage.setItem("items", JSON.stringify(updatedItem));
-      } else {
-        localStorage.clear();
-      }
+      return { ...state, cartItems: updatedItem };
+
+    case LOCAL_TO_STORE:
+      return { ...state, cartItems: updatedItem };
+
+    case GET_DATA:
+      updatedItem = payload;
       return { ...state, cartItems: updatedItem };
 
     default:
@@ -88,7 +122,6 @@ export function userReducer(state = userinitialState, action) {
 
 export function loaderReducer(state = loaderinitialstate, action) {
   const { payload, type } = action;
-
   switch (type) {
     case LOADER:
       return { ...state, loader: payload };

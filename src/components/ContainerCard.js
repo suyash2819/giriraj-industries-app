@@ -2,8 +2,10 @@ import React from "react";
 import { Container, Row, Spinner } from "react-bootstrap";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import firebase from "firebase";
 import { addToCart } from "./reducer";
 import CardDisplay from "./Card";
+import { db } from "../config/firebase";
 import "../CSS/AllSection.css";
 
 const ContainerCardComponent = (props) => {
@@ -21,7 +23,46 @@ const ContainerCardComponent = (props) => {
   });
 
   const addCart = (item) => {
-    props.addToCart(item);
+    if (!!props.user) {
+      db.collection("UserCart")
+        .doc(props.user.uid)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            db.collection("UserCart")
+              .doc(props.user.uid)
+              .update({
+                Cart_Items: firebase.firestore.FieldValue.arrayUnion(item),
+              })
+              .then(() => {
+                var payload = {
+                  data: doc.data().Cart_Items,
+                  userstate: props.user,
+                };
+                props.addToCart(payload);
+              });
+          } else {
+            db.collection("UserCart")
+              .doc(props.user.uid)
+              .set({
+                Cart_Items: item,
+              })
+              .then(() => {
+                var payload = {
+                  data: doc.data().Cart_Items,
+                  userstate: props.user,
+                };
+                props.addToCart(payload);
+              });
+          }
+        });
+    } else {
+      var payload = {
+        data: item,
+        userstate: props.user,
+      };
+      props.addToCart(payload);
+    }
   };
 
   if (showData.length === 0) {
@@ -83,6 +124,7 @@ const ContainerCardComponent = (props) => {
 
 const mapStateToProps = (state) => ({
   cartItems: state.cartstate.cartItems,
+  user: state.userstate.user,
 });
 
 const mapDispatchToProps = (dispatch) => ({

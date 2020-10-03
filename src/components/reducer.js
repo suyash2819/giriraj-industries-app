@@ -59,12 +59,11 @@ const loaderinitialstate = {
 
 export function cartReducer(state = cartinitialState, action) {
   const { payload, type } = action;
-
   let updatedItem = [];
+
   if (!!payload && !!payload.userstate) {
   } else {
     let localStorageItems = JSON.parse(localStorage.getItem("items")) || [];
-
     updatedItem = localStorageItems;
   }
 
@@ -73,19 +72,33 @@ export function cartReducer(state = cartinitialState, action) {
       if (!!payload && !!payload.userstate) {
         updatedItem = payload.data;
       } else {
-        updatedItem.push(payload.data);
+        let found = false;
+        updatedItem.forEach((item, index, updatedItem) => {
+          if (item.id === payload.data.id) {
+            updatedItem[index].item_num += 1;
+            found = true;
+          }
+        });
         localStorage.setItem("items", JSON.stringify(updatedItem));
+
+        if (!found) {
+          payload.data.item_num += 1;
+          updatedItem.push(payload.data);
+          localStorage.setItem("items", JSON.stringify(updatedItem));
+        }
       }
       return { ...state, cartItems: updatedItem };
     }
 
-    case REMOVE_FROM_CART:
+    case REMOVE_FROM_CART: {
       if (!!payload && !!payload.userstate) {
         updatedItem = payload.data;
       } else {
         for (let index = 0; index < updatedItem.length; index++) {
           if (updatedItem[index].id === payload.data.id) {
-            updatedItem.splice(index, 1);
+            if (updatedItem[index].item_num > 1) {
+              updatedItem[index].item_num -= 1;
+            } else updatedItem.splice(index, 1);
             break;
           }
         }
@@ -96,6 +109,7 @@ export function cartReducer(state = cartinitialState, action) {
         }
       }
       return { ...state, cartItems: updatedItem };
+    }
 
     case LOCAL_TO_STORE:
       return { ...state, cartItems: updatedItem };

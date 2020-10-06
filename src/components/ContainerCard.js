@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import { addToCart, getData, localToStore } from "./reducer";
 import CardDisplay from "./Card";
 import { db } from "../config/firebase";
+import { updateDBFromLocal, getFromDb } from "./Functions";
+
 import "../CSS/AllSection.css";
 
 const ContainerCardComponent = (props) => {
@@ -22,50 +24,6 @@ const ContainerCardComponent = (props) => {
     }
   });
 
-  const updateDBFromLocal = (doc) => {
-    //To check if the localstorage items exists in db already
-    let dbData = doc.data().Cart_Items;
-    let localStorageData = JSON.parse(localStorage.getItem("items"));
-
-    localStorageData.forEach((localItem, localIndex) => {
-      //TO DO, to implement binary search or something more efficient
-      let found = false;
-      for (let dbIndex = 0; dbIndex < dbData.length; dbIndex++) {
-        if (dbData[dbIndex].id == localItem.id) {
-          found = true;
-          dbData[dbIndex].item_num += localStorageData[localIndex].item_num;
-          break;
-        }
-      }
-
-      if (!found) {
-        dbData.push(localStorageData[localIndex]);
-      }
-    });
-
-    db.collection("UserCart")
-      .doc(props.user.uid)
-      .set({
-        Cart_Items: dbData,
-      })
-      .then(() => {
-        getFromDb(props.user.uid);
-        localStorage.clear();
-      });
-  };
-  const getFromDb = (userId) => {
-    db.collection("UserCart")
-      .doc(userId)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          props.getData(doc.data().Cart_Items);
-        } else {
-          console.log("No such document!");
-        }
-      });
-  };
-
   useEffect(() => {
     if (!!props.user) {
       db.collection("UserCart")
@@ -74,12 +32,36 @@ const ContainerCardComponent = (props) => {
         .then((doc) => {
           if (doc.exists) {
             if (!!localStorage.getItem("items")) {
-              updateDBFromLocal(doc);
+              updateDBFromLocal(doc, props.user.uid)
+                .then(() => {
+                  getFromDb(props.user.uid)
+                    .then((data) => {
+                      localStorage.clear();
+                      props.getData(data);
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
             } else {
               props.getData(doc.data().Cart_Items);
             }
           } else {
-            props.getData([]);
+            db.collection("UserCart")
+              .doc(props.user.uid)
+              .set({
+                Cart_Items: JSON.parse(localStorage.getItem("items")) || [],
+              })
+              .then(() => {
+                console.log("saved");
+                localStorage.clear();
+                getFromDb(props.user.uid).then((doc) => {
+                  props.getData(doc);
+                });
+              });
           }
         });
     } else {

@@ -33,8 +33,8 @@ export function updateDBFromLocal(doc, userid) {
       dbData.push(localStorageData[localIndex]);
     }
   });
-  let data = db.collection("UserCart").doc(userid).set({
+  let promise = db.collection("UserCart").doc(userid).set({
     Cart_Items: dbData,
   });
-  return data;
+  return promise;
 }

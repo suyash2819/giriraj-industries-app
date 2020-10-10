@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Container, Row, Spinner } from "react-bootstrap";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { addToCart, getData, localToStore } from "./reducer";
+import { addToCart, getData, localToStore } from "../store/reducer";
 import CardDisplay from "./Card";
 import { db } from "../config/firebase";
 import { updateDBFromLocal, getFromDb } from "./Functions";

@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { userSignedIn } from "../../store/reducer";
 import { fire } from "../../config/firebase";
-import NavBar from "../Header";
-import AlertMessage from "../AlertMessage";
+import NavBar from "../../components/Header";
+import AlertMessage from "../../components/AlertMessage";
 import "../../CSS/AllSection.css";
 
-const UserSignUp = () => {
+const RootuserSignIn = (props) => {
   const [userInfo, setUserInfo] = useState({
     userEmail: "",
     userPassword: "",
-    userName: "",
   });
 
   const [showAlert, setShowAlert] = useState({
@@ -18,36 +20,18 @@ const UserSignUp = () => {
     show: false,
   });
 
-  const sendEmailVerification = () => {
-    setShowAlert({
-      success: null,
-      message: null,
-      show: false,
-    });
-    let user = fire.auth().currentUser;
-    user
-      .updateProfile({
-        displayName: userInfo.userName,
-      })
+  const userNotVerified = () => {
+    fire
+      .auth()
+      .signOut()
       .then(() => {
-        user
-          .sendEmailVerification()
-          .then(() => {
-            setShowAlert({
-              success: true,
-              message: "Email Verification Sent at the provided Email",
-              show: true,
-            });
-            setUserInfo({ userEmail: "", userPassword: "", userName: "" });
-          })
-          .catch((err) => {
-            setShowAlert({
-              success: false,
-              message: err.message,
-              show: true,
-            });
-            setUserInfo({ userEmail: "", userPassword: "", userName: "" });
-          });
+        setShowAlert({
+          success: false,
+          message: "Please Verify your email address and login again",
+          show: true,
+        });
+        props.userSignedIn(null);
+        setUserInfo({ userEmail: "", userPassword: "" });
       })
       .catch((err) => {
         setShowAlert({
@@ -55,21 +39,28 @@ const UserSignUp = () => {
           message: err.message,
           show: true,
         });
+        setUserInfo({ userEmail: "", userPassword: "" });
       });
   };
 
-  const createUser = (e) => {
+  const userSignIn = (e) => {
     e.preventDefault();
-    setShowAlert({
-      success: null,
-      message: null,
-      show: false,
-    });
     fire
       .auth()
-      .createUserWithEmailAndPassword(userInfo.userEmail, userInfo.userPassword)
-      .then(() => {
-        sendEmailVerification();
+      .signInWithEmailAndPassword(userInfo.userEmail, userInfo.userPassword)
+      .then((userdata) => {
+        props.userSignedIn(userdata);
+
+        if (userdata.user.emailVerified) {
+          setShowAlert({
+            success: true,
+            message: "Signed In Successfully",
+            show: true,
+          });
+          setUserInfo({ userEmail: "", userPassword: "" });
+        } else {
+          userNotVerified();
+        }
       })
       .catch((err) => {
         setShowAlert({
@@ -77,7 +68,7 @@ const UserSignUp = () => {
           message: err.message,
           show: true,
         });
-        setUserInfo({ userEmail: "", userPassword: "", userName: "" });
+        setUserInfo({ userEmail: "", userPassword: "" });
       });
   };
 
@@ -93,25 +84,10 @@ const UserSignUp = () => {
           <Col md="5">
             <Card>
               <center>
-                <Card.Title style={{ marginTop: "20px" }}>Sign Up</Card.Title>
+                <Card.Title style={{ marginTop: "20px" }}>Sign In</Card.Title>
               </center>
               <Card.Body>
                 <Form>
-                  <Form.Group>
-                    <Form.Control
-                      type="text"
-                      id="name"
-                      placeholder="Full Name"
-                      value={userInfo.userName}
-                      onChange={(e) =>
-                        setUserInfo({
-                          userEmail: userInfo.userEmail,
-                          userPassword: userInfo.userPassword,
-                          userName: e.target.value,
-                        })
-                      }
-                    />
-                  </Form.Group>
                   <Form.Group>
                     <Form.Control
                       type="email"
@@ -122,7 +98,6 @@ const UserSignUp = () => {
                         setUserInfo({
                           userEmail: e.target.value,
                           userPassword: userInfo.userPassword,
-                          userName: userInfo.userName,
                         })
                       }
                     />
@@ -138,14 +113,17 @@ const UserSignUp = () => {
                         setUserInfo({
                           userEmail: userInfo.userEmail,
                           userPassword: e.target.value,
-                          userName: userInfo.userName,
                         })
                       }
                     />
                   </Form.Group>
                   <center>
-                    <Button variant="primary" onClick={createUser}>
-                      Create Account
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      onClick={userSignIn}
+                    >
+                      Sign In
                     </Button>
                   </center>
                 </Form>
@@ -167,4 +145,14 @@ const UserSignUp = () => {
   );
 };
 
-export default UserSignUp;
+const mapStateToProps = (state) => ({
+  user: state.userstate.user,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  userSignedIn: bindActionCreators(userSignedIn, dispatch),
+});
+
+const UserSignIn = connect(mapStateToProps, mapDispatchToProps)(RootuserSignIn);
+
+export default UserSignIn;

@@ -7,6 +7,7 @@ import "../CSS/AllSection.css";
 
 const ManCardList = () => {
   const [men, setMen] = useState([]);
+
   useEffect(() => {
     db.collection(sections.men).onSnapshot((snapshot) => {
       const data = snapshot.docs.map((doc) => ({
@@ -17,10 +18,11 @@ const ManCardList = () => {
       setMen(data);
     });
   }, []);
+
   return (
     <>
       <NavBar />
-      <ContainerCard data={men} btnText="Add To Cart"></ContainerCard>
+      <ContainerCard data={men} btnText="Add To Cart" />
     </>
   );
 };

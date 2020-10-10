@@ -69,25 +69,7 @@ export function cartReducer(state = cartinitialState, action) {
 
   switch (type) {
     case ADD_TO_CART: {
-      if (!!payload && !!payload.userstate) {
-        updatedItem = payload.data;
-      } else {
-        let found = false;
-        updatedItem.forEach((item, index, updatedItem) => {
-          if (item.id === payload.data.id) {
-            updatedItem[index].item_num += 1;
-            found = true;
-          }
-        });
-        localStorage.setItem("items", JSON.stringify(updatedItem));
-
-        if (!found) {
-          payload.data.item_num += 1;
-          updatedItem.push(payload.data);
-          localStorage.setItem("items", JSON.stringify(updatedItem));
-        }
-      }
-      return { ...state, cartItems: updatedItem };
+      return { ...state, cartItems: payload.data };
     }
 
     case REMOVE_FROM_CART: {

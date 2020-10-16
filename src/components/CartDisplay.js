@@ -2,11 +2,17 @@ import React, { useEffect } from "react";
 import { Container, Row } from "react-bootstrap";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import NavBar from "../components/Header";
+import NavBar from "./Header";
 import CardDisplay from "./Card";
-import { removeFromCart, getData, localToStore, addToCart } from "../store/reducer";
+import {
+  removeFromCart,
+  getData,
+  localToStore,
+  addToCart,
+} from "../store/reducer";
 import { db } from "../config/firebase";
-import { updateDBFromLocal, getFromDb } from "./Functions";
+import getFromDb from "./Utils";
+import * as CartService from "../services/CartService";
 import "../CSS/AllSection.css";
 
 const CartDisplayComponent = (props) => {
@@ -18,16 +24,10 @@ const CartDisplayComponent = (props) => {
         .then((doc) => {
           if (doc.exists) {
             if (!!localStorage.getItem("items")) {
-              updateDBFromLocal(doc, props.user.uid)
-                .then(() => {
-                  getFromDb(props.user.uid)
-                    .then((data) => {
-                      localStorage.clear();
-                      props.getData(data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
+              CartService.syncDBFromLocal(doc, props.user.uid)
+                .then((updateddata) => {
+                  localStorage.clear();
+                  props.getData(updateddata);
                 })
                 .catch((err) => {
                   console.log(err);
@@ -42,10 +42,9 @@ const CartDisplayComponent = (props) => {
                 Cart_Items: JSON.parse(localStorage.getItem("items")) || [],
               })
               .then(() => {
-                console.log("saved");
                 localStorage.clear();
-                getFromDb(props.user.uid).then((doc) => {
-                  props.getData(doc);
+                getFromDb(props.user.uid).then((datadoc) => {
+                  props.getData(datadoc);
                 });
               });
           }
@@ -55,36 +54,16 @@ const CartDisplayComponent = (props) => {
     }
   }, []);
 
-  const sendDataToReducer = (dbData) => {
-    var payload = {
-      data: dbData,
-      userstate: props.user,
-    };
-    props.removeFromCart(payload);
-  };
-
   const removeItem = (el) => {
-    if (!!props.user) {
-      let dbData = [...props.cartItems];
-      dbData.forEach((item, index) => {
-        if (item.item_num > 1 && item.id === el.id) {
-          item.item_num -= 1;
-        } else if (item.id === el.id && item.item_num === 1) {
-          dbData.splice(index, 1);
-        }
-      });
-      sendDataToReducer(dbData);
-
-      db.collection("UserCart").doc(props.user.uid).set({
-        Cart_Items: dbData,
-      });
-    } else {
-      var payload = {
-        data: el,
-        userstate: props.user,
-      };
-      props.removeFromCart(payload);
-    }
+    CartService.removeItem(props.user, el, [...props.cartItems])
+      .then((updatedData) => {
+        const payload = {
+          data: updatedData,
+          userstate: props.user,
+        };
+        props.removeFromCart(payload);
+      })
+      .catch(console.error);
   };
 
   return (

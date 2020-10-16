@@ -7,10 +7,6 @@ import { fire } from "../config/firebase";
 import { userSignedIn, displayLoader, localToStore } from "../store/reducer";
 
 const RootnavBar = (props) => {
-  // console.log(props.cartfromdb);
-  // console.log(props.user);
-  // console.log(props.cartItems);
-
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
       <Navbar.Brand style={{ fontSize: "15px" }}>

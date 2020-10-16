@@ -7,10 +7,15 @@
   "rules": {
     "no-unused-vars": "warn",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "no-console": "error",
+    "no-console": "warn",
     "prettier/prettier": "error",
     "camelcase": "warn",
-    "prefer-const": "off",
-    "react/prop-types": "off"
+    "prefer-const": "warn",
+    "react/prop-types": "off",
+    "no-plusplus":"off",
+    "no-param-reassign":"warn",
+    "no-extra-boolean-cast":"warn",
+    "no-underscore-dangle":"warn",
+    "react/destructuring-assignment":"warn"
   }
 }

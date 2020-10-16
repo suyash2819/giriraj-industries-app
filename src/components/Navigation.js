@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { bindActionCreators } from "redux";
-import { fire } from "../config/firebase";
 import { connect } from "react-redux";
 import { Switch, Route } from "react-router-dom";
+import { fire } from "../config/firebase";
 import { userSignedIn, displayLoader } from "../store/reducer";
 import Home from "../pages/Home";
 import WomanCardList from "../pages/WomanSection";

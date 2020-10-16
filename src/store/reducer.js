@@ -63,7 +63,7 @@ export function cartReducer(state = cartinitialState, action) {
 
   if (!!payload && !!payload.userstate) {
   } else {
-    let localStorageItems = JSON.parse(localStorage.getItem("items")) || [];
+    const localStorageItems = JSON.parse(localStorage.getItem("items")) || [];
     updatedItem = localStorageItems;
   }
 
@@ -73,24 +73,7 @@ export function cartReducer(state = cartinitialState, action) {
     }
 
     case REMOVE_FROM_CART: {
-      if (!!payload && !!payload.userstate) {
-        updatedItem = payload.data;
-      } else {
-        for (let index = 0; index < updatedItem.length; index++) {
-          if (updatedItem[index].id === payload.data.id) {
-            if (updatedItem[index].item_num > 1) {
-              updatedItem[index].item_num -= 1;
-            } else updatedItem.splice(index, 1);
-            break;
-          }
-        }
-        if (!!updatedItem.length) {
-          localStorage.setItem("items", JSON.stringify(updatedItem));
-        } else {
-          localStorage.clear();
-        }
-      }
-      return { ...state, cartItems: updatedItem };
+      return { ...state, cartItems: payload.data };
     }
 
     case LOCAL_TO_STORE:

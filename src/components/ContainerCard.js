@@ -5,9 +5,8 @@ import { connect } from "react-redux";
 import { addToCart, getData, localToStore } from "../store/reducer";
 import CardDisplay from "./Card";
 import { db } from "../config/firebase";
-import { updateDBFromLocal, getFromDb } from "./Functions";
+import getFromDb from "./Utils";
 import * as CartService from "../services/CartService";
-
 import "../CSS/AllSection.css";
 
 const ContainerCardComponent = (props) => {
@@ -33,16 +32,10 @@ const ContainerCardComponent = (props) => {
         .then((doc) => {
           if (doc.exists) {
             if (!!localStorage.getItem("items")) {
-              updateDBFromLocal(doc, props.user.uid)
-                .then(() => {
-                  getFromDb(props.user.uid)
-                    .then((data) => {
-                      localStorage.clear();
-                      props.getData(data);
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
+              CartService.syncDBFromLocal(doc, props.user.uid)
+                .then((updateddata) => {
+                  localStorage.clear();
+                  props.getData(updateddata);
                 })
                 .catch((err) => {
                   console.log(err);
@@ -57,10 +50,9 @@ const ContainerCardComponent = (props) => {
                 Cart_Items: JSON.parse(localStorage.getItem("items")) || [],
               })
               .then(() => {
-                console.log("saved");
                 localStorage.clear();
-                getFromDb(props.user.uid).then((doc) => {
-                  props.getData(doc);
+                getFromDb(props.user.uid).then((datadoc) => {
+                  props.getData(datadoc);
                 });
               });
           }
@@ -73,13 +65,10 @@ const ContainerCardComponent = (props) => {
   const addCart = (item) => {
     CartService.addItem(props.user, item)
       .then((updatedItems) => {
-        console.log(updatedItems);
-
-        let payload = {
+        const payload = {
           data: updatedItems,
           userstate: props.user,
         };
-
         props.addToCart(payload);
       })
       .catch(console.error);
@@ -100,21 +89,20 @@ const ContainerCardComponent = (props) => {
   return (
     <>
       {showData.map((el, index) => (
-        <Container key={index}>
+        <Container key={el[index].length}>
           <h1>{_itemTypes[index]}</h1>
-          <Row>
+          <Row key={el[index].length}>
             {el.map((obj) => {
-              // TODO fetch data from LocalStorage only when USER isn't logged in (taken care with use effecst)
               let _cartItems = [...props.cartItems];
               let localStorageItems =
                 JSON.parse(localStorage.getItem("items")) || [];
 
-              var num = 0;
+              let num = 0;
               let searchFrom = !!_cartItems.length
                 ? _cartItems
                 : localStorageItems;
               if (!!searchFrom.length) {
-                searchFrom.forEach((item, index, searchFrom) => {
+                searchFrom.forEach((item) => {
                   if (item.id === obj.id) {
                     num = item.item_num;
                   }

@@ -1,7 +1,7 @@
 import React from "react";
 import { Provider } from "react-redux";
+import store from "./store";
 import Main from "./components/Navigation";
-import store from "./store/index";
 
 function App() {
   return (

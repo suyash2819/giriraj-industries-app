@@ -19,17 +19,13 @@ const CardDisplay = (props) => {
       <Card key={id}>
         <img src={image} alt="" />
         <Card.Body>
-          {
-            <Card.Title>
-              {itemType}
+          <Card.Title>
+            {itemType}
 
-              {!!badgeNum && (
-                <span className="badge badge-pill badge-primary">
-                  {badgeNum}
-                </span>
-              )}
-            </Card.Title>
-          }
+            {!!badgeNum && (
+              <span className="badge badge-pill badge-primary">{badgeNum}</span>
+            )}
+          </Card.Title>
 
           <Card.Text>{description} </Card.Text>
           <Card.Text>{cost} </Card.Text>

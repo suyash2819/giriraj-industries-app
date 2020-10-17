@@ -1,3 +1,4 @@
+// add Item to Local storage
 export async function addItem(item) {
   let found = false;
   let localStorageItems = JSON.parse(localStorage.getItem("items")) || [];
@@ -20,6 +21,7 @@ export async function addItem(item) {
   return updatedItems;
 }
 
+// Remove Item from local storage
 export async function removeItem(item) {
   let localStorageItems = JSON.parse(localStorage.getItem("items")) || [];
   let updatedItems = [...localStorageItems];
@@ -37,4 +39,25 @@ export async function removeItem(item) {
     localStorage.clear();
   }
   return updatedItems;
+}
+
+// search local storage for item in db
+export function searchLocalForDbItem(dbData) {
+  let localStorageData = JSON.parse(localStorage.getItem("items"));
+
+  localStorageData.forEach((localItem, localIndex) => {
+    // TO DO, to implement binary search or something more efficient
+    let found = false;
+    for (let dbIndex = 0; dbIndex < dbData.length; dbIndex++) {
+      if (dbData[dbIndex].id === localItem.id) {
+        found = true;
+        dbData[dbIndex].item_num += localStorageData[localIndex].item_num;
+        break;
+      }
+    }
+    if (!found) {
+      dbData.push(localStorageData[localIndex]);
+    }
+  });
+  return dbData;
 }

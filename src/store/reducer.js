@@ -59,43 +59,22 @@ const loaderinitialstate = {
 
 export function cartReducer(state = cartinitialState, action) {
   const { payload, type } = action;
-
   let updatedItem = [];
+
   if (!!payload && !!payload.userstate) {
   } else {
-    let localStorageItems = JSON.parse(localStorage.getItem("items")) || [];
-
+    const localStorageItems = JSON.parse(localStorage.getItem("items")) || [];
     updatedItem = localStorageItems;
   }
 
   switch (type) {
     case ADD_TO_CART: {
-      if (!!payload && !!payload.userstate) {
-        updatedItem = payload.data;
-      } else {
-        updatedItem.push(payload.data);
-        localStorage.setItem("items", JSON.stringify(updatedItem));
-      }
-      return { ...state, cartItems: updatedItem };
+      return { ...state, cartItems: payload.data };
     }
 
-    case REMOVE_FROM_CART:
-      if (!!payload && !!payload.userstate) {
-        updatedItem = payload.data;
-      } else {
-        for (let index = 0; index < updatedItem.length; index++) {
-          if (updatedItem[index].id === payload.data.id) {
-            updatedItem.splice(index, 1);
-            break;
-          }
-        }
-        if (!!updatedItem.length) {
-          localStorage.setItem("items", JSON.stringify(updatedItem));
-        } else {
-          localStorage.clear();
-        }
-      }
-      return { ...state, cartItems: updatedItem };
+    case REMOVE_FROM_CART: {
+      return { ...state, cartItems: payload.data };
+    }
 
     case LOCAL_TO_STORE:
       return { ...state, cartItems: updatedItem };

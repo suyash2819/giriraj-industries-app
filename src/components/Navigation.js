@@ -1,17 +1,17 @@
 import React, { useEffect } from "react";
 import { bindActionCreators } from "redux";
-import { fire } from "../config/firebase";
 import { connect } from "react-redux";
 import { Switch, Route } from "react-router-dom";
-import { userSignedIn, displayLoader } from "./reducer";
-import Home from "./Home";
-import WomanCardList from "./WomanSection";
-import KidsCardList from "./KidsSection";
-import ManCardList from "./ManSection";
-import CovidCardList from "./CovidSection";
+import { fire } from "../config/firebase";
+import { userSignedIn, displayLoader } from "../store/reducer";
+import Home from "../pages/Home";
+import WomanCardList from "../pages/WomanSection";
+import KidsCardList from "../pages/KidsSection";
+import ManCardList from "../pages/ManSection";
+import CovidCardList from "../pages/CovidSection";
 import CartDisplay from "./CartDisplay";
-import UserSignUp from "./UserFunctionality/UserSignUp";
-import UserSignIn from "./UserFunctionality/UserSignIn";
+import UserSignUp from "../pages/auth/UserSignUp";
+import UserSignIn from "../pages/auth/UserSignIn";
 import Loader from "./Loader";
 
 const Rootmain = (props) => {

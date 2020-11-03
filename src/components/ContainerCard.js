@@ -1,17 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Row, Spinner } from "react-bootstrap";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import firebase from "firebase";
-import { addToCart } from "./reducer";
+import { addToCart, getData, localToStore } from "../store/reducer";
 import CardDisplay from "./Card";
 import { db } from "../config/firebase";
+import getFromDb from "./Utils";
+import * as CartService from "../services/CartService";
 import "../CSS/AllSection.css";
 
 const ContainerCardComponent = (props) => {
   let showData = [];
   let _itemTypes = [];
   const { data, btnText } = props;
+
   data.forEach((element) => {
     let index = _itemTypes.indexOf(element.Item_Type);
     if (index > -1) {
@@ -22,47 +24,54 @@ const ContainerCardComponent = (props) => {
     }
   });
 
-  const addCart = (item) => {
+  useEffect(() => {
     if (!!props.user) {
       db.collection("UserCart")
         .doc(props.user.uid)
         .get()
         .then((doc) => {
           if (doc.exists) {
-            db.collection("UserCart")
-              .doc(props.user.uid)
-              .update({
-                Cart_Items: firebase.firestore.FieldValue.arrayUnion(item),
-              })
-              .then(() => {
-                var payload = {
-                  data: doc.data().Cart_Items,
-                  userstate: props.user,
-                };
-                props.addToCart(payload);
-              });
+            if (!!localStorage.getItem("items")) {
+              CartService.syncDBFromLocal(doc, props.user.uid)
+                .then((updateddata) => {
+                  localStorage.clear();
+                  props.getData(updateddata);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            } else {
+              props.getData(doc.data().Cart_Items);
+            }
           } else {
             db.collection("UserCart")
               .doc(props.user.uid)
               .set({
-                Cart_Items: item,
+                Cart_Items: JSON.parse(localStorage.getItem("items")) || [],
               })
               .then(() => {
-                var payload = {
-                  data: doc.data().Cart_Items,
-                  userstate: props.user,
-                };
-                props.addToCart(payload);
+                localStorage.clear();
+                getFromDb(props.user.uid).then((datadoc) => {
+                  props.getData(datadoc);
+                });
               });
           }
         });
     } else {
-      var payload = {
-        data: item,
-        userstate: props.user,
-      };
-      props.addToCart(payload);
+      props.localToStore();
     }
+  }, []);
+
+  const addCart = (item) => {
+    CartService.addItem(props.user, item)
+      .then((updatedItems) => {
+        const payload = {
+          data: updatedItems,
+          userstate: props.user,
+        };
+        props.addToCart(payload);
+      })
+      .catch(console.error);
   };
 
   if (showData.length === 0) {
@@ -75,51 +84,51 @@ const ContainerCardComponent = (props) => {
         </center>
       </Container>
     );
-  } else {
-    return (
-      <>
-        {showData.map((el, index) => (
-          <Container key={index}>
-            <h1>{_itemTypes[index]}</h1>
-            <Row>
-              {el.map((obj) => {
-                // TODO fetch data from LocalStorage only when USER isn't logged in
-                let localStorageItems =
-                  JSON.parse(localStorage.getItem("items")) || [];
-                let _cartItems = [...props.cartItems];
-                let num = 0;
-                let searchFrom = !!_cartItems.length
-                  ? _cartItems
-                  : localStorageItems;
-
-                if (!!searchFrom.length) {
-                  searchFrom.forEach((item) => {
-                    if (item.id === obj.id) {
-                      num++;
-                    }
-                  });
-                }
-                return (
-                  <CardDisplay
-                    key={obj.id}
-                    id={obj.id}
-                    badgeNum={num}
-                    image={obj.Image_url}
-                    itemType={obj.Item_Type}
-                    description={obj.Description}
-                    cost={obj.Cost}
-                    btnText={btnText}
-                    element={obj}
-                    onClick={addCart}
-                  />
-                );
-              })}
-            </Row>
-          </Container>
-        ))}
-      </>
-    );
   }
+
+  return (
+    <>
+      {showData.map((el, index) => (
+        <Container key={el[index].length}>
+          <h1>{_itemTypes[index]}</h1>
+          <Row key={el[index].length}>
+            {el.map((obj) => {
+              let _cartItems = [...props.cartItems];
+              let localStorageItems =
+                JSON.parse(localStorage.getItem("items")) || [];
+
+              let num = 0;
+              let searchFrom = !!_cartItems.length
+                ? _cartItems
+                : localStorageItems;
+              if (!!searchFrom.length) {
+                searchFrom.forEach((item) => {
+                  if (item.id === obj.id) {
+                    num = item.item_num;
+                  }
+                });
+              }
+
+              return (
+                <CardDisplay
+                  key={obj.id}
+                  id={obj.id}
+                  badgeNum={num}
+                  image={obj.Image_url}
+                  itemType={obj.Item_Type}
+                  description={obj.Description}
+                  cost={obj.Cost}
+                  btnText={btnText}
+                  element={obj}
+                  onClick={() => addCart(obj)}
+                />
+              );
+            })}
+          </Row>
+        </Container>
+      ))}
+    </>
+  );
 };
 
 const mapStateToProps = (state) => ({
@@ -129,6 +138,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   addToCart: bindActionCreators(addToCart, dispatch),
+  getData: bindActionCreators(getData, dispatch),
+  localToStore: bindActionCreators(localToStore, dispatch),
 });
 
 const ContainerCard = connect(

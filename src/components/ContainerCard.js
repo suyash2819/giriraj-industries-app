@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Spinner } from "react-bootstrap";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -10,6 +10,8 @@ import * as CartService from "../services/CartService";
 import "../CSS/AllSection.css";
 
 const ContainerCardComponent = (props) => {
+  const [cartDisplay, setCartDisplay] = useState(false);
+
   let showData = [];
   let _itemTypes = [];
   const { data, btnText } = props;
@@ -62,17 +64,25 @@ const ContainerCardComponent = (props) => {
     }
   }, []);
 
-  const addCart = (item) => {
-    CartService.addItem(props.user, item)
-      .then((updatedItems) => {
-        const payload = {
-          data: updatedItems,
-          userstate: props.user,
-        };
-        props.addToCart(payload);
-      })
-      .catch(console.error);
-  };
+  // const addCart = (item) => {
+  //   let itemOrdered = { ...item };
+  //   delete itemOrdered.Sizes_Available;
+  //   delete itemOrdered.Color_Available;
+  //   itemOrdered.Size_Ordered = size;
+  //   // itemOrdered.Size_Ordered[size] = true;
+  //   itemOrdered.Color_Ordered = color;
+  //   // itemOrdered.Color_Ordered[color] = true;
+  //   console.log(item, " ", itemOrdered);
+  //   CartService.addItem(props.user, itemOrdered)
+  //     .then((updatedItems) => {
+  //       const payload = {
+  //         data: updatedItems,
+  //         userstate: props.user,
+  //       };
+  //       props.addToCart(payload);
+  //     })
+  //     .catch(console.error);
+  // };
 
   if (showData.length === 0) {
     return (
@@ -89,22 +99,23 @@ const ContainerCardComponent = (props) => {
   return (
     <>
       {showData.map((el, index) => (
-        <Container key={el[index].length}>
+        // eslint-disable-next-line react/no-array-index-key
+        <Container key={index}>
           <h1>{_itemTypes[index]}</h1>
-          <Row key={el[index].length}>
+          <Row>
             {el.map((obj) => {
               let _cartItems = [...props.cartItems];
               let localStorageItems =
                 JSON.parse(localStorage.getItem("items")) || [];
 
-              let num = 0;
+              let text = null;
               let searchFrom = !!_cartItems.length
                 ? _cartItems
                 : localStorageItems;
               if (!!searchFrom.length) {
                 searchFrom.forEach((item) => {
                   if (item.id === obj.id) {
-                    num = item.item_num;
+                    text = "added to cart";
                   }
                 });
               }
@@ -113,14 +124,18 @@ const ContainerCardComponent = (props) => {
                 <CardDisplay
                   key={obj.id}
                   id={obj.id}
-                  badgeNum={num}
+                  badgeText={text}
                   image={obj.Image_url}
                   itemType={obj.Item_Type}
                   description={obj.Description}
                   cost={obj.Cost}
+                  sizes={obj.Sizes_Available}
+                  colors={obj.Color_Available}
                   btnText={btnText}
                   element={obj}
-                  onClick={() => addCart(obj)}
+                  itemName={obj.Item_Name}
+                  cartDisplay={cartDisplay}
+                  // onClick={() => addCart(obj)}
                 />
               );
             })}

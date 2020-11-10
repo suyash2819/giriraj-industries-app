@@ -1,4 +1,6 @@
 import { db } from "../config/firebase";
+import React, { useEffect, useState, useCallback } from "react";
+
 import getFromDb from "../components/Utils";
 import * as LocalCart from "./LocalCart";
 
@@ -9,18 +11,18 @@ async function localAddItem(doc, item, user) {
   if (doc.exists) {
     dbData = doc.data().Cart_Items;
     for (let i = 0; i < dbData.length; i++) {
-      if (dbData[i].id === item.id) {
-        dbData[i].item_num += 1;
+      if (dbData[i].CompositeKey === item.CompositeKey) {
+        // dbData[i].item_num += 1;
         found = true;
         break;
       }
     }
     if (!found) {
-      item.item_num += 1;
+      // item.item_num += 1;
       dbData.push(item);
     }
   } else {
-    item.item_num += 1;
+    // item.item_num += 1;
     dbData.push(item);
   }
 
@@ -72,6 +74,7 @@ export async function removeItem(user, el, dbData) {
 // sync db data with local storage data
 export async function syncDBFromLocal(doc, userid) {
   let dbData = doc.data().Cart_Items;
+  console.log("dbdata from syncdbfrom local", dbData);
   let updatedData = LocalCart.searchLocalForDbItem(dbData);
   return db
     .collection("UserCart")
@@ -82,4 +85,19 @@ export async function syncDBFromLocal(doc, userid) {
     .then(() => {
       return getFromDb(userid);
     });
+}
+
+export function updateQuantityOfItem(cartItems, user) {
+  if (!!user) {
+  }
+  // return
+  console.log("cartItems", cartItems);
+  LocalCart.updateLocalQuantityOfItem(cartItems);
+}
+
+export async function addNewProperty(value, item, user) {
+  if (!!user) {
+  }
+
+  return LocalCart.addNewLocalProperty(value, item);
 }

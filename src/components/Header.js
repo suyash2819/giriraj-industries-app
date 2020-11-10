@@ -67,6 +67,11 @@ const RootnavBar = (props) => {
           <Navbar.Text style={{ padding: "0px" }}>
             <Link to="/cart" className="nav-link">
               <i className="fa fa-cart-plus" style={{ fontSize: "22px" }}></i>
+              {!!props.cartItems.length && (
+                <span className="badge badge-pill badge-primary">
+                  {props.cartItems.length}
+                </span>
+              )}
             </Link>
           </Navbar.Text>
         </Nav>

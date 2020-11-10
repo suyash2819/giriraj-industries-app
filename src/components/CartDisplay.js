@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
-import { Container, Row } from "react-bootstrap";
+import React, { useEffect, useState, useCallback } from "react";
+import { Container, Row, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import NavBar from "./Header";
@@ -13,9 +14,12 @@ import {
 import { db } from "../config/firebase";
 import getFromDb from "./Utils";
 import * as CartService from "../services/CartService";
+import * as LocalCart from "../services/LocalCart";
 import "../CSS/AllSection.css";
+import debounce from "lodash.debounce";
 
 const CartDisplayComponent = (props) => {
+  const [cartDisplay, setCartDisplay] = useState(true);
   useEffect(() => {
     if (!!props.user) {
       db.collection("UserCart")
@@ -54,6 +58,45 @@ const CartDisplayComponent = (props) => {
     }
   }, []);
 
+  const updateStorageWithQuantity = useCallback(
+    debounce(
+      (cartItems, user) => CartService.updateQuantityOfItem(cartItems, user),
+      10000
+    ),
+    []
+  );
+
+  const handleQuantity = (e, item) => {
+    e.persist();
+    let localStorageItems = JSON.parse(localStorage.getItem("items"));
+    let updatedItems = [...localStorageItems];
+
+    //  Quantity Property used here, if name changes in db make sure to do it here too
+    updatedItems.forEach((localItem, localIndex, updatedItems) => {
+      if (localItem.CompositeKey === item.CompositeKey) {
+        updatedItems[localIndex].Quantity = e.target.value;
+      }
+    });
+    const payload = {
+      data: updatedItems,
+      userstate: props.user,
+    };
+    props.addToCart(payload);
+    // CartService.addNewProperty(e.target.value, item, props.user).then(
+    //   (updatedItems) => {
+    //     const payload = {
+    //       data: updatedItems,
+    //       userstate: props.user,
+    //     };
+    //     props.addToCart(payload);
+    //     updateStorageWithQuantity(updatedItems, props.user);
+    //   }
+    // );
+    updateStorageWithQuantity(updatedItems, props.user);
+
+    //  just to update the redux store
+  };
+
   const removeItem = (el) => {
     CartService.removeItem(props.user, el, [...props.cartItems])
       .then((updatedData) => {
@@ -65,7 +108,6 @@ const CartDisplayComponent = (props) => {
       })
       .catch(console.error);
   };
-
   return (
     <>
       <NavBar />
@@ -83,13 +125,31 @@ const CartDisplayComponent = (props) => {
                   cost={obj.Cost}
                   badgeNum={obj.item_num}
                   btnText="Remove from Cart"
+                  cartDisplay={cartDisplay}
+                  sizes={obj.Size_Ordered}
+                  colors={obj.Color_Ordered}
                   element={obj}
                   onClick={removeItem}
+                  handleQuantity={handleQuantity}
                 />
               </>
             ))}
         </Row>
       </Container>
+      <br />
+      {!!props.cartItems.length && (
+        <center>
+          <Button variant="primary">
+            <Link
+              to="/checkout"
+              className="nav-link"
+              style={{ color: "white" }}
+            >
+              Checkout
+            </Link>
+          </Button>
+        </center>
+      )}
     </>
   );
 };

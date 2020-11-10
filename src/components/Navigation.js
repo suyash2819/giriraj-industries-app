@@ -12,7 +12,9 @@ import CovidCardList from "../pages/CovidSection";
 import CartDisplay from "./CartDisplay";
 import UserSignUp from "../pages/auth/UserSignUp";
 import UserSignIn from "../pages/auth/UserSignIn";
+import Checkout from "../pages/Checkout";
 import Loader from "./Loader";
+import ItemDetail from "../pages/ItemDetails";
 
 const Rootmain = (props) => {
   useEffect(() => {
@@ -36,6 +38,12 @@ const Rootmain = (props) => {
       <Route exact path="/cart" component={CartDisplay} />
       <Route exact path="/signup" component={UserSignUp} />
       <Route exact path="/signin" component={UserSignIn} />
+      <Route exact path="/checkout" component={Checkout} />
+      <Route
+        exact
+        path="/details/:itemType/:itemName/:itemId"
+        component={ItemDetail}
+      />
     </Switch>
   );
 };

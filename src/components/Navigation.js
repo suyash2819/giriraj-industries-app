@@ -51,6 +51,7 @@ const Rootmain = (props) => {
 const mapStateToProps = (state) => ({
   user: state.userstate.user,
   loader: state.loaderstate.loader,
+  cartItems: state.cartstate.cartItems,
 });
 
 const mapDispatchToProps = (dispatch) => ({

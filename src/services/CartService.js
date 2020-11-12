@@ -1,6 +1,4 @@
 import { db } from "../config/firebase";
-import React, { useEffect, useState, useCallback } from "react";
-
 import getFromDb from "../components/Utils";
 import * as LocalCart from "./LocalCart";
 
@@ -56,9 +54,7 @@ export async function addItem(user, item) {
 export async function removeItem(user, el, dbData) {
   if (!!user) {
     dbData.forEach((item, index) => {
-      if (item.item_num > 1 && item.id === el.id) {
-        item.item_num -= 1;
-      } else if (item.id === el.id && item.item_num === 1) {
+      if (item.CompositeKey === el.CompositeKey) {
         dbData.splice(index, 1);
       }
     });
@@ -87,17 +83,14 @@ export async function syncDBFromLocal(doc, userid) {
     });
 }
 
+//  update the quantity of item
 export function updateQuantityOfItem(cartItems, user) {
-  if (!!user) {
-  }
-  // return
   console.log("cartItems", cartItems);
-  LocalCart.updateLocalQuantityOfItem(cartItems);
-}
-
-export async function addNewProperty(value, item, user) {
   if (!!user) {
+    db.collection("UserCart").doc(user.uid).set({
+      Cart_Items: cartItems,
+    });
+  } else {
+    LocalCart.updateLocalQuantityOfItem(cartItems);
   }
-
-  return LocalCart.addNewLocalProperty(value, item);
 }

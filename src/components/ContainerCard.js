@@ -14,7 +14,7 @@ const ContainerCardComponent = (props) => {
 
   let showData = [];
   let _itemTypes = [];
-  const { data, btnText } = props;
+  const { data } = props;
 
   data.forEach((element) => {
     let index = _itemTypes.indexOf(element.Item_Type);
@@ -102,7 +102,7 @@ const ContainerCardComponent = (props) => {
         // eslint-disable-next-line react/no-array-index-key
         <Container key={index}>
           <h1>{_itemTypes[index]}</h1>
-          <Row>
+          <Row style={{ marginBottom: "10px" }}>
             {el.map((obj) => {
               let _cartItems = [...props.cartItems];
               let localStorageItems =
@@ -131,11 +131,9 @@ const ContainerCardComponent = (props) => {
                   cost={obj.Cost}
                   sizes={obj.Sizes_Available}
                   colors={obj.Color_Available}
-                  btnText={btnText}
                   element={obj}
                   itemName={obj.Item_Name}
                   cartDisplay={cartDisplay}
-                  // onClick={() => addCart(obj)}
                 />
               );
             })}

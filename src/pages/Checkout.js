@@ -1,77 +1,137 @@
 import React, { useEffect } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-
-import NavBar from "../components/Header";
 import {
-  removeFromCart,
-  getData,
-  localToStore,
-  addToCart,
-} from "../store/reducer";
+  Container,
+  Row,
+  Col,
+  Spinner,
+  Button,
+  Form,
+  Card,
+} from "react-bootstrap";
+import NavBar from "../components/Header";
+import { getData, localToStore, addToCart } from "../store/reducer";
 import { db } from "../config/firebase";
-import getFromDb from "../components/Utils";
-import * as CartService from "../services/CartService";
 import "../CSS/AllSection.css";
 
 const CheckoutComponent = (props) => {
-  console.log(props.cartItems);
+  useEffect(() => {
+    if (!!props.user) {
+      db.collection("UserCart")
+        .doc(props.user.uid)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            props.getData(doc.data().Cart_Items);
+          }
+        });
+    } else {
+      props.localToStore();
+    }
+  }, []);
   var totalCost = 0;
-  useEffect(() => {}, [props.cartItems]);
+
+  if (props.cartItems.length === 0) {
+    return (
+      <Container>
+        <center>
+          <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        </center>
+      </Container>
+    );
+  }
   return (
     <>
       <NavBar />
       <Container>
-        <table style={{ width: "100%" }}>
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>Item Type</th>
-              <th>Description</th>
-              <th>Quantity</th>
-              <th>Cost</th>
-            </tr>
-          </thead>
+        <center>
+          <h4 style={{ color: "grey" }}>
+            Confirm Your Order --- Address --- Payment
+          </h4>
+        </center>
+        <hr />
+        <br />
+
+        <div className="Items">
           {props.cartItems.map((el) => {
-            totalCost += parseInt(el.Cost);
+            totalCost += parseInt(el.Cost * el.Quantity);
             return (
               <>
-                <tbody key={el.id}>
-                  <tr
-                    style={{
-                      borderColor: "black",
-                      borderStyle: "solid",
-                      borderWidth: "5px",
-                      width: "100%",
-                    }}
-                    key={el.id}
-                  >
-                    <td>
+                <Row style={{ marginBottom: "20px" }} key={el.id}>
+                  <Col md={3}>
+                    <center>
                       <img
                         src={el.Image_url}
                         alt=""
-                        style={{ height: "50px", width: "50px" }}
+                        style={{ height: "100px", width: "100px" }}
                       />
-                    </td>
-                    <td key={el.id}>
-                      <p>{el.Item_Type}</p>
-                    </td>
-                    <td>
+                    </center>
+                  </Col>
+                  <Col md={3}>
+                    <center>
+                      <p>
+                        <b>{el.Item_Type}</b>
+                      </p>
+                      <p>
+                        <b>{el.Item_Name}</b>
+                      </p>
                       <p>{el.Description}</p>
-                    </td>
-                    <td>
-                      <p>{el.item_num}</p>
-                    </td>
-                    <td>{parseInt(el.Cost) * parseInt(el.item_num)}</td>
-                  </tr>
-                </tbody>
+                    </center>
+                  </Col>
+                  <Col mad={3}>
+                    <center>
+                      <p>Size: {el.Size_Ordered}</p>
+                      <p>Color: {el.Color_Ordered}</p>
+                      <p>Quantity {el.Quantity}</p>
+                    </center>
+                  </Col>
+                  <Col md={3}>
+                    <center>
+                      <p style={{}}>
+                        <b>Rs. {parseInt(el.Cost) * parseInt(el.Quantity)}</b>
+                      </p>
+                    </center>
+                  </Col>
+                </Row>
+                <hr />
               </>
             );
           })}
-        </table>
-        <p style={{ float: "right" }}>Total Cost = {totalCost}</p>
+          <Row>
+            <Col md={3}>
+              <center>
+                <h6 style={{}}>Total Cost</h6>
+              </center>
+            </Col>
+            <Col md={3}></Col>
+            <Col md={3}></Col>
+            <Col md={3}>
+              <center>
+                <b>
+                  <p style={{}}>Rs.{totalCost}</p>
+                </b>
+              </center>
+            </Col>
+          </Row>
+        </div>
+        <center>
+          <Button
+            variant="primary"
+            style={{ height: "50px", marginBottom: "10px" }}
+          >
+            <Link
+              to="/checkout"
+              className="nav-link"
+              style={{ color: "white" }}
+            >
+              Fill Address and Pay
+            </Link>
+          </Button>
+        </center>
       </Container>
     </>
   );
@@ -82,6 +142,15 @@ const mapStateToProps = (state) => ({
   loader: state.loaderstate.loader,
 });
 
-const Checkout = connect(mapStateToProps)(CheckoutComponent);
+const mapDispatchToProps = (dispatch) => ({
+  addToCart: bindActionCreators(addToCart, dispatch),
+  getData: bindActionCreators(getData, dispatch),
+  localToStore: bindActionCreators(localToStore, dispatch),
+});
+
+const Checkout = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CheckoutComponent);
 
 export default Checkout;

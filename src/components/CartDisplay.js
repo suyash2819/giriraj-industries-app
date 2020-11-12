@@ -14,7 +14,6 @@ import {
 import { db } from "../config/firebase";
 import getFromDb from "./Utils";
 import * as CartService from "../services/CartService";
-import * as LocalCart from "../services/LocalCart";
 import "../CSS/AllSection.css";
 import debounce from "lodash.debounce";
 
@@ -61,20 +60,19 @@ const CartDisplayComponent = (props) => {
   const updateStorageWithQuantity = useCallback(
     debounce(
       (cartItems, user) => CartService.updateQuantityOfItem(cartItems, user),
-      10000
+      5000
     ),
     []
   );
 
   const handleQuantity = (e, item) => {
     e.persist();
-    let localStorageItems = JSON.parse(localStorage.getItem("items"));
-    let updatedItems = [...localStorageItems];
+    let updatedItems = [...props.cartItems];
 
     //  Quantity Property used here, if name changes in db make sure to do it here too
     updatedItems.forEach((localItem, localIndex, updatedItems) => {
       if (localItem.CompositeKey === item.CompositeKey) {
-        updatedItems[localIndex].Quantity = e.target.value;
+        updatedItems[localIndex].Quantity = parseInt(e.target.value);
       }
     });
     const payload = {
@@ -82,19 +80,7 @@ const CartDisplayComponent = (props) => {
       userstate: props.user,
     };
     props.addToCart(payload);
-    // CartService.addNewProperty(e.target.value, item, props.user).then(
-    //   (updatedItems) => {
-    //     const payload = {
-    //       data: updatedItems,
-    //       userstate: props.user,
-    //     };
-    //     props.addToCart(payload);
-    //     updateStorageWithQuantity(updatedItems, props.user);
-    //   }
-    // );
     updateStorageWithQuantity(updatedItems, props.user);
-
-    //  just to update the redux store
   };
 
   const removeItem = (el) => {
@@ -129,6 +115,7 @@ const CartDisplayComponent = (props) => {
                   sizes={obj.Size_Ordered}
                   colors={obj.Color_Ordered}
                   element={obj}
+                  itemName={obj.Item_Name}
                   onClick={removeItem}
                   handleQuantity={handleQuantity}
                 />
@@ -139,7 +126,10 @@ const CartDisplayComponent = (props) => {
       <br />
       {!!props.cartItems.length && (
         <center>
-          <Button variant="primary">
+          <Button
+            variant="primary"
+            style={{ height: "50px", marginBottom: "20px" }}
+          >
             <Link
               to="/checkout"
               className="nav-link"

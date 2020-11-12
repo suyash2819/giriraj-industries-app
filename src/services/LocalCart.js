@@ -9,7 +9,7 @@ export async function addItem(item) {
     console.log("hi");
     updatedItems.push(item);
   } else {
-    updatedItems.forEach((localItem, index, updatedItems) => {
+    updatedItems.forEach((localItem) => {
       if (localItem.CompositeKey === item.CompositeKey) found = true;
     });
     if (!found) {
@@ -51,7 +51,7 @@ export function searchLocalForDbItem(dbData) {
       if (dbData[dbIndex].CompositeKey === localItem.CompositeKey) {
         console.log("found");
         found = true;
-        // dbData[dbIndex].item_num += localStorageData[localIndex].item_num;
+        dbData[dbIndex].Quantity += localStorageData[localIndex].Quantity;
         break;
       }
     }
@@ -64,18 +64,4 @@ export function searchLocalForDbItem(dbData) {
 
 export function updateLocalQuantityOfItem(cartItems) {
   localStorage.setItem("items", JSON.stringify(cartItems));
-}
-
-export async function addNewLocalProperty(value, item) {
-  let localStorageItems = JSON.parse(localStorage.getItem("items"));
-  let updatedItems = [...localStorageItems];
-
-  //  Quantity Property used here, if name changes in db make sure to do it here too
-  updatedItems.forEach((localItem, localIndex, updatedItems) => {
-    if (localItem.CompositeKey === item.CompositeKey) {
-      updatedItems[localIndex].Quantity = value;
-    }
-  });
-
-  return updatedItems;
 }

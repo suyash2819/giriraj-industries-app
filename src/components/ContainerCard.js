@@ -64,26 +64,6 @@ const ContainerCardComponent = (props) => {
     }
   }, []);
 
-  // const addCart = (item) => {
-  //   let itemOrdered = { ...item };
-  //   delete itemOrdered.Sizes_Available;
-  //   delete itemOrdered.Color_Available;
-  //   itemOrdered.Size_Ordered = size;
-  //   // itemOrdered.Size_Ordered[size] = true;
-  //   itemOrdered.Color_Ordered = color;
-  //   // itemOrdered.Color_Ordered[color] = true;
-  //   console.log(item, " ", itemOrdered);
-  //   CartService.addItem(props.user, itemOrdered)
-  //     .then((updatedItems) => {
-  //       const payload = {
-  //         data: updatedItems,
-  //         userstate: props.user,
-  //       };
-  //       props.addToCart(payload);
-  //     })
-  //     .catch(console.error);
-  // };
-
   if (showData.length === 0) {
     return (
       <Container>
@@ -99,7 +79,6 @@ const ContainerCardComponent = (props) => {
   return (
     <>
       {showData.map((el, index) => (
-        // eslint-disable-next-line react/no-array-index-key
         <Container key={index}>
           <h1>{_itemTypes[index]}</h1>
           <Row style={{ marginBottom: "10px" }}>

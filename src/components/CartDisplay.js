@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Container, Row, Button } from "react-bootstrap";
+import { Container, Row, Button, Form, Col, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -19,6 +19,8 @@ import debounce from "lodash.debounce";
 
 const CartDisplayComponent = (props) => {
   const [cartDisplay, setCartDisplay] = useState(true);
+  var totalCost = 0;
+
   useEffect(() => {
     if (!!props.user) {
       db.collection("UserCart")
@@ -94,51 +96,134 @@ const CartDisplayComponent = (props) => {
       })
       .catch(console.error);
   };
+  // if (props.cartItems.length === 0) {
+  //   return (
+  //     <Container>
+  //       <center>
+  //         <Spinner animation="border" role="status">
+  //           <span className="sr-only">Loading...</span>
+  //         </Spinner>
+  //       </center>
+  //     </Container>
+  //   );
+  // }
   return (
     <>
       <NavBar />
-      <Container>
-        <Row>
-          {!!props.cartItems.length &&
-            props.cartItems.map((obj) => (
-              <>
-                <CardDisplay
-                  key={obj.id}
-                  id={obj.id}
-                  image={obj.Image_url}
-                  itemType={obj.Item_Type}
-                  description={obj.Description}
-                  cost={obj.Cost}
-                  badgeNum={obj.item_num}
-                  btnText="Remove from Cart"
-                  cartDisplay={cartDisplay}
-                  sizes={obj.Size_Ordered}
-                  colors={obj.Color_Ordered}
-                  element={obj}
-                  itemName={obj.Item_Name}
-                  onClick={removeItem}
-                  handleQuantity={handleQuantity}
-                />
-              </>
-            ))}
-        </Row>
-      </Container>
-      <br />
-      {!!props.cartItems.length && (
-        <center>
-          <Button
-            variant="primary"
-            style={{ height: "50px", marginBottom: "20px" }}
-          >
-            <Link
-              to="/checkout"
-              className="nav-link"
-              style={{ color: "white" }}
+      {props.cartItems.length && (
+        <>
+          <Container>
+            <center>
+              <h4 style={{ color: "grey" }}>Cart --- Address --- Payment</h4>
+            </center>
+            <hr />
+            <br />
+
+            <div className="Items">
+              {props.cartItems.map((el) => {
+                totalCost += parseInt(el.Cost * el.Quantity);
+                return (
+                  <>
+                    <Row style={{ marginBottom: "20px" }} key={el.id}>
+                      <Col md={3}>
+                        <center>
+                          <img
+                            src={el.Image_url}
+                            alt=""
+                            style={{ height: "100px", width: "100px" }}
+                          />
+                          <br />
+                          <br />
+                          <Button
+                            variant="primary"
+                            onClick={() => removeItem(el) || null}
+                          >
+                            Remove Item
+                          </Button>
+                        </center>
+                      </Col>
+                      <Col md={3}>
+                        <center>
+                          <p>
+                            <b>{el.Item_Type}</b>
+                          </p>
+                          <p>
+                            <b>{el.Item_Name}</b>
+                          </p>
+                          <p>{el.Description}</p>
+                        </center>
+                      </Col>
+                      <Col mad={3}>
+                        <center>
+                          <p>Size: {el.Size_Ordered}</p>
+                          <p>Color: {el.Color_Ordered}</p>
+
+                          <Form.Group controlId="quantity">
+                            <Form.Label>Quantity</Form.Label>
+                            <Form.Control
+                              type="number"
+                              placeholder=""
+                              style={{
+                                width: "80px",
+                                display: "inline",
+                                marginLeft: "3%",
+                                height: "35px",
+                              }}
+                              min="1"
+                              value={el.Quantity || ""}
+                              onChange={(e) => handleQuantity(e, el)}
+                            />
+                          </Form.Group>
+                        </center>
+                      </Col>
+                      <Col md={3}>
+                        <center>
+                          <p style={{}}>
+                            <b>
+                              Rs. {parseInt(el.Cost) * parseInt(el.Quantity)}
+                            </b>
+                          </p>
+                        </center>
+                      </Col>
+                    </Row>
+                    <hr />
+                  </>
+                );
+              })}
+              <Row>
+                <Col md={3}>
+                  <center>
+                    <h6 style={{}}>Total Cost</h6>
+                  </center>
+                </Col>
+                <Col md={3}></Col>
+                <Col md={3}></Col>
+                <Col md={3}>
+                  <center>
+                    <b>
+                      <p style={{}}>Rs.{totalCost}</p>
+                    </b>
+                  </center>
+                </Col>
+              </Row>
+            </div>
+          </Container>
+          <br />
+          <center>
+            <Button
+              variant="primary"
+              style={{ height: "50px", marginBottom: "20px" }}
             >
-              Checkout
-            </Link>
-          </Button>
-        </center>
+              <Link
+                to="/checkout"
+                className="nav-link"
+                style={{ color: "white" }}
+              >
+                Checkout
+              </Link>
+            </Button>
+          </center>
+        </>
       )}
     </>
   );

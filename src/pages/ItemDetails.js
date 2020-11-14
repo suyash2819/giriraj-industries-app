@@ -32,7 +32,7 @@ const ItemDetailComponent = (props) => {
     delete itemOrdered.Color_Available;
     itemOrdered.Size_Ordered = sizeOrdered;
     itemOrdered.Color_Ordered = colorOrdered;
-
+    itemOrdered.Quantity = 1;
     itemOrdered.CompositeKey = item.id + sizeOrdered + colorOrdered;
     console.log(item, " ", itemOrdered);
     CartService.addItem(props.user, itemOrdered)

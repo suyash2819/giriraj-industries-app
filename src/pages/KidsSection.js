@@ -10,7 +10,6 @@ const KidsCardList = () => {
   useEffect(() => {
     db.collection(sections.kids).onSnapshot((snapshot) => {
       const data = snapshot.docs.map((doc) => ({
-        item_num: 0,
         id: doc.id,
         ...doc.data(),
       }));

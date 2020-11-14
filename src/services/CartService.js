@@ -10,17 +10,14 @@ async function localAddItem(doc, item, user) {
     dbData = doc.data().Cart_Items;
     for (let i = 0; i < dbData.length; i++) {
       if (dbData[i].CompositeKey === item.CompositeKey) {
-        // dbData[i].item_num += 1;
         found = true;
         break;
       }
     }
     if (!found) {
-      // item.item_num += 1;
       dbData.push(item);
     }
   } else {
-    // item.item_num += 1;
     dbData.push(item);
   }
 
@@ -85,7 +82,6 @@ export async function syncDBFromLocal(doc, userid) {
 
 //  update the quantity of item
 export function updateQuantityOfItem(cartItems, user) {
-  console.log("cartItems", cartItems);
   if (!!user) {
     db.collection("UserCart").doc(user.uid).set({
       Cart_Items: cartItems,

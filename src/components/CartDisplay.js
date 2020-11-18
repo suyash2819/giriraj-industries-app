@@ -5,6 +5,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import NavBar from "./Header";
 import CardDisplay from "./Card";
+import debounce from "lodash.debounce";
 import {
   removeFromCart,
   getData,
@@ -15,11 +16,11 @@ import { db } from "../config/firebase";
 import getFromDb from "./Utils";
 import * as CartService from "../services/CartService";
 import "../CSS/AllSection.css";
-import debounce from "lodash.debounce";
+import "../CSS/CartDisplay.css";
 
 const CartDisplayComponent = (props) => {
   const [cartDisplay, setCartDisplay] = useState(true);
-  var totalCost = 0;
+  let totalCost = 0;
 
   useEffect(() => {
     if (!!props.user) {
@@ -96,17 +97,7 @@ const CartDisplayComponent = (props) => {
       })
       .catch(console.error);
   };
-  // if (props.cartItems.length === 0) {
-  //   return (
-  //     <Container>
-  //       <center>
-  //         <Spinner animation="border" role="status">
-  //           <span className="sr-only">Loading...</span>
-  //         </Spinner>
-  //       </center>
-  //     </Container>
-  //   );
-  // }
+
   return (
     <>
       <NavBar />
@@ -114,7 +105,7 @@ const CartDisplayComponent = (props) => {
         <>
           <Container>
             <center>
-              <h4 style={{ color: "grey" }}>Cart --- Address --- Payment</h4>
+              <h4>Cart --- Address --- Payment</h4>
             </center>
             <hr />
             <br />
@@ -124,14 +115,10 @@ const CartDisplayComponent = (props) => {
                 totalCost += parseInt(el.Cost * el.Quantity);
                 return (
                   <>
-                    <Row style={{ marginBottom: "20px" }} key={el.id}>
+                    <Row key={el.id} className="ItemRow">
                       <Col md={3}>
                         <center>
-                          <img
-                            src={el.Image_url}
-                            alt=""
-                            style={{ height: "100px", width: "100px" }}
-                          />
+                          <img src={el.Image_url} alt={el.Item_Name} />
                           <br />
                           <br />
                           <Button
@@ -163,13 +150,8 @@ const CartDisplayComponent = (props) => {
                             <Form.Control
                               type="number"
                               placeholder=""
-                              style={{
-                                width: "80px",
-                                display: "inline",
-                                marginLeft: "3%",
-                                height: "35px",
-                              }}
                               min="1"
+                              className="quantity"
                               value={el.Quantity || ""}
                               onChange={(e) => handleQuantity(e, el)}
                             />
@@ -178,7 +160,7 @@ const CartDisplayComponent = (props) => {
                       </Col>
                       <Col md={3}>
                         <center>
-                          <p style={{}}>
+                          <p>
                             <b>
                               Rs. {parseInt(el.Cost) * parseInt(el.Quantity)}
                             </b>
@@ -193,7 +175,7 @@ const CartDisplayComponent = (props) => {
               <Row>
                 <Col md={3}>
                   <center>
-                    <h6 style={{}}>Total Cost</h6>
+                    <h6>Total Cost</h6>
                   </center>
                 </Col>
                 <Col md={3}></Col>
@@ -201,7 +183,7 @@ const CartDisplayComponent = (props) => {
                 <Col md={3}>
                   <center>
                     <b>
-                      <p style={{}}>Rs.{totalCost}</p>
+                      <p>Rs.{totalCost}</p>
                     </b>
                   </center>
                 </Col>
@@ -210,15 +192,8 @@ const CartDisplayComponent = (props) => {
           </Container>
           <br />
           <center>
-            <Button
-              variant="primary"
-              style={{ height: "50px", marginBottom: "20px" }}
-            >
-              <Link
-                to="/checkout"
-                className="nav-link"
-                style={{ color: "white" }}
-              >
+            <Button variant="primary" className="checkoutButton">
+              <Link to="/checkout" className="nav-link checkoutLink">
                 Checkout
               </Link>
             </Button>

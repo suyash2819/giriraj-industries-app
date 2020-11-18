@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-one-expression-per-line */
 import React, { useState } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -10,13 +9,8 @@ import { addToCart, getData, localToStore } from "../store/reducer";
 const ItemDetailComponent = (props) => {
   const [sizeOrdered, setSize] = useState("");
   const [colorOrdered, setColor] = useState("");
-  // const [quantityOrdered, setQuantity] = useState("");
 
-  const {
-    image,
-
-    element,
-  } = props.location.state;
+  const { image, element } = props.location.state;
 
   const handleSize = (e) => {
     setSize(e.target.value);
@@ -34,7 +28,7 @@ const ItemDetailComponent = (props) => {
     itemOrdered.Color_Ordered = colorOrdered;
     itemOrdered.Quantity = 1;
     itemOrdered.CompositeKey = item.id + sizeOrdered + colorOrdered;
-    console.log(item, " ", itemOrdered);
+
     CartService.addItem(props.user, itemOrdered)
       .then((updatedItems) => {
         const payload = {

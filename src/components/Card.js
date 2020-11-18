@@ -2,7 +2,6 @@ import React from "react";
 import { Card, Col, Button, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { bindActionCreators } from "redux";
-// import { debounce } from "lodash";
 import { connect } from "react-redux";
 
 import {
@@ -37,7 +36,6 @@ const CardDisplayComponent = (props) => {
                 element,
               },
             }}
-            className=""
           >
             <img src={image} alt="" />
           </Link>

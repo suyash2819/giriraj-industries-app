@@ -1,12 +1,10 @@
 // add Item to Local storage
 export async function addItem(item) {
-  console.log("addItem called");
   let found = false;
   let localStorageItems = JSON.parse(localStorage.getItem("items")) || [];
   let updatedItems = [...localStorageItems];
 
   if (updatedItems.length === 0) {
-    console.log("hi");
     updatedItems.push(item);
   } else {
     updatedItems.forEach((localItem) => {
@@ -49,7 +47,6 @@ export function searchLocalForDbItem(dbData) {
     let found = false;
     for (let dbIndex = 0; dbIndex < dbData.length; dbIndex++) {
       if (dbData[dbIndex].CompositeKey === localItem.CompositeKey) {
-        console.log("found");
         found = true;
         dbData[dbIndex].Quantity += localStorageData[localIndex].Quantity;
         break;

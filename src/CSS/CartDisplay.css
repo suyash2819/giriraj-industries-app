@@ -1,0 +1,28 @@
+h4 {
+  color: grey;
+}
+
+.ItemRow {
+  margin-bottom: 20px;
+}
+
+img {
+  height: 100px;
+  width: 100px;
+}
+
+.quantity {
+  width: 80px;
+  display: inline;
+  margin-left: 3%;
+  height: 35px;
+}
+
+.checkoutLink {
+  color: white;
+}
+
+.checkoutButton {
+  height: 50px;
+  margin-bottom: 20px;
+}

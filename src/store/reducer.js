@@ -69,8 +69,6 @@ export function cartReducer(state = cartinitialState, action) {
 
   switch (type) {
     case ADD_TO_CART: {
-      console.log("cart Data", payload.data);
-
       return { ...state, cartItems: payload.data };
     }
 

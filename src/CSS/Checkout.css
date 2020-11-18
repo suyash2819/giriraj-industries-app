@@ -1,0 +1,16 @@
+.itemRow {
+  display: block !important;
+}
+
+form {
+  width: 50%;
+}
+
+.error {
+  font-size: 11px;
+  color: red;
+}
+
+.addAddress {
+  margin-bottom: 10px;
+}

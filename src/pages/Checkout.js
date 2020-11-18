@@ -3,11 +3,12 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Container, Row, Button, Form } from "react-bootstrap";
 import firebase from "firebase";
-
+import { validPincode, validPhonenumber } from "../components/Utils";
 import NavBar from "../components/Header";
 import { getData, localToStore } from "../store/reducer";
 import { db } from "../config/firebase";
 import "../CSS/AllSection.css";
+import "../CSS/Checkout.css";
 
 const CheckoutComponent = (props) => {
   const [address, setAddress] = useState({
@@ -26,10 +27,6 @@ const CheckoutComponent = (props) => {
   });
 
   const [addressExists, setAddressExists] = useState([]);
-
-  const validPincode = RegExp(/^[1-9](\d{5})$/i);
-
-  const validPhonenumber = RegExp(/^[0-9]\d{9}$/i);
 
   useEffect(() => {
     if (!!props.user) {
@@ -103,8 +100,7 @@ const CheckoutComponent = (props) => {
         } else {
           setError({
             phonenumber: error.phonenumber,
-            pincode:
-              "invalid pincode, it should be of 6 digits and should not start with  0",
+            pincode: "Please enter a valid pincode",
           });
         }
         break;
@@ -116,7 +112,7 @@ const CheckoutComponent = (props) => {
             addressLine2: address.addressLine2,
             city: address.city,
             state: address.state,
-            pincode: address.phonenumber,
+            pincode: address.pincode,
             country: address.country,
             phonenumber: value,
           });
@@ -126,7 +122,7 @@ const CheckoutComponent = (props) => {
           });
         } else {
           setError({
-            phonenumber: "invalid phone number, it should be of 10 digits",
+            phonenumber: "Please enter a valid phone number",
             pincode: error.pincode,
           });
         }
@@ -137,6 +133,113 @@ const CheckoutComponent = (props) => {
     }
   };
 
+  const addressFields = [
+    {
+      type: "text",
+      id: "",
+      placeholder: "Address Line 1",
+      name: "address Line 1",
+      onChange: (e) => {
+        setAddress({
+          addressLine1: e.target.value,
+          addressLine2: address.addressLine2,
+          city: address.city,
+          state: address.state,
+          pincode: address.pincode,
+          country: address.country,
+          phonenumber: address.phonenumber,
+        });
+      },
+    },
+    {
+      type: "text",
+      id: "",
+      placeholder: "Address Line 2",
+      name: "address Line 2",
+      onChange: (e) => {
+        setAddress({
+          addressLine1: address.addressLine1,
+          addressLine2: e.target.value,
+          city: address.city,
+          state: address.state,
+          pincode: address.pincode,
+          country: address.country,
+          phonenumber: address.phonenumber,
+        });
+      },
+    },
+    {
+      type: "text",
+      id: "",
+      placeholder: "City",
+      name: "City",
+      onChange: (e) => {
+        setAddress({
+          addressLine1: address.addressLine1,
+          addressLine2: address.addressLine2,
+          city: e.target.value,
+          state: address.state,
+          pincode: address.pincode,
+          country: address.country,
+          phonenumber: address.phonenumber,
+        });
+      },
+    },
+    {
+      type: "text",
+      id: "",
+      placeholder: "State",
+      name: "State",
+      onChange: (e) => {
+        setAddress({
+          addressLine1: address.addressLine1,
+          addressLine2: address.addressLine2,
+          city: address.city,
+          state: e.target.value,
+          pincode: address.pincode,
+          country: address.country,
+          phonenumber: address.phonenumber,
+        });
+      },
+    },
+
+    {
+      type: "number",
+      id: "",
+      placeholder: "Pin Code",
+      name: "pincode",
+      onChange: (e) => {
+        handleChange(e);
+      },
+    },
+    {
+      type: "text",
+      id: "",
+      placeholder: "Country",
+      name: "Country",
+      onChange: (e) => {
+        setAddress({
+          addressLine1: address.addressLine1,
+          addressLine2: address.addressLine2,
+          city: address.city,
+          state: address.state,
+          pincode: address.pincode,
+          country: e.target.value,
+          phonenumber: address.phonenumber,
+        });
+      },
+    },
+    {
+      type: "number",
+      id: "",
+      placeholder: "Phone Number",
+      name: "phonenumber",
+      onChange: (e) => {
+        handleChange(e);
+      },
+    },
+  ];
+  console.log(address);
   return (
     <>
       <NavBar />
@@ -170,147 +273,31 @@ const CheckoutComponent = (props) => {
               <h2>Address</h2>
             </center>
             <br />
-            <Row style={{ display: "block" }}>
+            <Row className="itemRow">
               <center>
-                <Form style={{ width: "50%" }}>
-                  <Form.Group>
-                    <Form.Control
-                      type="text"
-                      id=""
-                      placeholder="Address Line 1"
-                      required
-                      onChange={(e) =>
-                        setAddress({
-                          addressLine1: e.target.value,
-                          addressLine2: address.addressLine2,
-                          city: address.city,
-                          state: address.state,
-                          pincode: address.phonenumber,
-                          country: address.country,
-                          phonenumber: address.phonenumber,
-                        })
-                      }
-                    />
-                  </Form.Group>
-
-                  <Form.Group>
-                    <Form.Control
-                      type="text"
-                      id=""
-                      placeholder="Address Line 2"
-                      required
-                      // value={userInfo.userPassword}
-                      onChange={(e) =>
-                        setAddress({
-                          addressLine1: address.addressLine1,
-                          addressLine2: e.target.value,
-                          city: address.city,
-                          state: address.state,
-                          pincode: address.phonenumber,
-                          country: address.country,
-                          phonenumber: address.phonenumber,
-                        })
-                      }
-                    />
-                  </Form.Group>
-
-                  <Form.Group>
-                    <Form.Control
-                      type="text"
-                      id=""
-                      placeholder="City"
-                      required
-                      onChange={(e) =>
-                        setAddress({
-                          addressLine1: address.addressLine1,
-                          addressLine2: address.addressLine2,
-                          city: e.target.value,
-                          state: address.state,
-                          pincode: address.phonenumber,
-                          country: address.country,
-                          phonenumber: address.phonenumber,
-                        })
-                      }
-                    />
-                  </Form.Group>
-
-                  <Form.Group>
-                    <Form.Control
-                      type="text"
-                      id=""
-                      placeholder="State"
-                      required
-                      onChange={(e) =>
-                        setAddress({
-                          addressLine1: address.addressLine1,
-                          addressLine2: address.addressLine2,
-                          city: address.city,
-                          state: e.target.value,
-                          pincode: address.phonenumber,
-                          country: address.country,
-                          phonenumber: address.phonenumber,
-                        })
-                      }
-                    />
-                  </Form.Group>
-
-                  <Form.Group>
-                    <Form.Control
-                      type="number"
-                      id=""
-                      placeholder="Pin Code"
-                      required
-                      name="pincode"
-                      onChange={(e) => handleChange(e)}
-                    />
-                    {error.pincode.length > 0 && (
-                      <span
-                        className="error"
-                        style={{ fontSize: "11px", color: "red" }}
-                      >
-                        {error.pincode}
-                      </span>
-                    )}
-                  </Form.Group>
-
-                  <Form.Group>
-                    <Form.Control
-                      type="text"
-                      id=""
-                      placeholder="Country"
-                      onChange={(e) =>
-                        setAddress({
-                          addressLine1: address.addressLine1,
-                          addressLine2: address.addressLine2,
-                          city: address.city,
-                          state: address.state,
-                          pincode: address.phonenumber,
-                          country: e.target.value,
-                          phonenumber: address.phonenumber,
-                        })
-                      }
-                    />
-                  </Form.Group>
-
-                  <Form.Group>
-                    <Form.Control
-                      type="text"
-                      id=""
-                      placeholder="Phone Number"
-                      className="required"
-                      required
-                      name="phonenumber"
-                      onChange={(e) => handleChange(e)}
-                    />
-                    {error.phonenumber.length > 0 && (
-                      <span
-                        className="error"
-                        style={{ fontSize: "11px", color: "red" }}
-                      >
-                        {error.phonenumber}
-                      </span>
-                    )}
-                  </Form.Group>
+                <Form>
+                  {addressFields.map((field) => (
+                    <>
+                      <Form.Group>
+                        <Form.Control
+                          type={field.type}
+                          id={field}
+                          placeholder={field.placeholder}
+                          required
+                          name={field.name}
+                          onChange={field.onChange}
+                        />
+                        {field.name === "phonenumber" &&
+                          error.phonenumber.length > 0 && (
+                            <span className="error">{error.phonenumber}</span>
+                          )}
+                        {field.name === "pincode" &&
+                          error.pincode.length > 0 && (
+                            <span className="error">{error.pincode}</span>
+                          )}
+                      </Form.Group>
+                    </>
+                  ))}
 
                   <Button
                     type="submit"
@@ -318,7 +305,7 @@ const CheckoutComponent = (props) => {
                     onClick={(e) => {
                       handleSubmit(e);
                     }}
-                    style={{ marginBottom: "10px" }}
+                    className="addAddress"
                   >
                     Add Address
                   </Button>

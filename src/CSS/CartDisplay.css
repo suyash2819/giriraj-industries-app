@@ -1,4 +1,8 @@
-h4 {
+.container {
+  margin-top: 100px;
+}
+
+.header {
   color: grey;
 }
 
@@ -6,16 +10,16 @@ h4 {
   margin-bottom: 20px;
 }
 
-img {
-  height: 100px;
-  width: 100px;
+.Itemimage {
+  height: 100px !important;
+  width: 100px !important;
 }
 
 .quantity {
-  width: 80px;
-  display: inline;
-  margin-left: 3%;
-  height: 35px;
+  width: 80px !important;
+  display: inline !important;
+  margin-left: 3% !important;
+  height: 35px !important;
 }
 
 .checkoutLink {
@@ -25,4 +29,8 @@ img {
 .checkoutButton {
   height: 50px;
   margin-bottom: 20px;
+}
+
+.card-text {
+  height: 50px;
 }

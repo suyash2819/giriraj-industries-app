@@ -16,9 +16,9 @@ const CheckoutComponent = (props) => {
     addressLine2: "",
     city: "",
     state: "",
-    pincode: 0,
+    pincode: "",
     country: "",
-    phonenumber: 0,
+    phonenumber: "",
   });
 
   const [error, setError] = useState({
@@ -67,9 +67,9 @@ const CheckoutComponent = (props) => {
             addressLine2: "",
             city: "",
             state: "",
-            pincode: 0,
+            pincode: "",
             country: "",
-            phonenumber: 0,
+            phonenumber: "",
           });
         });
     } else {
@@ -83,16 +83,16 @@ const CheckoutComponent = (props) => {
 
     switch (name) {
       case "pincode":
+        setAddress({
+          addressLine1: address.addressLine1,
+          addressLine2: address.addressLine2,
+          city: address.city,
+          state: address.state,
+          pincode: value,
+          country: address.country,
+          phonenumber: address.phonenumber,
+        });
         if (validPincode.test(value)) {
-          setAddress({
-            addressLine1: address.addressLine1,
-            addressLine2: address.addressLine2,
-            city: address.city,
-            state: address.state,
-            pincode: value,
-            country: address.country,
-            phonenumber: address.phonenumber,
-          });
           setError({
             phonenumber: error.phonenumber,
             pincode: "",
@@ -106,16 +106,16 @@ const CheckoutComponent = (props) => {
         break;
 
       case "phonenumber":
+        setAddress({
+          addressLine1: address.addressLine1,
+          addressLine2: address.addressLine2,
+          city: address.city,
+          state: address.state,
+          pincode: address.pincode,
+          country: address.country,
+          phonenumber: value,
+        });
         if (validPhonenumber.test(value)) {
-          setAddress({
-            addressLine1: address.addressLine1,
-            addressLine2: address.addressLine2,
-            city: address.city,
-            state: address.state,
-            pincode: address.pincode,
-            country: address.country,
-            phonenumber: value,
-          });
           setError({
             phonenumber: "",
             pincode: error.pincode,
@@ -139,6 +139,7 @@ const CheckoutComponent = (props) => {
       id: "",
       placeholder: "Address Line 1",
       name: "address Line 1",
+      value: address.addressLine1,
       onChange: (e) => {
         setAddress({
           addressLine1: e.target.value,
@@ -156,6 +157,7 @@ const CheckoutComponent = (props) => {
       id: "",
       placeholder: "Address Line 2",
       name: "address Line 2",
+      value: address.addressLine2,
       onChange: (e) => {
         setAddress({
           addressLine1: address.addressLine1,
@@ -173,6 +175,7 @@ const CheckoutComponent = (props) => {
       id: "",
       placeholder: "City",
       name: "City",
+      value: address.city,
       onChange: (e) => {
         setAddress({
           addressLine1: address.addressLine1,
@@ -190,6 +193,7 @@ const CheckoutComponent = (props) => {
       id: "",
       placeholder: "State",
       name: "State",
+      value: address.state,
       onChange: (e) => {
         setAddress({
           addressLine1: address.addressLine1,
@@ -208,6 +212,7 @@ const CheckoutComponent = (props) => {
       id: "",
       placeholder: "Pin Code",
       name: "pincode",
+      value: address.pincode,
       onChange: (e) => {
         handleChange(e);
       },
@@ -217,6 +222,7 @@ const CheckoutComponent = (props) => {
       id: "",
       placeholder: "Country",
       name: "Country",
+      value: address.country,
       onChange: (e) => {
         setAddress({
           addressLine1: address.addressLine1,
@@ -234,12 +240,12 @@ const CheckoutComponent = (props) => {
       id: "",
       placeholder: "Phone Number",
       name: "phonenumber",
+      value: address.phonenumber,
       onChange: (e) => {
         handleChange(e);
       },
     },
   ];
-  console.log(address);
   return (
     <>
       <NavBar />
@@ -275,7 +281,12 @@ const CheckoutComponent = (props) => {
             <br />
             <Row className="itemRow">
               <center>
-                <Form>
+                <Form
+                  id="addressForm"
+                  onSubmit={(e) => {
+                    handleSubmit(e);
+                  }}
+                >
                   {addressFields.map((field) => (
                     <>
                       <Form.Group>
@@ -285,6 +296,7 @@ const CheckoutComponent = (props) => {
                           placeholder={field.placeholder}
                           required
                           name={field.name}
+                          value={field.value}
                           onChange={field.onChange}
                         />
                         {field.name === "phonenumber" &&
@@ -302,9 +314,6 @@ const CheckoutComponent = (props) => {
                   <Button
                     type="submit"
                     variant="primary"
-                    onClick={(e) => {
-                      handleSubmit(e);
-                    }}
                     className="addAddress"
                   >
                     Add Address

@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import NavBar from "./Header";
-import CardDisplay from "./Card";
 import debounce from "lodash.debounce";
 import {
   removeFromCart,
@@ -15,7 +14,6 @@ import {
 import { db } from "../config/firebase";
 import getFromDb from "./Utils";
 import * as CartService from "../services/CartService";
-import "../CSS/AllSection.css";
 import "../CSS/CartDisplay.css";
 
 const CartDisplayComponent = (props) => {
@@ -105,7 +103,7 @@ const CartDisplayComponent = (props) => {
         <>
           <Container>
             <center>
-              <h4>Cart --- Address --- Payment</h4>
+              <h4 className="header">Cart --- Address --- Payment</h4>
             </center>
             <hr />
             <br />
@@ -118,7 +116,11 @@ const CartDisplayComponent = (props) => {
                     <Row key={el.id} className="ItemRow">
                       <Col md={3}>
                         <center>
-                          <img src={el.Image_url} alt={el.Item_Name} />
+                          <img
+                            src={el.Image_url}
+                            alt={el.Item_Name}
+                            className="Itemimage"
+                          />
                           <br />
                           <br />
                           <Button

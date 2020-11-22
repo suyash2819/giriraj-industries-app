@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { Col, Button, Form, Container, Row } from "react-bootstrap";
+import { Col, Button, Form, Container, Row, Alert } from "react-bootstrap";
 import * as CartService from "../services/CartService";
 import NavBar from "../components/Header";
 import { addToCart, getData, localToStore } from "../store/reducer";
@@ -9,6 +9,7 @@ import { addToCart, getData, localToStore } from "../store/reducer";
 const ItemDetailComponent = (props) => {
   const [sizeOrdered, setSize] = useState("");
   const [colorOrdered, setColor] = useState("");
+  const [error, setError] = useState(false);
 
   const { image, element } = props.location.state;
 
@@ -20,24 +21,39 @@ const ItemDetailComponent = (props) => {
     setColor(e.target.value);
   };
 
-  const addCart = (item) => {
-    let itemOrdered = { ...item };
-    delete itemOrdered.Sizes_Available;
-    delete itemOrdered.Color_Available;
-    itemOrdered.Size_Ordered = sizeOrdered;
-    itemOrdered.Color_Ordered = colorOrdered;
-    itemOrdered.Quantity = 1;
-    itemOrdered.CompositeKey = item.id + sizeOrdered + colorOrdered;
+  const validateFields = () => {
+    if (
+      sizeOrdered === "" ||
+      colorOrdered === "" ||
+      sizeOrdered === "Choose..." ||
+      colorOrdered === "Choose..."
+    )
+      return false;
+    return true;
+  };
 
-    CartService.addItem(props.user, itemOrdered)
-      .then((updatedItems) => {
-        const payload = {
-          data: updatedItems,
-          userstate: props.user,
-        };
-        props.addToCart(payload);
-      })
-      .catch(console.error);
+  const addCart = (item) => {
+    if (validateFields()) {
+      let itemOrdered = { ...item };
+      delete itemOrdered.Sizes_Available;
+      delete itemOrdered.Color_Available;
+      itemOrdered.Size_Ordered = sizeOrdered;
+      itemOrdered.Color_Ordered = colorOrdered;
+      itemOrdered.Quantity = 1;
+      itemOrdered.CompositeKey = item.id + sizeOrdered + colorOrdered;
+
+      CartService.addItem(props.user, itemOrdered)
+        .then((updatedItems) => {
+          const payload = {
+            data: updatedItems,
+            userstate: props.user,
+          };
+          props.addToCart(payload);
+        })
+        .catch(console.error);
+    } else {
+      setError(true);
+    }
   };
 
   return (
@@ -73,6 +89,7 @@ const ItemDetailComponent = (props) => {
                 )}
               </Form.Control>
             </Form.Group>
+
             <br />
             <Form.Group controlId="formGridState">
               <Form.Label>Color</Form.Label>
@@ -101,7 +118,16 @@ const ItemDetailComponent = (props) => {
           <Button variant="primary" onClick={() => addCart(element)}>
             Add To Cart
           </Button>
+          <br />
+          {error &&
+            (sizeOrdered === "" ||
+              colorOrdered === "" ||
+              sizeOrdered === "Choose..." ||
+              colorOrdered === "Choose...") && (
+              <span className="error">Please Fill Both the Fields</span>
+            )}
         </center>
+
         <br />
       </Container>
     </>

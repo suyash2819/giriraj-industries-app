@@ -219,9 +219,11 @@ const CheckoutComponent = (props) => {
               <h2>Address</h2>
             </center>
             <br />
-            <Row className="itemRow">
-              <AddressForm onSave={handleAddressSave} />
-            </Row>
+            <center>
+              <Row className="itemRow">
+                <AddressForm onSave={handleAddressSave} />
+              </Row>
+            </center>
           </>
         )}
       </Container>

@@ -9,18 +9,15 @@ async function localAddItem(doc, item, user) {
   if (doc.exists) {
     dbData = doc.data().Cart_Items;
     for (let i = 0; i < dbData.length; i++) {
-      if (dbData[i].id === item.id) {
-        dbData[i].item_num += 1;
+      if (dbData[i].CompositeKey === item.CompositeKey) {
         found = true;
         break;
       }
     }
     if (!found) {
-      item.item_num += 1;
       dbData.push(item);
     }
   } else {
-    item.item_num += 1;
     dbData.push(item);
   }
 
@@ -54,9 +51,7 @@ export async function addItem(user, item) {
 export async function removeItem(user, el, dbData) {
   if (!!user) {
     dbData.forEach((item, index) => {
-      if (item.item_num > 1 && item.id === el.id) {
-        item.item_num -= 1;
-      } else if (item.id === el.id && item.item_num === 1) {
+      if (item.CompositeKey === el.CompositeKey) {
         dbData.splice(index, 1);
       }
     });
@@ -72,6 +67,7 @@ export async function removeItem(user, el, dbData) {
 // sync db data with local storage data
 export async function syncDBFromLocal(doc, userid) {
   let dbData = doc.data().Cart_Items;
+  console.log("dbdata from syncdbfrom local", dbData);
   let updatedData = LocalCart.searchLocalForDbItem(dbData);
   return db
     .collection("UserCart")
@@ -82,4 +78,15 @@ export async function syncDBFromLocal(doc, userid) {
     .then(() => {
       return getFromDb(userid);
     });
+}
+
+//  update the quantity of item
+export function updateQuantityOfItem(cartItems, user) {
+  if (!!user) {
+    db.collection("UserCart").doc(user.uid).set({
+      Cart_Items: cartItems,
+    });
+  } else {
+    LocalCart.updateLocalQuantityOfItem(cartItems);
+  }
 }

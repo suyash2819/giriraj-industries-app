@@ -1,41 +1,82 @@
 import React from "react";
-import { Card, Col, Button } from "react-bootstrap";
+import { Card, Col, Button, Form } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-const CardDisplay = (props) => {
+import {
+  removeFromCart,
+  getData,
+  localToStore,
+  addToCart,
+} from "../store/reducer";
+
+const CardDisplayComponent = (props) => {
   const {
     id,
     image,
     itemType,
     description,
     cost,
-    badgeNum = null,
-    onClick,
-    btnText,
+    badgeText = null,
     element,
+    cartDisplay,
+    itemName,
   } = props;
 
   return (
     <Col md={3}>
       <Card key={id}>
-        <img src={image} alt="" />
+        {!cartDisplay ? (
+          <Link
+            to={{
+              pathname: `/details/${itemType}/${itemName}/${id}`,
+              state: {
+                image,
+                element,
+              },
+            }}
+          >
+            <img src={image} alt="" />
+          </Link>
+        ) : (
+          <img src={image} alt="" />
+        )}
         <Card.Body>
           <Card.Title>
-            {itemType}
+            {itemName}
 
-            {!!badgeNum && (
-              <span className="badge badge-pill badge-primary">{badgeNum}</span>
+            {!!badgeText && (
+              <span className="badge badge-pill badge-primary">
+                {badgeText}
+              </span>
             )}
           </Card.Title>
 
           <Card.Text>{description} </Card.Text>
-          <Card.Text>{cost} </Card.Text>
-          <Button variant="primary" onClick={() => onClick(element) || null}>
-            {btnText}
-          </Button>
+          <Card.Text style={{ height: "20px" }}>{cost} </Card.Text>
         </Card.Body>
       </Card>
     </Col>
   );
 };
+
+const mapStateToProps = (state) => ({
+  cartItems: state.cartstate.cartItems,
+  user: state.userstate.user,
+  loader: state.loaderstate.loader,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  removeFromCart: bindActionCreators(removeFromCart, dispatch),
+  getData: bindActionCreators(getData, dispatch),
+  localToStore: bindActionCreators(localToStore, dispatch),
+  addToCart: bindActionCreators(addToCart, dispatch),
+});
+
+const CardDisplay = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CardDisplayComponent);
 
 export default CardDisplay;

@@ -4,16 +4,15 @@ export async function addItem(item) {
   let localStorageItems = JSON.parse(localStorage.getItem("items")) || [];
   let updatedItems = [...localStorageItems];
 
-  localStorageItems.forEach((localItem, index, updatedItem) => {
-    if (localItem.id !== item.id) return;
-
-    updatedItem[index].item_num += 1;
-    found = true;
-  });
-
-  if (!found) {
-    item.item_num += 1;
+  if (updatedItems.length === 0) {
     updatedItems.push(item);
+  } else {
+    updatedItems.forEach((localItem) => {
+      if (localItem.CompositeKey === item.CompositeKey) found = true;
+    });
+    if (!found) {
+      updatedItems.push(item);
+    }
   }
 
   localStorage.setItem("items", JSON.stringify(updatedItems));
@@ -26,10 +25,8 @@ export async function removeItem(item) {
   let localStorageItems = JSON.parse(localStorage.getItem("items")) || [];
   let updatedItems = [...localStorageItems];
   for (let index = 0; index < updatedItems.length; index++) {
-    if (updatedItems[index].id === item.id) {
-      if (updatedItems[index].item_num > 1) {
-        updatedItems[index].item_num -= 1;
-      } else updatedItems.splice(index, 1);
+    if (updatedItems[index].CompositeKey === item.CompositeKey) {
+      updatedItems.splice(index, 1);
       break;
     }
   }
@@ -49,9 +46,9 @@ export function searchLocalForDbItem(dbData) {
     // TO DO, to implement binary search or something more efficient
     let found = false;
     for (let dbIndex = 0; dbIndex < dbData.length; dbIndex++) {
-      if (dbData[dbIndex].id === localItem.id) {
+      if (dbData[dbIndex].CompositeKey === localItem.CompositeKey) {
         found = true;
-        dbData[dbIndex].item_num += localStorageData[localIndex].item_num;
+        dbData[dbIndex].Quantity += localStorageData[localIndex].Quantity;
         break;
       }
     }
@@ -60,4 +57,8 @@ export function searchLocalForDbItem(dbData) {
     }
   });
   return dbData;
+}
+
+export function updateLocalQuantityOfItem(cartItems) {
+  localStorage.setItem("items", JSON.stringify(cartItems));
 }

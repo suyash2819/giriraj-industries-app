@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Spinner } from "react-bootstrap";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -10,9 +10,11 @@ import * as CartService from "../services/CartService";
 import "../CSS/AllSection.css";
 
 const ContainerCardComponent = (props) => {
+  const [cartDisplay, setCartDisplay] = useState(false);
+
   let showData = [];
   let _itemTypes = [];
-  const { data, btnText } = props;
+  const { data } = props;
 
   data.forEach((element) => {
     let index = _itemTypes.indexOf(element.Item_Type);
@@ -62,18 +64,6 @@ const ContainerCardComponent = (props) => {
     }
   }, []);
 
-  const addCart = (item) => {
-    CartService.addItem(props.user, item)
-      .then((updatedItems) => {
-        const payload = {
-          data: updatedItems,
-          userstate: props.user,
-        };
-        props.addToCart(payload);
-      })
-      .catch(console.error);
-  };
-
   if (showData.length === 0) {
     return (
       <Container>
@@ -89,22 +79,22 @@ const ContainerCardComponent = (props) => {
   return (
     <>
       {showData.map((el, index) => (
-        <Container key={el[index].length}>
+        <Container key={index}>
           <h1>{_itemTypes[index]}</h1>
-          <Row key={el[index].length}>
+          <Row style={{ marginBottom: "10px" }}>
             {el.map((obj) => {
               let _cartItems = [...props.cartItems];
               let localStorageItems =
                 JSON.parse(localStorage.getItem("items")) || [];
 
-              let num = 0;
+              let text = null;
               let searchFrom = !!_cartItems.length
                 ? _cartItems
                 : localStorageItems;
               if (!!searchFrom.length) {
                 searchFrom.forEach((item) => {
                   if (item.id === obj.id) {
-                    num = item.item_num;
+                    text = "added to cart";
                   }
                 });
               }
@@ -113,14 +103,16 @@ const ContainerCardComponent = (props) => {
                 <CardDisplay
                   key={obj.id}
                   id={obj.id}
-                  badgeNum={num}
+                  badgeText={text}
                   image={obj.Image_url}
                   itemType={obj.Item_Type}
                   description={obj.Description}
                   cost={obj.Cost}
-                  btnText={btnText}
+                  sizes={obj.Sizes_Available}
+                  colors={obj.Color_Available}
                   element={obj}
-                  onClick={() => addCart(obj)}
+                  itemName={obj.Item_Name}
+                  cartDisplay={cartDisplay}
                 />
               );
             })}

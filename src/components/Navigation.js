@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { fire } from "../config/firebase";
 import { userSignedIn, displayLoader } from "../store/reducer";
 import Home from "../pages/Home";
@@ -12,7 +12,9 @@ import CovidCardList from "../pages/CovidSection";
 import CartDisplay from "./CartDisplay";
 import UserSignUp from "../pages/auth/UserSignUp";
 import UserSignIn from "../pages/auth/UserSignIn";
+import Checkout from "../pages/Checkout";
 import Loader from "./Loader";
+import ItemDetail from "../pages/ItemDetails";
 
 const Rootmain = (props) => {
   useEffect(() => {
@@ -36,6 +38,18 @@ const Rootmain = (props) => {
       <Route exact path="/cart" component={CartDisplay} />
       <Route exact path="/signup" component={UserSignUp} />
       <Route exact path="/signin" component={UserSignIn} />
+      <Route exact path="/checkout" component={Checkout}>
+        {props.user ? (
+          <Route exact path="/checkout" component={Checkout} />
+        ) : (
+          <Redirect to="/signin" />
+        )}
+      </Route>
+      <Route
+        exact
+        path="/details/:itemType/:itemName/:itemId"
+        component={ItemDetail}
+      />
     </Switch>
   );
 };
@@ -43,6 +57,7 @@ const Rootmain = (props) => {
 const mapStateToProps = (state) => ({
   user: state.userstate.user,
   loader: state.loaderstate.loader,
+  cartItems: state.cartstate.cartItems,
 });
 
 const mapDispatchToProps = (dispatch) => ({

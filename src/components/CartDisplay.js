@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import { Container, Row, Button, Form, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { bindActionCreators } from "redux";
@@ -11,51 +11,11 @@ import {
   localToStore,
   addToCart,
 } from "../store/reducer";
-import { db } from "../config/firebase";
-import getFromDb from "./Utils";
 import * as CartService from "../services/CartService";
 import "../CSS/CartDisplay.css";
 
 const CartDisplayComponent = (props) => {
   let totalCost = 0;
-
-  useEffect(() => {
-    if (props.user) {
-      db.collection("UserCart")
-        .doc(props.user.uid)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            if (localStorage.getItem("items")) {
-              CartService.syncDBFromLocal(doc, props.user.uid)
-                .then((updateddata) => {
-                  localStorage.clear();
-                  props.getData(updateddata);
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-            } else {
-              props.getData(doc.data().Cart_Items);
-            }
-          } else {
-            db.collection("UserCart")
-              .doc(props.user.uid)
-              .set({
-                Cart_Items: JSON.parse(localStorage.getItem("items")) || [],
-              })
-              .then(() => {
-                localStorage.clear();
-                getFromDb(props.user.uid).then((datadoc) => {
-                  props.getData(datadoc);
-                });
-              });
-          }
-        });
-    } else {
-      props.localToStore();
-    }
-  }, []);
 
   const updateStorageWithQuantity = useCallback(
     debounce(

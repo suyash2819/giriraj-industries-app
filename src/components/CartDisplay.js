@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { Container, Row, Button, Form, Col, Spinner } from "react-bootstrap";
+import React, { useEffect, useCallback } from "react";
+import { Container, Row, Button, Form, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import NavBar from "./Header";
 import debounce from "lodash.debounce";
+import NavBar from "./Header";
 import {
   removeFromCart,
   getData,
@@ -17,17 +17,16 @@ import * as CartService from "../services/CartService";
 import "../CSS/CartDisplay.css";
 
 const CartDisplayComponent = (props) => {
-  const [cartDisplay, setCartDisplay] = useState(true);
   let totalCost = 0;
 
   useEffect(() => {
-    if (!!props.user) {
+    if (props.user) {
       db.collection("UserCart")
         .doc(props.user.uid)
         .get()
         .then((doc) => {
           if (doc.exists) {
-            if (!!localStorage.getItem("items")) {
+            if (localStorage.getItem("items")) {
               CartService.syncDBFromLocal(doc, props.user.uid)
                 .then((updateddata) => {
                   localStorage.clear();
@@ -144,8 +143,8 @@ const CartDisplayComponent = (props) => {
                       </Col>
                       <Col mad={3}>
                         <center>
-                          <p>Size: {el.Size_Ordered}</p>
-                          <p>Color: {el.Color_Ordered}</p>
+                          <p>{`Size: ${el.Size_Ordered}`}</p>
+                          <p>{`Color: ${el.Color_Ordered}`}</p>
 
                           <Form.Group controlId="quantity">
                             <Form.Label>Quantity</Form.Label>

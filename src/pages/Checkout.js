@@ -158,7 +158,7 @@ const CheckoutComponent = (props) => {
   const [addressExists, setAddressExists] = useState([]);
 
   useEffect(() => {
-    if (!!props.user) {
+    if (props.user) {
       db.collection("UserOrders")
         .doc(props.user.uid)
         .get()

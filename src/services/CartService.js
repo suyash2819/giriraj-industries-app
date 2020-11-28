@@ -65,10 +65,9 @@ export async function removeItem(user, el, dbData) {
 }
 
 // sync db data with local storage data
-export async function syncDBFromLocal(doc, userid) {
-  let dbData = doc.data().Cart_Items;
-  console.log("dbdata from syncdbfrom local", dbData);
-  let updatedData = LocalCart.searchLocalForDbItem(dbData);
+export async function syncDBFromLocal(dbCart, userid) {
+  const updatedData = LocalCart.searchLocalForDbItem(dbCart.Cart_Items);
+
   return db
     .collection("UserCart")
     .doc(userid)
@@ -76,7 +75,7 @@ export async function syncDBFromLocal(doc, userid) {
       Cart_Items: updatedData,
     })
     .then(() => {
-      return getFromDb(userid);
+      return { Cart_Items: updatedData };
     });
 }
 
@@ -96,10 +95,15 @@ export function getUserCart(uid) {
 }
 
 export function initialize(uid) {
+  const cartItems = JSON.parse(localStorage.getItem("items")) || [];
+
   return db
     .collection("UserCart")
     .doc(uid)
     .set({
-      Cart_Items: JSON.parse(localStorage.getItem("items")) || [],
+      Cart_Items: cartItems,
+    })
+    .then(() => {
+      return { Cart_Items: cartItems };
     });
 }

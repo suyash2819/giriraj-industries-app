@@ -21,29 +21,26 @@ function AppComponent(props) {
 
       return CartService.getUserCart(user.uid)
         .then((doc) => {
-          // If an online cart does not exist, initialise a new cart
+          // If an online cart does not exist, initialise a new cart. It picks
+          // the current state of local cart, and creates a new cart in DB.
           if (!doc.exists) {
-            return CartService.initialize(user.uid)
-              .then(() => CartService.getUserCart(props.user.uid))
-              .then((document) => {
-                return document.data().Cart_Items;
-              });
+            return CartService.initialize(user.uid);
           }
 
           // If there are no items in the local storage, return
           // the cart items from the cart
           if (!localStorage.getItem("items")) {
-            return doc.data().Cart_Items;
+            return doc.data();
           }
 
           // If an online cart exists, and there are items in the local cart,
           // merge both carts
-          return CartService.syncDBFromLocal(doc, user.uid);
+          return CartService.syncDBFromLocal(doc.data(), user.uid);
         })
-        .then((cartItems) => {
+        .then((cartData) => {
           localStorage.clear();
 
-          props.getData(cartItems);
+          props.getData(cartData.Cart_Items);
         })
         .catch(console.error);
     });

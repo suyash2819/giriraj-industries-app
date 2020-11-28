@@ -59,14 +59,18 @@ function SectionItems({ categories }) {
   );
 }
 
+// TODO: Use Section component directly in Navigation and remove other section components
 function Section({ name, title, cartItems }) {
   const [items, setItems] = useState({});
   const [loading, setLoading] = useState(true);
 
+  // Get all the items for this sections
   useEffect(() => {
     ItemsService.getItemsForSection(name).then((_items) => {
       const categories = {};
 
+      // Group the items by Item_Type, and transfrom into a object
+      // structure to make lookups easier.
       _items.forEach((item) => {
         if (!categories[item.Item_Type]) {
           categories[item.Item_Type] = { items: {} };
@@ -80,11 +84,16 @@ function Section({ name, title, cartItems }) {
     });
   }, []);
 
+  // When cartItems changes (including inital load), and the data is loaded
+  // update the items to add the `added` flag to items that are already added
   useEffect(() => {
     if (loading) {
       return;
     }
 
+    // Using functional state update as we require the latest value of items,
+    // but don't want to listen to changes on `items` (Not added `items` in
+    // dependency array)
     setItems((_items) => {
       const updated = { ..._items };
 

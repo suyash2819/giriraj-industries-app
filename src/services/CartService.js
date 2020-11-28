@@ -90,3 +90,16 @@ export function updateQuantityOfItem(cartItems, user) {
     LocalCart.updateLocalQuantityOfItem(cartItems);
   }
 }
+
+export function getUserCart(uid) {
+  return db.collection("UserCart").doc(uid).get();
+}
+
+export function initialize(uid) {
+  return db
+    .collection("UserCart")
+    .doc(uid)
+    .set({
+      Cart_Items: JSON.parse(localStorage.getItem("items")) || [],
+    });
+}

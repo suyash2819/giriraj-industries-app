@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Container, Row, Button, Form } from "react-bootstrap";
-import firebase from "firebase";
+import addAddress from "../services/CheckoutService";
 import { validPincode, validPhonenumber } from "../components/Utils";
 import NavBar from "../components/Header";
 import { getData, localToStore } from "../store/reducer";
@@ -56,22 +56,17 @@ const CheckoutComponent = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (validateForm()) {
-      db.collection("UserOrders")
-        .doc(props.user.uid)
-        .update({
-          Address: firebase.firestore.FieldValue.arrayUnion(address),
-        })
-        .then(() => {
-          setAddress({
-            addressLine1: "",
-            addressLine2: "",
-            city: "",
-            state: "",
-            pincode: "",
-            country: "",
-            phonenumber: "",
-          });
+      addAddress(props.user.uid, address).then(() => {
+        setAddress({
+          addressLine1: "",
+          addressLine2: "",
+          city: "",
+          state: "",
+          pincode: "",
+          country: "",
+          phonenumber: "",
         });
+      });
     } else {
       console.log("invalid");
     }
@@ -246,6 +241,19 @@ const CheckoutComponent = (props) => {
       },
     },
   ];
+
+  const formattedAddress = (ad) => {
+    return (
+      ad.addressLine1 +
+      ad.addressLine2 +
+      " " +
+      ad.city +
+      ad.state +
+      " " +
+      ad.pincode
+    );
+  };
+
   return (
     <>
       <NavBar />
@@ -260,21 +268,13 @@ const CheckoutComponent = (props) => {
               <Form.Check
                 type="checkbox"
                 id=""
-                label={
-                  ad.addressLine1 +
-                  ad.addressLine2 +
-                  " " +
-                  ad.city +
-                  ad.state +
-                  " " +
-                  ad.pincode
-                }
+                label={formattedAddress(ad)}
+                key={ad.addressLine1}
               />
             ))}
           </>
         ) : (
           <>
-            {" "}
             <center>
               <h2>Address</h2>
             </center>
@@ -289,7 +289,7 @@ const CheckoutComponent = (props) => {
                 >
                   {addressFields.map((field) => (
                     <>
-                      <Form.Group>
+                      <Form.Group key={field.name}>
                         <Form.Control
                           type={field.type}
                           id={field}
@@ -298,15 +298,19 @@ const CheckoutComponent = (props) => {
                           name={field.name}
                           value={field.value}
                           onChange={field.onChange}
+                          key={field.placeholder}
                         />
                         {field.name === "phonenumber" &&
                           error.phonenumber.length > 0 && (
-                            <span className="error">{error.phonenumber}</span>
+                            <span className="error" key={error.phonenumber}>
+                              {error.phonenumber}
+                            </span>
                           )}
-                        {field.name === "pincode" &&
-                          error.pincode.length > 0 && (
-                            <span className="error">{error.pincode}</span>
-                          )}
+                        {field.name === "pincode" && error.pincode.length > 0 && (
+                          <span className="error" key={error.pincode}>
+                            {error.pincode}
+                          </span>
+                        )}
                       </Form.Group>
                     </>
                   ))}
@@ -319,7 +323,7 @@ const CheckoutComponent = (props) => {
                     Add Address
                   </Button>
                 </Form>
-              </center>{" "}
+              </center>
             </Row>
           </>
         )}

@@ -1,28 +1,16 @@
-import React, { useState, useEffect } from "react";
-import NavBar from "../components/Header";
+import React from "react";
+import { connect } from "react-redux";
 import "../CSS/AllSection.css";
-import { db } from "../config/firebase";
-import { sections } from "../data";
-import ContainerCard from "../components/ContainerCard";
-import "../CSS/AllSection.css";
+import Section from "./section";
 
-const WomanCardList = () => {
-  const [women, setWomen] = useState([]);
-  useEffect(() => {
-    db.collection(sections.women).onSnapshot((snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setWomen(data);
-    });
-  }, []);
-  return (
-    <>
-      <NavBar />
-      <ContainerCard data={women} btnText="Add To Cart"></ContainerCard>
-    </>
-  );
+const ManCardList = ({ cartItems }) => {
+  return <Section name="women" title="Woman" cartItems={cartItems} />;
 };
 
-export default WomanCardList;
+const mapStateToProps = (state) => ({
+  cartItems: state.cartstate.cartItems,
+});
+
+const mapDispatchToProps = () => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManCardList);

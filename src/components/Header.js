@@ -38,6 +38,7 @@ const RootnavBar = (props) => {
                   onClick={() => {
                     fire.auth().signOut();
                     props.userSignedIn(null);
+                    props.localToStore();
                   }}
                   to="/"
                 >

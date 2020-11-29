@@ -14,7 +14,7 @@ import * as CartService from "./services/CartService";
 function AppComponent(props) {
   React.useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
-      // If the use is not authenticated, then load the local cart in redux store
+      // If the user is not authenticated, then load the local cart in redux store
       if (!user) {
         return props.localToStore();
       }

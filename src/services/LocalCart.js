@@ -48,6 +48,8 @@ export function searchLocalForDbItem(dbData) {
     let found = false;
 
     for (let dbIndex = 0; dbIndex < dbData.length; dbIndex++) {
+      // make sure to change the compositekey and quantity property here if something changes in previous files where we are introducing
+      // these properties
       if (dbData[dbIndex].CompositeKey === localItem.CompositeKey) {
         found = true;
         data[dbIndex].Quantity += localStorageData[localIndex].Quantity;

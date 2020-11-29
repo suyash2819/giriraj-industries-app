@@ -40,23 +40,29 @@ export async function removeItem(item) {
 
 // search local storage for item in db
 export function searchLocalForDbItem(dbData) {
-  let localStorageData = JSON.parse(localStorage.getItem("items"));
+  const localStorageData = JSON.parse(localStorage.getItem("items"));
+  const data = { ...dbData };
 
   localStorageData.forEach((localItem, localIndex) => {
     // TO DO, to implement binary search or something more efficient
     let found = false;
+
     for (let dbIndex = 0; dbIndex < dbData.length; dbIndex++) {
+      // make sure to change the compositekey and quantity property here if something changes in previous files where we are introducing
+      // these properties
       if (dbData[dbIndex].CompositeKey === localItem.CompositeKey) {
         found = true;
-        dbData[dbIndex].Quantity += localStorageData[localIndex].Quantity;
+        data[dbIndex].Quantity += localStorageData[localIndex].Quantity;
         break;
       }
     }
+
     if (!found) {
-      dbData.push(localStorageData[localIndex]);
+      data.push(localStorageData[localIndex]);
     }
   });
-  return dbData;
+
+  return data;
 }
 
 export function updateLocalQuantityOfItem(cartItems) {

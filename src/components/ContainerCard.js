@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Container, Row, Spinner } from "react-bootstrap";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { addToCart, getData, localToStore } from "../store/reducer";
 import CardDisplay from "./Card";
-import { db } from "../config/firebase";
-import getFromDb from "./Utils";
-import * as CartService from "../services/CartService";
 import "../CSS/AllSection.css";
 
 const ContainerCardComponent = (props) => {
-  const [cartDisplay, setCartDisplay] = useState(false);
+  const [cartDisplay] = useState(false);
 
   let showData = [];
   let _itemTypes = [];
@@ -25,44 +22,6 @@ const ContainerCardComponent = (props) => {
       _itemTypes.push(element.Item_Type);
     }
   });
-
-  useEffect(() => {
-    if (!!props.user) {
-      db.collection("UserCart")
-        .doc(props.user.uid)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            if (!!localStorage.getItem("items")) {
-              CartService.syncDBFromLocal(doc, props.user.uid)
-                .then((updateddata) => {
-                  localStorage.clear();
-                  props.getData(updateddata);
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-            } else {
-              props.getData(doc.data().Cart_Items);
-            }
-          } else {
-            db.collection("UserCart")
-              .doc(props.user.uid)
-              .set({
-                Cart_Items: JSON.parse(localStorage.getItem("items")) || [],
-              })
-              .then(() => {
-                localStorage.clear();
-                getFromDb(props.user.uid).then((datadoc) => {
-                  props.getData(datadoc);
-                });
-              });
-          }
-        });
-    } else {
-      props.localToStore();
-    }
-  }, []);
 
   if (showData.length === 0) {
     return (

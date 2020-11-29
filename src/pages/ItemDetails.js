@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { Col, Button, Form, Container, Row, Alert } from "react-bootstrap";
+import { Col, Button, Form, Container, Row } from "react-bootstrap";
 import * as CartService from "../services/CartService";
 import NavBar from "../components/Header";
 import { addToCart, getData, localToStore } from "../store/reducer";

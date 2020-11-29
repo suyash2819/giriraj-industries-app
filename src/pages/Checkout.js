@@ -156,6 +156,7 @@ function AddressForm({ onSave }) {
 
 const CheckoutComponent = (props) => {
   const [addressExists, setAddressExists] = useState([]);
+  const [addMultipleAddress, setMultipleAddress] = useState(false);
 
   useEffect(() => {
     if (props.user) {
@@ -183,6 +184,7 @@ const CheckoutComponent = (props) => {
       newAddresses.push(_address);
 
       setAddressExists(newAddresses);
+      setMultipleAddress(false);
     });
 
     return prm;
@@ -205,13 +207,33 @@ const CheckoutComponent = (props) => {
             </center>
             <br />
             {addressExists.map((ad) => (
-              <Form.Check
-                type="checkbox"
-                id=""
-                label={formattedAddress(ad)}
-                key={ad.addressLine1}
-              />
+              <>
+                <Form.Check
+                  type="checkbox"
+                  id=""
+                  label={formattedAddress(ad)}
+                  key={ad.addressLine1}
+                />
+                <br key={ad.addressLine2} />
+              </>
             ))}
+            <br />
+            <center>
+              <Button
+                type="submit"
+                variant="primary"
+                className="addAddress"
+                id="multipleAddress"
+                onClick={() => setMultipleAddress(!addMultipleAddress)}
+              >
+                Add Address
+              </Button>
+              {addMultipleAddress && (
+                <Row className="itemRow">
+                  <AddressForm onSave={handleAddressSave} />
+                </Row>
+              )}
+            </center>
           </>
         ) : (
           <>

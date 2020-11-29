@@ -41,7 +41,7 @@ export async function removeItem(item) {
 // search local storage for item in db
 export function searchLocalForDbItem(dbData) {
   const localStorageData = JSON.parse(localStorage.getItem("items"));
-  const data = Object.create(dbData);
+  const data = { ...dbData };
 
   localStorageData.forEach((localItem, localIndex) => {
     // TO DO, to implement binary search or something more efficient

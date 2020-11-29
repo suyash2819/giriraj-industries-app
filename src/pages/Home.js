@@ -10,13 +10,13 @@ const Home = () => {
       <div className="Woman-pic">
         <h1 className="front-text">WOMEN</h1>
         <button className="front-button">
-          <Link to="/woman">DISCOVER</Link>
+          <Link to="/women">DISCOVER</Link>
         </button>
       </div>
       <div className="Man-pic">
         <h1 className="front-text">MEN</h1>
         <button className="front-button">
-          <Link to="/man">DISCOVER</Link>
+          <Link to="/men">DISCOVER</Link>
         </button>
       </div>
       <div className="Kid-pic">

@@ -28,7 +28,7 @@ export function Item({ item }) {
             <span className="badge badge-pill badge-primary">Added</span>
           )}
           <Card.Text>{item.Description}</Card.Text>
-          <Card.Text style={{ height: "20px" }}>{item.Cost}</Card.Text>
+          <Card.Text id="cost">{item.Cost}</Card.Text>
         </Card.Body>
       </Card>
     </Col>
@@ -39,7 +39,7 @@ export function Category({ items, label }) {
   return (
     <div>
       <h2>{label}</h2>
-      <Row style={{ marginBottom: "10px" }}>
+      <Row id="itemsrow">
         {items &&
           Object.values(items).map((item) => (
             <Item key={item.id} item={item} />

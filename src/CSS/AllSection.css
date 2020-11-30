@@ -9,3 +9,11 @@ img {
 .card-text {
   height: 50px;
 }
+
+#cost {
+  height: 20px;
+}
+
+#itemsrow {
+  margin-bottom: 10px;
+}

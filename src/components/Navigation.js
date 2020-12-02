@@ -5,10 +5,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { fire } from "../config/firebase";
 import { userSignedIn, displayLoader } from "../store/reducer";
 import Home from "../pages/Home";
-import WomanCardList from "../pages/WomanSection";
-import KidsCardList from "../pages/KidsSection";
-import ManCardList from "../pages/ManSection";
-import CovidCardList from "../pages/CovidSection";
+import Section from "../pages/section";
 import CartDisplay from "./CartDisplay";
 import UserSignUp from "../pages/auth/UserSignUp";
 import UserSignIn from "../pages/auth/UserSignIn";
@@ -18,23 +15,42 @@ import ItemDetail from "../pages/ItemDetails";
 
 const Rootmain = (props) => {
   useEffect(() => {
-    fire.auth().onAuthStateChanged(function (user) {
+    fire.auth().onAuthStateChanged(function handleAuthStateChange(user) {
       if (user) {
         props.userSignedIn(user);
       }
       props.displayLoader(false);
     });
   });
+
   if (props.loader) {
     return <Loader />;
   }
+
   return (
     <Switch>
       <Route exact path="/" component={Home} />
-      <Route exact path="/woman" component={WomanCardList} />
-      <Route exact path="/kids" component={KidsCardList} />
-      <Route exact path="/man" component={ManCardList} />
-      <Route exact path="/covid" component={CovidCardList} />
+      {/* TODO: Make the sections dynamic or generate sections at runtime */}
+      <Route
+        exact
+        path="/women"
+        render={() => <Section name="women" title="Women" />}
+      />
+      <Route
+        exact
+        path="/kids"
+        render={() => <Section name="kids" title="Kids" />}
+      />
+      <Route
+        exact
+        path="/covid"
+        render={() => <Section name="covid" title="Covid" />}
+      />
+      <Route
+        exact
+        path="/men"
+        render={() => <Section name="men" title="Men" />}
+      />
       <Route exact path="/cart" component={CartDisplay} />
       <Route exact path="/signup" component={UserSignUp} />
       <Route exact path="/signin" component={UserSignIn} />

@@ -12,6 +12,7 @@ import UserSignIn from "../pages/auth/UserSignIn";
 import Checkout from "../pages/Checkout";
 import Loader from "./Loader";
 import ItemDetail from "../pages/ItemDetails";
+import Payment from "../pages/Payment";
 
 const Rootmain = (props) => {
   useEffect(() => {
@@ -61,11 +62,19 @@ const Rootmain = (props) => {
           <Redirect to="/signin" />
         )}
       </Route>
+
       <Route
         exact
         path="/details/:itemType/:itemName/:itemId"
         component={ItemDetail}
       />
+      <Route exact path="/payment" component={Payment}>
+        {props.user ? (
+          <Route exact path="/payment" component={Payment} />
+        ) : (
+          <Redirect to="/signin" />
+        )}
+      </Route>
     </Switch>
   );
 };

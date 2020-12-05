@@ -14,3 +14,16 @@
 .addAddress {
   margin-bottom: 10px;
 }
+#delivery {
+  margin-top: 10px;
+}
+.addressFields {
+  margin-top: 10px;
+}
+.paymentLink {
+  color: white;
+}
+.paymentLink:hover {
+  color: white;
+  text-decoration: none;
+}

@@ -154,7 +154,7 @@ const CartDisplayComponent = (props) => {
           <br />
           <center>
             <Button variant="primary" className="checkoutButton">
-              <Link to="/checkout" className="nav-link checkoutLink">
+              <Link to="/checkout" className="checkoutLink">
                 Checkout
               </Link>
             </Button>

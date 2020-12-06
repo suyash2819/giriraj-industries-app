@@ -66,6 +66,7 @@ export async function removeItem(user, el, dbData) {
 
 // sync db data with local storage data
 export async function syncDBFromLocal(dbCart, userid) {
+  
   const updatedData = LocalCart.searchLocalForDbItem(dbCart.Cart_Items);
 
   return db

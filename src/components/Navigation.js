@@ -13,7 +13,7 @@ import Checkout from "../pages/Checkout";
 import Loader from "./Loader";
 import ItemDetail from "../pages/ItemDetails";
 import Payment from "../pages/Payment";
-import AuthenticatedRoute from "./AuthenticatedRoutes"
+import AuthenticatedRoute from "./AuthenticatedRoutes";
 
 const Rootmain = (props) => {
   useEffect(() => {
@@ -61,8 +61,8 @@ const Rootmain = (props) => {
         path="/details/:itemType/:itemName/:itemId"
         component={ItemDetail}
       />
-      <AuthenticatedRoute exact path="/checkout" component={Checkout} user={props.user}/>
-      <AuthenticatedRoute exact path="/payment" component={Payment} user={props.user}/>
+      <AuthenticatedRoute exact path="/checkout" component={Checkout} />
+      <AuthenticatedRoute exact path="/payment" component={Payment} />
     </Switch>
   );
 };

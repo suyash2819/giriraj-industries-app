@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Container, Row, Button, Form } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import addAddress from "../services/CheckoutService";
 import { validPincode, validPhonenumber } from "../components/Utils";
 import NavBar from "../components/Header";
@@ -148,7 +149,7 @@ function AddressForm({ onSave }) {
       ))}
 
       <Button type="submit" variant="primary" className="addAddress">
-        Add Address
+        Submit New Address
       </Button>
     </Form>
   );
@@ -157,6 +158,7 @@ function AddressForm({ onSave }) {
 const CheckoutComponent = (props) => {
   const [addressExists, setAddressExists] = useState([]);
   const [addMultipleAddress, setMultipleAddress] = useState(false);
+  const [checkedAddress, setCheckedAddress] = useState(null);
 
   useEffect(() => {
     if (props.user) {
@@ -196,6 +198,10 @@ const CheckoutComponent = (props) => {
     return `${addressLine1}, ${addressLine2}, ${city}, ${state}, ${pincode}`;
   };
 
+  const handleCheckBox = (addressLine1) => {
+    setCheckedAddress(addressLine1);
+  };
+
   return (
     <>
       <NavBar />
@@ -210,11 +216,31 @@ const CheckoutComponent = (props) => {
               <>
                 <Form.Check
                   type="checkbox"
-                  id=""
+                  className="addressFields"
                   label={formattedAddress(ad)}
+                  checked={checkedAddress === ad}
+                  onChange={() => {
+                    handleCheckBox(ad);
+                  }}
                   key={ad.addressLine1}
                 />
-                <br key={ad.addressLine2} />
+                {checkedAddress === ad && (
+                  <>
+                    <center>
+                      <Button
+                        type="submit"
+                        variant="success"
+                        className="addAddress"
+                        id="delivery"
+                      >
+                        <Link to="/payment" className="paymentLink">
+                          Deliver To This Address
+                        </Link>
+                      </Button>
+                    </center>
+                  </>
+                )}
+                {/* <br key={ad.addressLine2} /> */}
               </>
             ))}
             <br />
@@ -226,7 +252,7 @@ const CheckoutComponent = (props) => {
                 id="multipleAddress"
                 onClick={() => setMultipleAddress(!addMultipleAddress)}
               >
-                Add Address
+                Add New Address
               </Button>
               {addMultipleAddress && (
                 <Row className="itemRow">

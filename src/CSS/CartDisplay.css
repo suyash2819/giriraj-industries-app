@@ -21,11 +21,13 @@
   margin-left: 3% !important;
   height: 35px !important;
 }
-
+.checkoutLink:hover {
+  text-decoration: none;
+  color: white;
+}
 .checkoutLink {
   color: white;
 }
-
 .checkoutButton {
   height: 50px;
   margin-bottom: 20px;

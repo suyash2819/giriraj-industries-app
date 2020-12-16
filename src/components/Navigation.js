@@ -13,6 +13,7 @@ import Checkout from "../pages/Checkout";
 import Loader from "./Loader";
 import ItemDetail from "../pages/ItemDetails";
 import Payment from "../pages/Payment";
+import AuthenticatedRoute from "./AuthenticatedRoutes";
 
 const Rootmain = (props) => {
   useEffect(() => {
@@ -55,26 +56,13 @@ const Rootmain = (props) => {
       <Route exact path="/cart" component={CartDisplay} />
       <Route exact path="/signup" component={UserSignUp} />
       <Route exact path="/signin" component={UserSignIn} />
-      <Route exact path="/checkout" component={Checkout}>
-        {props.user ? (
-          <Route exact path="/checkout" component={Checkout} />
-        ) : (
-          <Redirect to="/signin" />
-        )}
-      </Route>
-
       <Route
         exact
         path="/details/:itemType/:itemName/:itemId"
         component={ItemDetail}
       />
-      <Route exact path="/payment" component={Payment}>
-        {props.user ? (
-          <Route exact path="/payment" component={Payment} />
-        ) : (
-          <Redirect to="/signin" />
-        )}
-      </Route>
+      <AuthenticatedRoute exact path="/checkout" component={Checkout} />
+      <AuthenticatedRoute exact path="/payment" component={Payment} />
     </Switch>
   );
 };

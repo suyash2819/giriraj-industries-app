@@ -20,6 +20,7 @@ function AddressForm({ onSave }) {
     pincode: "",
     country: "",
     phonenumber: "",
+    label: "",
   });
   const [error, setError] = useState({});
 
@@ -73,6 +74,13 @@ function AddressForm({ onSave }) {
       placeholder: "Phone Number",
       name: "phonenumber",
       value: address.phonenumber,
+    },
+    {
+      type: "text",
+      id: "",
+      placeholder: "Home address or Office address or others",
+      name: "label",
+      value: address.label,
     },
   ];
 
@@ -162,14 +170,14 @@ const CheckoutComponent = (props) => {
 
   useEffect(() => {
     if (props.user) {
-      db.collection("UserOrders")
+      db.collection("UserAddress")
         .doc(props.user.uid)
         .get()
         .then((doc) => {
           if (doc.exists) {
             setAddressExists(doc.data().Address);
           } else {
-            db.collection("UserOrders").doc(props.user.uid).set({
+            db.collection("UserAddress").doc(props.user.uid).set({
               Address: [],
             });
           }
@@ -209,7 +217,7 @@ const CheckoutComponent = (props) => {
         {addressExists.length > 0 ? (
           <>
             <center>
-              <h2>Address</h2>
+              <h2>Select a Delivery Address</h2>
             </center>
             <br />
             {addressExists.map((ad) => (
@@ -233,7 +241,16 @@ const CheckoutComponent = (props) => {
                         className="addAddress"
                         id="delivery"
                       >
-                        <Link to="/payment" className="paymentLink">
+                        <Link
+                          to={{
+                            pathname: "/payment",
+                            state: {
+                              deliveryAddress: checkedAddress,
+                              contactnumber: ad.phonenumber,
+                            },
+                          }}
+                          className="paymentLink"
+                        >
                           Deliver To This Address
                         </Link>
                       </Button>

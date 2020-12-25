@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { Container, Row, Button, Col } from "react-bootstrap";
+import cryptoRandomString from "crypto-random-string";
 import AlertMessage from "../components/AlertMessage";
 import NavBar from "../components/Header";
 import "../CSS/AllSection.css";
+import "../CSS/Payment.css";
 import handleOrders from "../services/OrderService";
-
-const cryptoRandomString = require("crypto-random-string");
 
 const PaymentComponent = (props) => {
   const [order, setOrder] = useState({
@@ -42,6 +42,8 @@ const PaymentComponent = (props) => {
   const { deliveryAddress, contactnumber } = props.location.state;
 
   let totalCost = 0;
+  const logo =
+    "https://firebasestorage.googleapis.com/v0/b/giriraj-industries.appspot.com/o/images%2Fgiriraj-industries-logo.png?alt=media&token=c84f3229-c1ef-44e4-9779-a029625254b2";
 
   const alertMessageDisplay = () => {
     setShowAlert({ show: false });
@@ -54,8 +56,7 @@ const PaymentComponent = (props) => {
       currency: "INR",
       name: "Giriraj Industries",
       description: "Test Transaction",
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/giriraj-industries.appspot.com/o/images%2Fgiriraj-industries-logo.png?alt=media&token=c84f3229-c1ef-44e4-9779-a029625254b2",
+      image: logo,
       handler: (response) => {
         setShowAlert({
           success: true,
@@ -174,9 +175,9 @@ const PaymentComponent = (props) => {
           <Button
             variant="primary"
             onClick={openPaymentModal}
-            style={{ marginRight: "5px" }}
+            className="payOnline"
           >
-            Pay with Razorpay
+            Pay Online
           </Button>
           <Button variant="primary">Pay On Delivery</Button>
         </center>

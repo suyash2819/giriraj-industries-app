@@ -8,6 +8,7 @@ import { validPincode, validPhonenumber } from "../components/Utils";
 import NavBar from "../components/Header";
 import { getData, localToStore } from "../store/reducer";
 import { db } from "../config/firebase";
+import Loader from "../components/Loader";
 import "../CSS/AllSection.css";
 import "../CSS/Checkout.css";
 
@@ -167,6 +168,7 @@ const CheckoutComponent = (props) => {
   const [addressExists, setAddressExists] = useState([]);
   const [addMultipleAddress, setMultipleAddress] = useState(false);
   const [checkedAddress, setCheckedAddress] = useState(null);
+  const [showLoader, setShowLoader] = useState(true);
 
   useEffect(() => {
     if (props.user) {
@@ -176,10 +178,16 @@ const CheckoutComponent = (props) => {
         .then((doc) => {
           if (doc.exists) {
             setAddressExists(doc.data().Address);
+            setShowLoader(false);
           } else {
-            db.collection("UserAddress").doc(props.user.uid).set({
-              Address: [],
-            });
+            db.collection("UserAddress")
+              .doc(props.user.uid)
+              .set({
+                Address: [],
+              })
+              .then(() => {
+                setShowLoader(false);
+              });
           }
         });
     }
@@ -209,6 +217,8 @@ const CheckoutComponent = (props) => {
   const handleCheckBox = (addressLine1) => {
     setCheckedAddress(addressLine1);
   };
+
+  if (showLoader) return <Loader />;
 
   return (
     <>

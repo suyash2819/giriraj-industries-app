@@ -60,7 +60,7 @@ const PaymentComponent = (props) => {
       handler: (response) => {
         setShowAlert({
           success: true,
-          message: "Payment Successful",
+          message: "Payment Successful, Order Placed",
           show: true,
         });
         const orderId = cryptoRandomString({
@@ -98,6 +98,26 @@ const PaymentComponent = (props) => {
       });
     });
     rzp1.open();
+  };
+
+  const payOnDelivery = () => {
+    setShowAlert({
+      success: true,
+      message: "Order Placed",
+      show: true,
+    });
+    const orderId = cryptoRandomString({
+      length: 10,
+      type: "alphanumeric",
+    });
+    setOrder({
+      orderDate: new Date(),
+      orderId,
+      paymentId: null,
+      itemsOrdered: props.cartItems,
+      totalCost,
+      deliveryAddress,
+    });
   };
 
   return (
@@ -179,7 +199,9 @@ const PaymentComponent = (props) => {
           >
             Pay Online
           </Button>
-          <Button variant="primary">Pay On Delivery</Button>
+          <Button variant="primary" onClick={payOnDelivery}>
+            Pay On Delivery
+          </Button>
         </center>
         <br />
       </Container>

@@ -14,7 +14,6 @@ const PaymentComponent = (props) => {
     orderDate: "",
     orderId: "",
     paymentId: "",
-    itemsOrdered: props.cartItems,
     totalCost: 0,
     deliveryAddress: "",
   });
@@ -33,7 +32,7 @@ const PaymentComponent = (props) => {
       return;
     }
 
-    handleOrders(props.user.uid, order);
+    handleOrders(props.user.uid, { ...order, itemsOrdered: props.cartItems });
   }, [order]);
 
   // if a user has not entered the delivery address
@@ -71,7 +70,6 @@ const PaymentComponent = (props) => {
           orderDate: new Date(),
           orderId,
           paymentId: response.razorpay_payment_id,
-          itemsOrdered: props.cartItems,
           totalCost,
           deliveryAddress,
         });
@@ -114,7 +112,6 @@ const PaymentComponent = (props) => {
       orderDate: new Date(),
       orderId,
       paymentId: null,
-      itemsOrdered: props.cartItems,
       totalCost,
       deliveryAddress,
     });

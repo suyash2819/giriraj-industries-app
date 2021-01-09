@@ -214,12 +214,11 @@ const CheckoutComponent = (props) => {
     return `${addressLine1}, ${addressLine2}, ${city}, ${state}, ${pincode}`;
   };
 
-  const handleCheckBox = (addressLine1) => {
-    setCheckedAddress(addressLine1);
+  const handleCheckBox = (address) => {
+    setCheckedAddress(address);
   };
 
   if (showLoader) return <Loader />;
-
   return (
     <>
       <NavBar />

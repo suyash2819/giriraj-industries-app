@@ -7,7 +7,7 @@ const RootAuthenticatedRoute = ({ component: Component, ...rest }) => {
     <Route
       path={rest.path}
       render={(props) =>
-        rest.user ? <Component /> : <Redirect to="/signin" />
+        rest.user ? <Component {...props} /> : <Redirect to="/signin" />
       }
     />
   );

@@ -5,6 +5,7 @@
   "dependencies": {
     "@types/react-router": "^5.1.8",
     "bootstrap": "^4.5.3",
+    "crypto-random-string": "^3.3.0",
     "firebase": "^7.24.0",
     "jquery": "^3.5.1",
     "lodash.debounce": "^4.0.8",

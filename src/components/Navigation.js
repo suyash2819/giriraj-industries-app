@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import { fire } from "../config/firebase";
 import { userSignedIn, displayLoader } from "../store/reducer";
 import Home from "../pages/Home";

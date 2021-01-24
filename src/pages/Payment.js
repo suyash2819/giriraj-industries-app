@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
+import axios from "axios";
 import { Container, Row, Button, Col } from "react-bootstrap";
 import cryptoRandomString from "crypto-random-string";
 import AlertMessage from "../components/AlertMessage";
@@ -8,14 +9,21 @@ import NavBar from "../components/Header";
 import "../CSS/AllSection.css";
 import "../CSS/Payment.css";
 import handleOrders from "../services/OrderService";
+import Loader from "../components/Loader";
+
+// const Razorpay3 = require("razorpay");
 
 const PaymentComponent = (props) => {
+  const [orderFetchLoader, setOrderFetchLoader] = useState(false);
+
   const [order, setOrder] = useState({
     orderDate: "",
     orderId: "",
     paymentId: "",
+    paymentSignature: "",
     totalCost: 0,
     deliveryAddress: "",
+    paymentVerified: "N",
   });
 
   const [showAlert, setShowAlert] = useState({
@@ -25,6 +33,7 @@ const PaymentComponent = (props) => {
   });
 
   const isFirstRun = useRef(true);
+  let totalCost = 0;
 
   useEffect(() => {
     if (isFirstRun.current) {
@@ -40,7 +49,6 @@ const PaymentComponent = (props) => {
 
   const { deliveryAddress, contactnumber } = props.location.state;
 
-  let totalCost = 0;
   const logo =
     "https://firebasestorage.googleapis.com/v0/b/giriraj-industries.appspot.com/o/images%2Fgiriraj-industries-logo.png?alt=media&token=c84f3229-c1ef-44e4-9779-a029625254b2";
 
@@ -48,54 +56,71 @@ const PaymentComponent = (props) => {
     setShowAlert({ show: false });
   };
 
+  const fetchOrderId = () => {
+    return axios
+      .post(
+        "https://us-central1-giriraj-industries.cloudfunctions.net/createOrder",
+        { cartItems: props.cartItems }
+        // userId: props.user.uid,
+      )
+      .then((orderDetails) => {
+        return orderDetails.data.id;
+      });
+  };
+
   const openPaymentModal = () => {
-    const options = {
-      key: process.env.REACT_APP_RAZORPAY_KEY,
-      amount: totalCost * 100,
-      currency: "INR",
-      name: "Giriraj Industries",
-      description: "Test Transaction",
-      image: logo,
-      handler: (response) => {
+    setOrderFetchLoader(true);
+
+    fetchOrderId().then((orderId) => {
+      setOrderFetchLoader(false);
+      const options = {
+        key: process.env.REACT_APP_RAZORPAY_KEY,
+        amount: totalCost * 100,
+        currency: "INR",
+        name: "Giriraj Industries",
+        description: "Test Transaction",
+        image: logo,
+        order_id: orderId,
+        handler: (response) => {
+          setShowAlert({
+            success: true,
+            message: "Payment Successful, Order Placed",
+            show: true,
+          });
+
+          setOrder({
+            orderDate: new Date(),
+            orderId,
+            paymentId: response.razorpay_payment_id,
+            paymentSignature: response.razorpay_signature,
+            totalCost,
+            deliveryAddress,
+            paymentVerified: "N",
+          });
+        },
+        prefill: {
+          name: props.user.displayName,
+          email: props.user.email,
+          contact: contactnumber,
+        },
+        notes: {
+          address: "Razorpay Corporate Office",
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      let rzp1 = new window.Razorpay(options);
+      rzp1.on("payment.failed", function (response) {
         setShowAlert({
-          success: true,
-          message: "Payment Successful, Order Placed",
+          success: false,
+          message: response.error.description,
           show: true,
         });
-        const orderId = cryptoRandomString({
-          length: 10,
-          type: "alphanumeric",
-        });
-        setOrder({
-          orderDate: new Date(),
-          orderId,
-          paymentId: response.razorpay_payment_id,
-          totalCost,
-          deliveryAddress,
-        });
-      },
-      prefill: {
-        name: props.user.displayName,
-        email: props.user.email,
-        contact: contactnumber,
-      },
-      notes: {
-        address: "Razorpay Corporate Office",
-      },
-      theme: {
-        color: "#3399cc",
-      },
-    };
-
-    let rzp1 = new window.Razorpay(options);
-    rzp1.on("payment.failed", function (response) {
-      setShowAlert({
-        success: false,
-        message: response.error.description,
-        show: true,
       });
+      rzp1.open();
     });
-    rzp1.open();
   };
 
   const payOnDelivery = () => {
@@ -116,6 +141,8 @@ const PaymentComponent = (props) => {
       deliveryAddress,
     });
   };
+
+  if (orderFetchLoader) return <Loader />;
 
   return (
     <>
@@ -178,7 +205,7 @@ const PaymentComponent = (props) => {
                 <h6>Total Cost</h6>
               </center>
             </Col>
-            <Col md={4}></Col>
+            <Col md={4} />
             <Col md={4}>
               <center>
                 <b>

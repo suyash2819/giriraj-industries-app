@@ -4,12 +4,15 @@
   "private": true,
   "dependencies": {
     "@types/react-router": "^5.1.8",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.3",
+    "crypto-js": "^4.0.0",
     "crypto-random-string": "^3.3.0",
     "firebase": "^7.24.0",
     "jquery": "^3.5.1",
     "lodash.debounce": "^4.0.8",
     "popper.js": "^1.16.1",
+    "razorpay": "^2.0.6",
     "react": "^16.14.0",
     "react-bootstrap": "^1.4.0",
     "react-dom": "^16.14.0",
@@ -28,6 +31,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "proxy": "https://api.razorpay.com",
   "browserslist": {
     "production": [
       ">0.2%",

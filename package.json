@@ -31,7 +31,6 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "proxy": "https://api.razorpay.com",
   "browserslist": {
     "production": [
       ">0.2%",

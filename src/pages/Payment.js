@@ -11,8 +11,6 @@ import "../CSS/Payment.css";
 import handleOrders from "../services/OrderService";
 import Loader from "../components/Loader";
 
-// const Razorpay3 = require("razorpay");
-
 const PaymentComponent = (props) => {
   const [orderFetchLoader, setOrderFetchLoader] = useState(false);
 
@@ -49,6 +47,9 @@ const PaymentComponent = (props) => {
 
   const { deliveryAddress, contactnumber } = props.location.state;
 
+  const createOrderUrl =
+    "https://us-central1-giriraj-industries.cloudfunctions.net/createOrder";
+
   const logo =
     "https://firebasestorage.googleapis.com/v0/b/giriraj-industries.appspot.com/o/images%2Fgiriraj-industries-logo.png?alt=media&token=c84f3229-c1ef-44e4-9779-a029625254b2";
 
@@ -58,11 +59,7 @@ const PaymentComponent = (props) => {
 
   const fetchOrderId = () => {
     return axios
-      .post(
-        "https://us-central1-giriraj-industries.cloudfunctions.net/createOrder",
-        { cartItems: props.cartItems }
-        // userId: props.user.uid,
-      )
+      .post(createOrderUrl, { cartItems: props.cartItems })
       .then((orderDetails) => {
         return orderDetails.data.id;
       });

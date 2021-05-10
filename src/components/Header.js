@@ -5,10 +5,17 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { fire } from "../config/firebase";
 import { userSignedIn, displayLoader, localToStore } from "../store/reducer";
+import "../CSS/Header.css";
 
 const RootnavBar = (props) => {
   return (
-    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
+    <Navbar
+      collapseOnSelect
+      expand="lg"
+      className="bg-light"
+      variant="dark"
+      fixed="top"
+    >
       <Navbar.Brand style={{ fontSize: "15px" }}>
         GIRIRAJ INDUSTRIES
       </Navbar.Brand>

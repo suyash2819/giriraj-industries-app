@@ -31,8 +31,8 @@ export default function authenticatePayment(userid, paymentid) {
     .get()
     .then((doc) => {
       const orders = doc.data().Orders;
-      const generateHashUrl =
-        "https://us-central1-giriraj-industries.cloudfunctions.net/generateHash";
+      const generateHashUrl ="https://a8ithcdo7g.execute-api.ap-south-1.amazonaws.com/latest/generateHash"
+        // "https://us-central1-giriraj-industries.cloudfunctions.net/generateHash";
 
       for (let i = 0; i < orders.length; i++) {
         if (orders[i].paymentId === paymentid) {

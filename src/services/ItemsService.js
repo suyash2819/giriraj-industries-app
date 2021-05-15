@@ -39,3 +39,11 @@ export async function getItemsForType(section, type) {
     .get()
     .then(formatSnapshot);
 }
+
+export async function getItemForFrontPage(collectionName) {
+  return firebase
+    .firestore()
+    .collection(collectionName)
+    .get()
+    .then(formatSnapshot);
+}

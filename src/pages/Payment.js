@@ -10,6 +10,7 @@ import "../CSS/AllSection.css";
 import "../CSS/Payment.css";
 import handleOrders from "../services/OrderService";
 import Loader from "../components/Loader";
+import { createOrderUrl, logo } from "../data";
 
 const PaymentComponent = (props) => {
   const [orderFetchLoader, setOrderFetchLoader] = useState(false);
@@ -46,11 +47,6 @@ const PaymentComponent = (props) => {
 
   const { deliveryAddress, contactnumber } = props.location.state;
 
-  const createOrderUrl =  "https://a8ithcdo7g.execute-api.ap-south-1.amazonaws.com/latest"
-
-  const logo =
-    "https://firebasestorage.googleapis.com/v0/b/giriraj-industries.appspot.com/o/images%2Fgiriraj-industries-logo.png?alt=media&token=c84f3229-c1ef-44e4-9779-a029625254b2";
-
   const alertMessageDisplay = () => {
     setShowAlert({ show: false });
   };
@@ -60,7 +56,10 @@ const PaymentComponent = (props) => {
       .post(createOrderUrl, { cartItems: props.cartItems })
       .then((orderDetails) => {
         return orderDetails.data.id;
-      }).catch((err)=>{console.log(err);});
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const openPaymentModal = () => {

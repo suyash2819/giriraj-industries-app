@@ -2,6 +2,7 @@ import "firebase/firestore";
 import firebase from "firebase/app";
 import axios from "axios";
 import { db } from "../config/firebase";
+import { generateHashUrl } from "../data";
 
 function markPaymentVerified(verifiedOrder, userid, oldOrder) {
   db.collection("UserOrder")
@@ -31,8 +32,6 @@ export default function authenticatePayment(userid, paymentid) {
     .get()
     .then((doc) => {
       const orders = doc.data().Orders;
-      const generateHashUrl ="https://a8ithcdo7g.execute-api.ap-south-1.amazonaws.com/latest/generateHash"
-        // "https://us-central1-giriraj-industries.cloudfunctions.net/generateHash";
 
       for (let i = 0; i < orders.length; i++) {
         if (orders[i].paymentId === paymentid) {

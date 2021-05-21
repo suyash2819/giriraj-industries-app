@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
-import Gallery from "react-grid-gallery";
 import { Col, Row } from "react-bootstrap";
 import NavBar from "../components/Header";
 import "../CSS/Home.css";
@@ -62,29 +61,8 @@ const Home = () => {
           }}
         >
           <Row>
-            {frontPageItems.slice(0, 3).map((item) => (
+            {frontPageItems.map((item) => (
               <Col lg={4} md={12}>
-                <Link
-                  to={{
-                    pathname: `/details/${item.Item_Type}/${item.Item_Name}/${item.id}`,
-                    state: {
-                      image: item.Image_url,
-                      element: item,
-                    },
-                  }}
-                  key={item.id}
-                >
-                  <img
-                    src={item.Image_url}
-                    alt=""
-                    className="w-100 shadow-1-strong rounded mb-4"
-                  />
-                </Link>
-              </Col>
-            ))}
-
-            {frontPageItems.slice(3, 6).map((item) => (
-              <Col lg={4} className="mb-lg-0">
                 <Link
                   to={{
                     pathname: `/details/${item.Item_Type}/${item.Item_Name}/${item.id}`,

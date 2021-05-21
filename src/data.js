@@ -81,3 +81,6 @@ export const sections = {
   kids: "Kids",
   covid: "Covid",
 };
+
+export const logo =
+  "https://firebasestorage.googleapis.com/v0/b/giriraj-industries.appspot.com/o/images%2Fgiriraj-industries-logo.png?alt=media&token=c84f3229-c1ef-44e4-9779-a029625254b2";

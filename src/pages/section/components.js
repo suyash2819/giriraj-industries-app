@@ -64,7 +64,6 @@ export function Section({ name, title, cartItems }) {
   const [items, setItems] = useState({});
   const [loading, setLoading] = useState(true);
 
-  console.log(cartItems, items, loading);
   // Get all the items for this sections
   useEffect(() => {
     ItemsService.getItemsForSection(name).then((_items) => {
@@ -100,7 +99,6 @@ export function Section({ name, title, cartItems }) {
 
       cartItems.forEach((item) => {
         if (updated[item.Item_Type]) {
-          console.log(updated[item.Item_Type]);
           updated[item.Item_Type].items[item.id].added = true;
         }
       });

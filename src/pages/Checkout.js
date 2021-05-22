@@ -166,7 +166,7 @@ function AddressForm({ onSave }) {
 }
 
 const CheckoutComponent = (props) => {
-  const [addressExists, setAddressExists] = useState([]);
+  const [addresses, setAddresses] = useState([]);
   const [addMultipleAddress, setMultipleAddress] = useState(false);
   const [checkedAddress, setCheckedAddress] = useState(null);
   const [showLoader, setShowLoader] = useState(true);
@@ -174,7 +174,7 @@ const CheckoutComponent = (props) => {
   useEffect(() => {
     if (props.user) {
       UserService.listAddresses(props.user).then((snapshot) => {
-        setAddressExists(
+        setAddresses(
           snapshot.docs.map((doc) => Object.assign({ id: doc.id }, doc.data()))
         );
         setShowLoader(false);
@@ -183,18 +183,17 @@ const CheckoutComponent = (props) => {
   }, []);
 
   const handleAddressSave = (_address) => {
-    const newAddressPromise = UserService.addNewAddress(props.user, _address);
+    return UserService
+      .addNewAddress(props.user, _address)
+      .then((doc) => {
+        const localAddresses = Array.from(addresses);
 
-    newAddressPromise.then(() => {
-      const allAddresses = Array.from(addressExists);
+        localAddresses.push(Object.assign({ id: doc.id }, _address));
+        setAddresses(localAddresses);
+        setMultipleAddress(false);
 
-      allAddresses.push(_address);
-
-      setAddressExists(allAddresses);
-      setMultipleAddress(false);
-    });
-
-    return newAddressPromise;
+        return doc;
+      })
   };
 
   const formattedAddress = (ad) => {
@@ -212,13 +211,13 @@ const CheckoutComponent = (props) => {
     <>
       <NavBar />
       <Container>
-        {addressExists.length > 0 ? (
+        {addresses.length > 0 ? (
           <>
             <center>
               <h2>Select a Delivery Address</h2>
             </center>
             <br />
-            {addressExists.map((ad) => (
+            {addresses.map((ad) => (
               <React.Fragment key={ad.id}>
                 <Form.Check
                   type="checkbox"

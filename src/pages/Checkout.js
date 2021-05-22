@@ -11,7 +11,7 @@ import Loader from "../components/Loader";
 import "../CSS/AllSection.css";
 import "../CSS/Checkout.css";
 
-import * as UserService from '../services/UserService';
+import * as UserService from "../services/UserService";
 
 function AddressForm({ onSave }) {
   const [address, setAddress] = useState({
@@ -173,12 +173,12 @@ const CheckoutComponent = (props) => {
 
   useEffect(() => {
     if (props.user) {
-      UserService
-        .listAddresses(props.user)
-        .then((snapshot) => {
-          setAddressExists(snapshot.docs.map(doc => Object.assign({ id: doc.id }, doc.data())));
-          setShowLoader(false);
-        });
+      UserService.listAddresses(props.user).then((snapshot) => {
+        setAddressExists(
+          snapshot.docs.map((doc) => Object.assign({ id: doc.id }, doc.data()))
+        );
+        setShowLoader(false);
+      });
     }
   }, []);
 
@@ -186,11 +186,11 @@ const CheckoutComponent = (props) => {
     const newAddressPromise = UserService.addNewAddress(props.user, _address);
 
     newAddressPromise.then(() => {
-      const newAddresses = Array.from(addressExists);
+      const allAddresses = Array.from(addressExists);
 
-      newAddresses.push(_address);
+      allAddresses.push(_address);
 
-      setAddressExists(newAddresses);
+      setAddressExists(allAddresses);
       setMultipleAddress(false);
     });
 

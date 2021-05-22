@@ -170,7 +170,7 @@ const CheckoutComponent = (props) => {
   const [addMultipleAddress, setMultipleAddress] = useState(false);
   const [checkedAddress, setCheckedAddress] = useState(null);
   const [showLoader, setShowLoader] = useState(true);
-  console.log(addressExists);
+
   useEffect(() => {
     if (props.user) {
       UserService.listAddresses(props.user).then((snapshot) => {

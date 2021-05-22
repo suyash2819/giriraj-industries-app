@@ -3,7 +3,6 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Container, Row, Button, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import addAddress from "../services/CheckoutService";
 import { validPincode, validPhonenumber } from "../components/Utils";
 import NavBar from "../components/Header";
 import { getData, localToStore } from "../store/reducer";
@@ -11,6 +10,8 @@ import { db } from "../config/firebase";
 import Loader from "../components/Loader";
 import "../CSS/AllSection.css";
 import "../CSS/Checkout.css";
+
+import * as UserService from "../services/UserService";
 
 function AddressForm({ onSave }) {
   const [address, setAddress] = useState({
@@ -172,40 +173,28 @@ const CheckoutComponent = (props) => {
 
   useEffect(() => {
     if (props.user) {
-      db.collection("UserAddress")
-        .doc(props.user.uid)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            setAddressExists(doc.data().Address);
-            setShowLoader(false);
-          } else {
-            db.collection("UserAddress")
-              .doc(props.user.uid)
-              .set({
-                Address: [],
-              })
-              .then(() => {
-                setShowLoader(false);
-              });
-          }
-        });
+      UserService.listAddresses(props.user).then((snapshot) => {
+        setAddressExists(
+          snapshot.docs.map((doc) => Object.assign({ id: doc.id }, doc.data()))
+        );
+        setShowLoader(false);
+      });
     }
   }, []);
 
   const handleAddressSave = (_address) => {
-    const prm = addAddress(props.user.uid, _address);
+    const newAddressPromise = UserService.addNewAddress(props.user, _address);
 
-    prm.then(() => {
-      const newAddresses = Array.from(addressExists);
+    newAddressPromise.then(() => {
+      const allAddresses = Array.from(addressExists);
 
-      newAddresses.push(_address);
+      allAddresses.push(_address);
 
-      setAddressExists(newAddresses);
+      setAddressExists(allAddresses);
       setMultipleAddress(false);
     });
 
-    return prm;
+    return newAddressPromise;
   };
 
   const formattedAddress = (ad) => {
@@ -230,7 +219,7 @@ const CheckoutComponent = (props) => {
             </center>
             <br />
             {addressExists.map((ad) => (
-              <>
+              <React.Fragment key={ad.id}>
                 <Form.Check
                   type="checkbox"
                   className="addressFields"
@@ -267,7 +256,7 @@ const CheckoutComponent = (props) => {
                   </>
                 )}
                 {/* <br key={ad.addressLine2} /> */}
-              </>
+              </React.Fragment>
             ))}
             <br />
             <center>

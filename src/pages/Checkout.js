@@ -166,15 +166,15 @@ function AddressForm({ onSave }) {
 }
 
 const CheckoutComponent = (props) => {
-  const [addresses, setAddresses] = useState([]);
+  const [addressExists, setAddressExists] = useState([]);
   const [addMultipleAddress, setMultipleAddress] = useState(false);
   const [checkedAddress, setCheckedAddress] = useState(null);
   const [showLoader, setShowLoader] = useState(true);
-
+  console.log(addressExists);
   useEffect(() => {
     if (props.user) {
       UserService.listAddresses(props.user).then((snapshot) => {
-        setAddresses(
+        setAddressExists(
           snapshot.docs.map((doc) => Object.assign({ id: doc.id }, doc.data()))
         );
         setShowLoader(false);
@@ -183,17 +183,15 @@ const CheckoutComponent = (props) => {
   }, []);
 
   const handleAddressSave = (_address) => {
-    return UserService
-      .addNewAddress(props.user, _address)
-      .then((doc) => {
-        const localAddresses = Array.from(addresses);
+    return UserService.addNewAddress(props.user, _address).then((doc) => {
+      const allAddresses = Array.from(addressExists);
 
-        localAddresses.push(Object.assign({ id: doc.id }, _address));
-        setAddresses(localAddresses);
-        setMultipleAddress(false);
+      allAddresses.push(Object.assign({ id: doc.id }, _address));
+      setAddressExists(allAddresses);
+      setMultipleAddress(false);
 
-        return doc;
-      })
+      return doc;
+    });
   };
 
   const formattedAddress = (ad) => {
@@ -211,13 +209,13 @@ const CheckoutComponent = (props) => {
     <>
       <NavBar />
       <Container>
-        {addresses.length > 0 ? (
+        {addressExists.length > 0 ? (
           <>
             <center>
               <h2>Select a Delivery Address</h2>
             </center>
             <br />
-            {addresses.map((ad) => (
+            {addressExists.map((ad) => (
               <React.Fragment key={ad.id}>
                 <Form.Check
                   type="checkbox"

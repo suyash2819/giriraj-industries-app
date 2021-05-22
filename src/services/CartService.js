@@ -1,9 +1,9 @@
 import { db } from "../config/firebase";
 import * as LocalCart from "./LocalCart";
 
-function userCartCollection (uid) {
-  const userCollection = db.collection('Users');
-  return userCollection.doc(uid).collection('Carts');
+function userCartCollection(uid) {
+  const userCollection = db.collection("Users");
+  return userCollection.doc(uid).collection("Carts");
 }
 
 // adds Item to cart, called by addItem
@@ -59,10 +59,9 @@ export async function removeItem(user, el, dbData) {
       }
     });
 
-    userCartCollection(user.uid)
-      .doc(user.uid).set({
-        Cart_Items: dbData,
-      });
+    userCartCollection(user.uid).doc(user.uid).set({
+      Cart_Items: dbData,
+    });
 
     return dbData;
   }
@@ -73,7 +72,7 @@ export async function removeItem(user, el, dbData) {
 // sync db data with local storage data
 export async function syncDBFromLocal(dbCart, userid) {
   const updatedData = LocalCart.searchLocalForDbItem(dbCart.Cart_Items);
-  
+
   return userCartCollection(userid)
     .doc(userid)
     .set({
@@ -87,11 +86,9 @@ export async function syncDBFromLocal(dbCart, userid) {
 //  update the quantity of item
 export function updateQuantityOfItem(cartItems, user) {
   if (!!user) {
-    userCartCollection(user.uid)
-      .doc(user.uid)
-      .set({
-        Cart_Items: cartItems,
-      });
+    userCartCollection(user.uid).doc(user.uid).set({
+      Cart_Items: cartItems,
+    });
   } else {
     LocalCart.updateLocalQuantityOfItem(cartItems);
   }

@@ -183,18 +183,15 @@ const CheckoutComponent = (props) => {
   }, []);
 
   const handleAddressSave = (_address) => {
-    const newAddressPromise = UserService.addNewAddress(props.user, _address);
-
-    newAddressPromise.then(() => {
+    return UserService.addNewAddress(props.user, _address).then((doc) => {
       const allAddresses = Array.from(addressExists);
 
-      allAddresses.push(_address);
-
+      allAddresses.push(Object.assign({ id: doc.id }, _address));
       setAddressExists(allAddresses);
       setMultipleAddress(false);
-    });
 
-    return newAddressPromise;
+      return doc;
+    });
   };
 
   const formattedAddress = (ad) => {

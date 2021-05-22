@@ -1,11 +1,16 @@
 import { db } from "../config/firebase";
-import getFromDb from "../components/Utils";
 import * as LocalCart from "./LocalCart";
+
+function userCartCollection(uid) {
+  const userCollection = db.collection("Users");
+  return userCollection.doc(uid).collection("Carts");
+}
 
 // adds Item to cart, called by addItem
 async function localAddItem(doc, item, user) {
   let found = false;
   let dbData = [];
+
   if (doc.exists) {
     dbData = doc.data().Cart_Items;
     for (let i = 0; i < dbData.length; i++) {
@@ -21,8 +26,7 @@ async function localAddItem(doc, item, user) {
     dbData.push(item);
   }
 
-  return db
-    .collection("UserCart")
+  return userCartCollection(user.uid)
     .doc(user.uid)
     .set({
       Cart_Items: dbData,
@@ -35,8 +39,7 @@ async function localAddItem(doc, item, user) {
 export async function addItem(user, item) {
   // TO DO update store first then DB ..
   if (!!user) {
-    return db
-      .collection("UserCart")
+    return userCartCollection(user.uid)
       .doc(user.uid)
       .get()
       .then((doc) => {
@@ -55,9 +58,11 @@ export async function removeItem(user, el, dbData) {
         dbData.splice(index, 1);
       }
     });
-    db.collection("UserCart").doc(user.uid).set({
+
+    userCartCollection(user.uid).doc(user.uid).set({
       Cart_Items: dbData,
     });
+
     return dbData;
   }
 
@@ -66,11 +71,9 @@ export async function removeItem(user, el, dbData) {
 
 // sync db data with local storage data
 export async function syncDBFromLocal(dbCart, userid) {
-  
   const updatedData = LocalCart.searchLocalForDbItem(dbCart.Cart_Items);
 
-  return db
-    .collection("UserCart")
+  return userCartCollection(userid)
     .doc(userid)
     .set({
       Cart_Items: updatedData,
@@ -83,7 +86,7 @@ export async function syncDBFromLocal(dbCart, userid) {
 //  update the quantity of item
 export function updateQuantityOfItem(cartItems, user) {
   if (!!user) {
-    db.collection("UserCart").doc(user.uid).set({
+    userCartCollection(user.uid).doc(user.uid).set({
       Cart_Items: cartItems,
     });
   } else {
@@ -92,14 +95,13 @@ export function updateQuantityOfItem(cartItems, user) {
 }
 
 export function getUserCart(uid) {
-  return db.collection("UserCart").doc(uid).get();
+  return userCartCollection(uid).doc(uid).get();
 }
 
 export function initialize(uid) {
   const cartItems = JSON.parse(localStorage.getItem("items")) || [];
 
-  return db
-    .collection("UserCart")
+  return userCartCollection(uid)
     .doc(uid)
     .set({
       Cart_Items: cartItems,

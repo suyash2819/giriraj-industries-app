@@ -44,6 +44,7 @@ export async function getItemForFrontPage(collectionName) {
   return firebase
     .firestore()
     .collection(collectionName)
+    .limit(6)
     .get()
     .then(formatSnapshot);
 }

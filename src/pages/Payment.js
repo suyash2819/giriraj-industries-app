@@ -1,21 +1,82 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { Container, Row, Button, Col } from "react-bootstrap";
-import cryptoRandomString from "crypto-random-string";
+import axios from "axios";
+import { Container, Row, Button, Col, Form, Spinner } from "react-bootstrap";
+import firebase from "firebase/app";
 import AlertMessage from "../components/AlertMessage";
 import NavBar from "../components/Header";
 import "../CSS/AllSection.css";
 import "../CSS/Payment.css";
-import handleOrders from "../services/OrderService";
+import * as orderService from "../services/UserService";
+import { generateHashUrl } from "../data";
+import { createOrderUrl, logo } from "../data";
+
+const ShowItems = (props) => {
+  let { totalCost, cartItems } = props;
+  return (
+    <>
+      {cartItems.map((el) => {
+        totalCost += parseInt(el.Cost * el.Quantity);
+        return (
+          <>
+            <Row key={el.id} className="ItemRow">
+              <Col md={4} key={el.Item_Name}>
+                <center>
+                  <p>
+                    <b>{el.Item_Type}</b>
+                  </p>
+                  <p>{el.Item_Name}</p>
+                </center>
+              </Col>
+              <Col md={4} key={el.Item_Type}>
+                <center>
+                  <p>{`Size: ${el.Size_Ordered}`}</p>
+                  <p>{`Color: ${el.Color_Ordered}`}</p>
+                </center>
+              </Col>
+              <Col md={4} key={el.Cost}>
+                <center>
+                  <p>
+                    <b>Rs. {parseInt(el.Cost) * parseInt(el.Quantity)}</b>
+                  </p>
+                </center>
+              </Col>
+            </Row>
+            <hr />
+          </>
+        );
+      })}
+      <Row>
+        <Col md={4}>
+          <center>
+            <h6>Total Cost</h6>
+          </center>
+        </Col>
+        <Col md={4}></Col>
+        <Col md={4}>
+          <center>
+            <b>
+              <p>Rs.{totalCost}</p>
+            </b>
+          </center>
+        </Col>
+      </Row>
+    </>
+  );
+};
 
 const PaymentComponent = (props) => {
+  const [paymentChoice, setPaymentChoice] = useState(null);
+
   const [order, setOrder] = useState({
     orderDate: "",
     orderId: "",
-    paymentId: "",
+    paymentId: null,
+    paymentSignature: null,
     totalCost: 0,
     deliveryAddress: "",
+    paymentVerified: false,
   });
 
   const [showAlert, setShowAlert] = useState({
@@ -25,6 +86,10 @@ const PaymentComponent = (props) => {
   });
 
   const isFirstRun = useRef(true);
+  const choicesOfPayment = ["Pay Online", "Pay on Delivery"];
+  const [loading, setLoading] = useState(false);
+  const [paymentChoiceError, setPaymentChoiceError] = useState(false);
+  let totalCost = 0;
 
   useEffect(() => {
     if (isFirstRun.current) {
@@ -32,7 +97,16 @@ const PaymentComponent = (props) => {
       return;
     }
 
-    handleOrders(props.user.uid, { ...order, itemsOrdered: props.cartItems });
+    orderService
+      .addNewOrders(
+        props.user.uid,
+        { ...order, itemsOrdered: props.cartItems },
+        order.orderId
+      )
+      .then((d) => {})
+      .catch((err) => {
+        console.log(err);
+      });
   }, [order]);
 
   // if a user has not entered the delivery address
@@ -40,38 +114,33 @@ const PaymentComponent = (props) => {
 
   const { deliveryAddress, contactnumber } = props.location.state;
 
-  let totalCost = 0;
-  const logo =
-    "https://firebasestorage.googleapis.com/v0/b/giriraj-industries.appspot.com/o/images%2Fgiriraj-industries-logo.png?alt=media&token=c84f3229-c1ef-44e4-9779-a029625254b2";
-
   const alertMessageDisplay = () => {
     setShowAlert({ show: false });
+    setPaymentChoiceError(false);
   };
 
-  const openPaymentModal = () => {
+  const openPaymentModal = (orderId, orderTotalCost) => {
     const options = {
       key: process.env.REACT_APP_RAZORPAY_KEY,
-      amount: totalCost * 100,
+      amount: orderTotalCost * 100,
       currency: "INR",
       name: "Giriraj Industries",
       description: "Test Transaction",
       image: logo,
+      order_id: orderId,
       handler: (response) => {
         setShowAlert({
           success: true,
           message: "Payment Successful, Order Placed",
           show: true,
         });
-        const orderId = cryptoRandomString({
-          length: 10,
-          type: "alphanumeric",
-        });
-        setOrder({
-          orderDate: new Date(),
+
+        axios.post(generateHashUrl, {
+          order,
           orderId,
           paymentId: response.razorpay_payment_id,
-          totalCost,
-          deliveryAddress,
+          paymentSignature: response.razorpay_signature,
+          userId: props.user.uid,
         });
       },
       prefill: {
@@ -104,19 +173,79 @@ const PaymentComponent = (props) => {
       message: "Order Placed",
       show: true,
     });
-    const orderId = cryptoRandomString({
-      length: 10,
-      type: "alphanumeric",
-    });
-    setOrder({
-      orderDate: new Date(),
-      orderId,
-      paymentId: null,
-      totalCost,
-      deliveryAddress,
-    });
   };
 
+  const fetchOrderId = () => {
+    if (!paymentChoice) {
+      setPaymentChoiceError(true);
+    } else {
+      setLoading(true);
+      return firebase
+        .auth()
+        .currentUser.getIdToken(true)
+        .then(function (idToken) {
+          // Sending token to your backend via HTTPS
+          return axios
+            .post(
+              createOrderUrl,
+              { userId: props.user.uid },
+              {
+                headers: {
+                  userToken: idToken,
+                },
+              }
+            )
+            .then((orderDetails) => {
+              setLoading(false);
+
+              if (paymentChoice === choicesOfPayment[0]) {
+                setOrder({
+                  orderDate: new Date(),
+                  orderId: orderDetails.data.order.id,
+                  paymentId: null,
+                  paymentSignature: null,
+                  totalCost: orderDetails.data.totalCost,
+                  deliveryAddress,
+                  paymentVerified: false,
+                });
+                openPaymentModal(
+                  orderDetails.data.order.id,
+                  orderDetails.data.totalCost
+                );
+              } else {
+                setOrder({
+                  orderDate: new Date(),
+                  orderId: orderDetails.data.order.id,
+                  totalCost: orderDetails.data.totalCost,
+                  deliveryAddress,
+                  paymentVerified: false,
+                });
+                payOnDelivery();
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        })
+        .catch(function (error) {});
+    }
+  };
+
+  const handlePaymentChoice = (e) => {
+    setPaymentChoice(e.target.name);
+  };
+
+  if (loading) {
+    return (
+      <div>
+        <center>
+          <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        </center>
+      </div>
+    );
+  }
   return (
     <>
       <NavBar />
@@ -131,74 +260,53 @@ const PaymentComponent = (props) => {
           </h6>
         </center>
         <br />
-        <div className="row justify-content-center">
-          {showAlert.show ? (
-            <AlertMessage
-              success={showAlert.success}
-              message={showAlert.message}
-              alertDisplay={alertMessageDisplay}
-            />
-          ) : null}
-        </div>
         <div className="Items">
-          {props.cartItems.map((el) => {
-            totalCost += parseInt(el.Cost * el.Quantity);
-            return (
-              <>
-                <Row key={el.id} className="ItemRow">
-                  <Col md={4} key={el.Item_Name}>
-                    <center>
-                      <p>
-                        <b>{el.Item_Type}</b>
-                      </p>
-                      <p>{el.Item_Name}</p>
-                    </center>
-                  </Col>
-                  <Col md={4} key={el.Item_Type}>
-                    <center>
-                      <p>{`Size: ${el.Size_Ordered}`}</p>
-                      <p>{`Color: ${el.Color_Ordered}`}</p>
-                    </center>
-                  </Col>
-                  <Col md={4} key={el.Cost}>
-                    <center>
-                      <p>
-                        <b>Rs. {parseInt(el.Cost) * parseInt(el.Quantity)}</b>
-                      </p>
-                    </center>
-                  </Col>
-                </Row>
-                <hr />
-              </>
-            );
-          })}
-          <Row>
-            <Col md={4}>
-              <center>
-                <h6>Total Cost</h6>
-              </center>
-            </Col>
-            <Col md={4}></Col>
-            <Col md={4}>
-              <center>
-                <b>
-                  <p>Rs.{totalCost}</p>
-                </b>
-              </center>
-            </Col>
-          </Row>
+          <ShowItems totalCost={totalCost} cartItems={props.cartItems} />
         </div>
         <center>
+          <h6>select payment method</h6>
+          {choicesOfPayment.map((choice) => (
+            <Form.Group
+              controlId="formBasicCheckbox"
+              style={{ display: "inline", marginRight: "50px" }}
+            >
+              <Form.Check
+                type="checkbox"
+                label={choice}
+                name={choice}
+                checked={paymentChoice === choice}
+                onChange={handlePaymentChoice}
+                style={{ display: "inline" }}
+              />
+            </Form.Group>
+          ))}
+
           <Button
             variant="primary"
-            onClick={openPaymentModal}
+            onClick={fetchOrderId}
             className="payOnline"
+            style={{ display: "block", margin: "10px" }}
           >
-            Pay Online
+            Place Order
           </Button>
-          <Button variant="primary" onClick={payOnDelivery}>
-            Pay On Delivery
-          </Button>
+          <div className="row justify-content-center">
+            {showAlert.show ? (
+              <AlertMessage
+                success={showAlert.success}
+                message={showAlert.message}
+                alertDisplay={alertMessageDisplay}
+              />
+            ) : null}
+          </div>
+          <div className="row justify-content-center">
+            {paymentChoiceError ? (
+              <AlertMessage
+                success={false}
+                message="please choose method of payment"
+                alertDisplay={alertMessageDisplay}
+              />
+            ) : null}
+          </div>
         </center>
         <br />
       </Container>
@@ -213,5 +321,4 @@ const mapStateToProps = (state) => ({
 });
 
 const Payment = connect(mapStateToProps, null)(PaymentComponent);
-
 export default Payment;

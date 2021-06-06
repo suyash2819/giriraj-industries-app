@@ -71,7 +71,7 @@ const CartDisplayComponent = (props) => {
               {props.cartItems.map((el) => {
                 totalCost += parseInt(el.Cost * el.Quantity);
                 return (
-                  <React.Fragment key={el.id}>
+                  <React.Fragment key={el.CompositeKey}>
                     <Row className="ItemRow">
                       <Col md={3}>
                         <center>

@@ -85,7 +85,9 @@ const ItemDetailComponent = (props) => {
                 <option>Choose...</option>
                 {Object.keys(element.Sizes_Available).map(
                   (size) =>
-                    !!element.Sizes_Available[size] && <option>{size}</option>
+                    !!element.Sizes_Available[size] && (
+                      <option key={size}>{size}</option>
+                    )
                 )}
               </Form.Control>
             </Form.Group>
@@ -106,7 +108,9 @@ const ItemDetailComponent = (props) => {
                 <option>Choose...</option>
                 {Object.keys(element.Color_Available).map(
                   (color) =>
-                    !!element.Color_Available[color] && <option>{color}</option>
+                    !!element.Color_Available[color] && (
+                      <option key={color}>{color}</option>
+                    )
                 )}
               </Form.Control>
             </Form.Group>

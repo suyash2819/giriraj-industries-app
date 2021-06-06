@@ -19,9 +19,9 @@ const ShowItems = (props) => {
       {cartItems.map((el) => {
         totalCost += parseInt(el.Cost * el.Quantity);
         return (
-          <>
-            <Row key={el.id} className="ItemRow">
-              <Col md={4} key={el.Item_Name}>
+          <React.Fragment key={el.CompositeKey}>
+            <Row className="ItemRow">
+              <Col md={4}>
                 <center>
                   <p>
                     <b>{el.Item_Type}</b>
@@ -29,13 +29,13 @@ const ShowItems = (props) => {
                   <p>{el.Item_Name}</p>
                 </center>
               </Col>
-              <Col md={4} key={el.Item_Type}>
+              <Col md={4}>
                 <center>
                   <p>{`Size: ${el.Size_Ordered}`}</p>
                   <p>{`Color: ${el.Color_Ordered}`}</p>
                 </center>
               </Col>
-              <Col md={4} key={el.Cost}>
+              <Col md={4}>
                 <center>
                   <p>
                     <b>Rs. {parseInt(el.Cost) * parseInt(el.Quantity)}</b>
@@ -44,7 +44,7 @@ const ShowItems = (props) => {
               </Col>
             </Row>
             <hr />
-          </>
+          </React.Fragment>
         );
       })}
       <Row>
@@ -269,6 +269,7 @@ const PaymentComponent = (props) => {
             <Form.Group
               controlId="formBasicCheckbox"
               style={{ display: "inline", marginRight: "50px" }}
+              key={choice}
             >
               <Form.Check
                 type="checkbox"

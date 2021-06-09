@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
 import { bindActionCreators } from "redux";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { userSignedIn } from "../../store/reducer";
 import { fire } from "../../config/firebase";
@@ -19,6 +20,8 @@ const RootuserSignIn = (props) => {
     message: null,
     show: false,
   });
+
+  const [redirectToHome, setRedirectToHome] = useState(false);
 
   const userNotVerified = () => {
     fire
@@ -58,6 +61,7 @@ const RootuserSignIn = (props) => {
             show: true,
           });
           setUserInfo({ userEmail: "", userPassword: "" });
+          setRedirectToHome(true);
         } else {
           userNotVerified();
         }
@@ -75,6 +79,8 @@ const RootuserSignIn = (props) => {
   const alertMessageDisplay = () => {
     setShowAlert({ show: false });
   };
+
+  if (redirectToHome) return <Redirect to="/" />;
 
   return (
     <>

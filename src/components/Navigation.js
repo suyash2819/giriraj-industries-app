@@ -18,9 +18,7 @@ import AuthenticatedRoute from "./AuthenticatedRoutes";
 const Rootmain = (props) => {
   useEffect(() => {
     fire.auth().onAuthStateChanged(function handleAuthStateChange(user) {
-      if (user) {
-        props.userSignedIn(user);
-      }
+      props.userSignedIn(user);
       props.displayLoader(false);
     });
   });

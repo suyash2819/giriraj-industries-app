@@ -15,6 +15,7 @@ function AppComponent(props) {
   React.useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       // If the user is not authenticated, then load the local cart in redux store
+      // console.log(user);
       if (!user) {
         return props.localToStore();
       }

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
 import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
 import { fire } from "../../config/firebase";
 import NavBar from "../../components/Header";
@@ -6,6 +7,8 @@ import AlertMessage from "../../components/AlertMessage";
 import "../../CSS/AllSection.css";
 
 const UserSignUp = () => {
+  const [redirectToSignIn, setRedirectToSignIn] = useState(false);
+
   const [userInfo, setUserInfo] = useState({
     userEmail: "",
     userPassword: "",
@@ -39,6 +42,17 @@ const UserSignUp = () => {
               show: true,
             });
             setUserInfo({ userEmail: "", userPassword: "", userName: "" });
+            fire
+              .auth()
+              .signOut()
+              .then(() => {
+                setTimeout(() => {
+                  setRedirectToSignIn(true);
+                }, 1500);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           })
           .catch((err) => {
             setShowAlert({
@@ -84,6 +98,8 @@ const UserSignUp = () => {
   const alertMessageDisplay = () => {
     setShowAlert({ show: false });
   };
+
+  if (redirectToSignIn) return <Redirect to="/signin" />;
 
   return (
     <>

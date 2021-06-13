@@ -86,9 +86,9 @@ export const logo =
   "https://firebasestorage.googleapis.com/v0/b/giriraj-industries.appspot.com/o/images%2Fgiriraj-industries-logo.png?alt=media&token=c84f3229-c1ef-44e4-9779-a029625254b2";
 
 export const createOrderUrl = 
-"http://localhost:9000/createOrder"
-  // "https://6n55wu9sxj.execute-api.us-east-1.amazonaws.com/dev/";
+// "http://localhost:9000/createOrder"
+  "https://6n55wu9sxj.execute-api.us-east-1.amazonaws.com/dev/";
 
 export const generateHashUrl = 
-"http://localhost:9000/generateHash"
-  // "https://6n55wu9sxj.execute-api.us-east-1.amazonaws.com/dev/generateHash";
+// "http://localhost:9000/generateHash"
+  "https://6n55wu9sxj.execute-api.us-east-1.amazonaws.com/dev/generateHash";

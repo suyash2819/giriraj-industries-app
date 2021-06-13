@@ -2,6 +2,9 @@
   "name": "giriraj-industries-app",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "12.11.1"
+    },
   "dependencies": {
     "@types/react-router": "^5.1.8",
     "axios": "^0.21.1",

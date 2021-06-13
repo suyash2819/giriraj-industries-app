@@ -196,6 +196,7 @@ const PaymentComponent = (props) => {
               }
             )
             .then((orderDetails) => {
+              console.log(orderDetails);
               setLoading(false);
 
               if (paymentChoice === choicesOfPayment[0]) {

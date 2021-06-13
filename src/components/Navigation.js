@@ -3,7 +3,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Switch, Route } from "react-router-dom";
 import { fire } from "../config/firebase";
-import { userSignedIn, displayLoader } from "../store/reducer";
+import { setUserSession, displayLoader } from "../store/reducer";
 import Home from "../pages/Home";
 import Section from "../pages/section";
 import CartDisplay from "./CartDisplay";
@@ -18,7 +18,7 @@ import AuthenticatedRoute from "./AuthenticatedRoutes";
 const Rootmain = (props) => {
   useEffect(() => {
     fire.auth().onAuthStateChanged(function handleAuthStateChange(user) {
-      props.userSignedIn(user);
+      props.setUserSession(user);
       props.displayLoader(false);
     });
   });
@@ -72,7 +72,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  userSignedIn: bindActionCreators(userSignedIn, dispatch),
+  setUserSession: bindActionCreators(setUserSession, dispatch),
   displayLoader: bindActionCreators(displayLoader, dispatch),
 });
 

@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 
 const ADD_TO_CART = "ADD_TO_CART";
 const REMOVE_FROM_CART = "REMOVE_FROM_CART";
-const USER_SIGN_IN = "USER_SIGN_IN";
+const SET_USER_SESSION = "SET_USER_SESSION";
 const LOADER = "DISPLAY_LOADER";
 const GET_DATA = "GET_DATA_FROM_DB";
 const LOCAL_TO_STORE = "LOCAL_TO_STORE";
@@ -21,8 +21,8 @@ export function removeFromCart(payload) {
   };
 }
 
-export function userSignedIn(payload) {
-  return { type: USER_SIGN_IN, payload };
+export function setUserSession(payload) {
+  return { type: SET_USER_SESSION, payload };
 }
 
 export function displayLoader(payload) {
@@ -92,7 +92,7 @@ export function userReducer(state = userinitialState, action) {
   const { payload, type } = action;
 
   switch (type) {
-    case USER_SIGN_IN:
+    case SET_USER_SESSION:
       return { ...state, user: payload };
     default:
       return state;

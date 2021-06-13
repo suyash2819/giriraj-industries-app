@@ -87,7 +87,7 @@ export const logo =
 
 export const createOrderUrl = 
 // "http://localhost:9000/createOrder"
-  "https://6n55wu9sxj.execute-api.us-east-1.amazonaws.com/dev/";
+  "https://6n55wu9sxj.execute-api.us-east-1.amazonaws.com/dev/createOrder";
 
 export const generateHashUrl = 
 // "http://localhost:9000/generateHash"

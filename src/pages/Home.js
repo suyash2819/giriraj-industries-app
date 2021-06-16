@@ -27,7 +27,9 @@ const Home = () => {
       <div className="Man-pic">
         <p className="front-text">
           WE'RE GIRIRAJ INDUSTRIES
-          <p className="front-text-subhead">YOUR SMILE IS WHAT MATTERS TO US</p>
+          <span className="front-text-subhead">
+            YOUR SMILE IS WHAT MATTERS TO US
+          </span>
         </p>
         <HashLink to="#men" className="front-button">
           <i
@@ -62,7 +64,7 @@ const Home = () => {
         >
           <Row>
             {frontPageItems.map((item) => (
-              <Col lg={4} md={12}>
+              <Col lg={4} md={12} key={item.id}>
                 <Link
                   to={{
                     pathname: `/details/${item.Item_Type}/${item.Item_Name}/${item.id}`,

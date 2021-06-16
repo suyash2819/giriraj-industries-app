@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
 import { bindActionCreators } from "redux";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { userSignedIn } from "../../store/reducer";
+import { setUserSession } from "../../store/reducer";
 import { fire } from "../../config/firebase";
 import NavBar from "../../components/Header";
 import AlertMessage from "../../components/AlertMessage";
@@ -20,6 +21,8 @@ const RootuserSignIn = (props) => {
     show: false,
   });
 
+  const [redirectToHome, setRedirectToHome] = useState(false);
+
   const userNotVerified = () => {
     fire
       .auth()
@@ -30,7 +33,7 @@ const RootuserSignIn = (props) => {
           message: "Please Verify your email address and login again",
           show: true,
         });
-        props.userSignedIn(null);
+        props.setUserSession(null);
         setUserInfo({ userEmail: "", userPassword: "" });
       })
       .catch((err) => {
@@ -49,7 +52,7 @@ const RootuserSignIn = (props) => {
       .auth()
       .signInWithEmailAndPassword(userInfo.userEmail, userInfo.userPassword)
       .then((userdata) => {
-        props.userSignedIn(userdata);
+        props.setUserSession(userdata);
 
         if (userdata.user.emailVerified) {
           setShowAlert({
@@ -58,6 +61,7 @@ const RootuserSignIn = (props) => {
             show: true,
           });
           setUserInfo({ userEmail: "", userPassword: "" });
+          setRedirectToHome(true);
         } else {
           userNotVerified();
         }
@@ -75,6 +79,8 @@ const RootuserSignIn = (props) => {
   const alertMessageDisplay = () => {
     setShowAlert({ show: false });
   };
+
+  if (redirectToHome) return <Redirect to="/" />;
 
   return (
     <>
@@ -150,7 +156,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  userSignedIn: bindActionCreators(userSignedIn, dispatch),
+  setUserSession: bindActionCreators(setUserSession, dispatch),
 });
 
 const UserSignIn = connect(mapStateToProps, mapDispatchToProps)(RootuserSignIn);

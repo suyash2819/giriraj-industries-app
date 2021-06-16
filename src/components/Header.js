@@ -4,7 +4,7 @@ import { Navbar, Nav } from "react-bootstrap";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { fire } from "../config/firebase";
-import { userSignedIn, displayLoader, localToStore } from "../store/reducer";
+import { setUserSession, displayLoader, localToStore } from "../store/reducer";
 import "../CSS/Header.css";
 
 const RootnavBar = (props) => {
@@ -44,7 +44,7 @@ const RootnavBar = (props) => {
                   className="nav-link"
                   onClick={() => {
                     fire.auth().signOut();
-                    props.userSignedIn(null);
+                    props.setUserSession(null);
                     props.localToStore();
                   }}
                   to="/"
@@ -95,7 +95,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  userSignedIn: bindActionCreators(userSignedIn, dispatch),
+  setUserSession: bindActionCreators(setUserSession, dispatch),
   displayLoader: bindActionCreators(displayLoader, dispatch),
   localToStore: bindActionCreators(localToStore, dispatch),
 });

@@ -16,9 +16,22 @@ const RootnavBar = (props) => {
       variant="dark"
       fixed="top"
     >
+      <Nav>
+        <Navbar.Text style={{ padding: "0px" }}>
+          <Link to="/cart" className="nav-link">
+            <i className="fa fa-cart-plus" style={{ fontSize: "22px" }}></i>
+            {!!props.cartItems.length && (
+              <span className="badge badge-pill badge-primary">
+                {props.cartItems.length}
+              </span>
+            )}
+          </Link>
+        </Navbar.Text>
+      </Nav>
       <Navbar.Brand style={{ fontSize: "15px" }}>
         GIRIRAJ INDUSTRIES
       </Navbar.Brand>
+
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="mr-auto">
@@ -72,16 +85,6 @@ const RootnavBar = (props) => {
           {!!props.user && (
             <Navbar.Text>Welcome {props.user.displayName}</Navbar.Text>
           )}
-          <Navbar.Text style={{ padding: "0px" }}>
-            <Link to="/cart" className="nav-link">
-              <i className="fa fa-cart-plus" style={{ fontSize: "22px" }}></i>
-              {!!props.cartItems.length && (
-                <span className="badge badge-pill badge-primary">
-                  {props.cartItems.length}
-                </span>
-              )}
-            </Link>
-          </Navbar.Text>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

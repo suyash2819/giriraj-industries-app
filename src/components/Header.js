@@ -17,9 +17,6 @@ const RootnavBar = (props) => {
       fixed="top"
     >
       <Nav>
-        {/* {!!props.user && (
-            <Navbar.Text>Welcome {props.user.displayName}</Navbar.Text>
-          )} */}
         <Navbar.Text style={{ padding: "0px" }}>
           <Link to="/cart" className="nav-link">
             <i className="fa fa-cart-plus" style={{ fontSize: "22px" }}></i>
@@ -84,42 +81,12 @@ const RootnavBar = (props) => {
             </>
           )}
         </Nav>
-        {/* <Nav>
-          {!!props.user && (
-            <Navbar.Text>Welcome {props.user.displayName}</Navbar.Text>
-          )}
-          <Navbar.Text style={{ padding: "0px" }}>
-            <Link to="/cart" className="nav-link">
-              <i className="fa fa-cart-plus" style={{ fontSize: "22px" }}></i>
-              {!!props.cartItems.length && (
-                <span className="badge badge-pill badge-primary">
-                  {props.cartItems.length}
-                </span>
-              )}
-            </Link>
-          </Navbar.Text>
-        </Nav> */}
         <Nav>
           {!!props.user && (
             <Navbar.Text>Welcome {props.user.displayName}</Navbar.Text>
           )}
         </Nav>
       </Navbar.Collapse>
-      {/* <Nav>
-        {!!props.user && (
-            <Navbar.Text>Welcome {props.user.displayName}</Navbar.Text>
-          )}
-        <Navbar.Text style={{ padding: "0px" }}>
-          <Link to="/cart" className="nav-link">
-            <i className="fa fa-cart-plus" style={{ fontSize: "22px" }}></i>
-            {!!props.cartItems.length && (
-              <span className="badge badge-pill badge-primary">
-                {props.cartItems.length}
-              </span>
-            )}
-          </Link>
-        </Navbar.Text>
-      </Nav> */}
     </Navbar>
   );
 };

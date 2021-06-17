@@ -96,10 +96,14 @@ export function Section({ name, title, cartItems }) {
     // dependency array)
     setItems((_items) => {
       const updated = { ..._items };
-
       cartItems.forEach((item) => {
         if (updated[item.Item_Type]) {
-          updated[item.Item_Type].items[item.id].added = true;
+          // checking if for that particular item type in updated items(section wise), is that id persent in cart also
+          // as men and women can have same item type as well (lowers) and it might fail when we go to women section
+          // and it checkes for lowers but takes id from men item, as cart will contain all items.
+          if (updated[item.Item_Type].items[item.id]) {
+            updated[item.Item_Type].items[item.id].added = true;
+          }
         }
       });
 

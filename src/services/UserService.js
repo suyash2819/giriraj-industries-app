@@ -18,12 +18,3 @@ export function listAddresses(user) {
 
   return addressCollection.get();
 }
-
-export function addNewOrders(userid, order, orderId) {
-  const userCollection = firebase.firestore().collection("Users");
-  return userCollection
-    .doc(userid)
-    .collection("Orders")
-    .doc(orderId)
-    .set(order);
-}

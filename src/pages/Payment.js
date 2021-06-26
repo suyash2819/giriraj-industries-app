@@ -8,7 +8,6 @@ import AlertMessage from "../components/AlertMessage";
 import NavBar from "../components/Header";
 import "../CSS/AllSection.css";
 import "../CSS/Payment.css";
-import * as orderService from "../services/UserService";
 import { generateHashUrl } from "../data";
 import { createOrderUrl, logo } from "../data";
 
@@ -91,24 +90,6 @@ const PaymentComponent = (props) => {
   const [paymentChoiceError, setPaymentChoiceError] = useState(false);
   let totalCost = 0;
 
-  useEffect(() => {
-    if (isFirstRun.current) {
-      isFirstRun.current = false;
-      return;
-    }
-
-    orderService
-      .addNewOrders(
-        props.user.uid,
-        { ...order, itemsOrdered: props.cartItems },
-        order.orderId
-      )
-      .then((d) => {})
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [order]);
-
   // if a user has not entered the delivery address
   if (props.location.state === undefined) return <Redirect to="/checkout" />;
 
@@ -180,6 +161,7 @@ const PaymentComponent = (props) => {
       setPaymentChoiceError(true);
     } else {
       setLoading(true);
+
       return firebase
         .auth()
         .currentUser.getIdToken(true)
@@ -188,7 +170,7 @@ const PaymentComponent = (props) => {
           return axios
             .post(
               createOrderUrl,
-              { userId: props.user.uid },
+              { userId: props.user.uid, deliveryAddress, paymentChoice },
               {
                 headers: {
                   userToken: idToken,
@@ -196,31 +178,14 @@ const PaymentComponent = (props) => {
               }
             )
             .then((orderDetails) => {
-              console.log(orderDetails);
               setLoading(false);
 
               if (paymentChoice === choicesOfPayment[0]) {
-                setOrder({
-                  orderDate: new Date(),
-                  orderId: orderDetails.data.order.id,
-                  paymentId: null,
-                  paymentSignature: null,
-                  totalCost: orderDetails.data.totalCost,
-                  deliveryAddress,
-                  paymentVerified: false,
-                });
                 openPaymentModal(
-                  orderDetails.data.order.id,
+                  orderDetails.data.order.orderId,
                   orderDetails.data.totalCost
                 );
               } else {
-                setOrder({
-                  orderDate: new Date(),
-                  orderId: orderDetails.data.order.id,
-                  totalCost: orderDetails.data.totalCost,
-                  deliveryAddress,
-                  paymentVerified: false,
-                });
                 payOnDelivery();
               }
             })

@@ -7,7 +7,7 @@
     },
   "dependencies": {
     "@types/react-router": "^5.1.8",
-    "axios": "^0.21.1",
+    "axios": "^1.6.0",
     "bootstrap": "^4.5.3",
     "crypto-random-string": "^3.3.0",
     "firebase": "^7.24.0",

@@ -18,3 +18,7 @@ export function listAddresses(user) {
 
   return addressCollection.get();
 }
+
+export default function addUsers(user1, user2) {
+  return user1 + user2;
+}
